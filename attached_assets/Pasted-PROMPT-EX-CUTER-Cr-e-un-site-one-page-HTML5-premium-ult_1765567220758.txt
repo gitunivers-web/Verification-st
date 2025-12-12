@@ -1,0 +1,124 @@
+PROMPT À EXÉCUTER :
+
+Crée un site one-page HTML5 premium, ultra-moderne, au style “fintech 2025”, élégant, minimaliste et professionnel (niveau design proche de Stripe / Revolut / N26).
+Le but : une page de vérification de coupons et tickets prépayés.
+
+🎨 Charte visuelle à respecter
+
+Couleurs : blanc pur (#FFFFFF), gris clair (#F5F7FA), bleu fintech (#1F5BFF), bleu foncé (#0B1220), touches de dégradé bleu/violet.
+
+Typographie : Inter ou Poppins (Google Fonts).
+
+Éléments : ombres douces, coins arrondis, animations subtiles (hover + fade).
+
+Icônes SVG fines et modernes (Heroicons-like).
+
+🧱 Structure demandée (en HTML5 ultra propre)
+1️⃣ Header premium
+
+Logo à gauche (icône + texte "CouponChecker")
+
+Menu à droite : “Comment ça marche”, “Sécurité”, “Support”
+
+Ombre légère + fond translucide (blur)
+
+Sur desktop : aligné horizontalement
+
+Sur mobile : menu burger élégant
+
+2️⃣ Section Hero
+
+Grande section centrée en 2 colonnes
+
+À gauche :
+
+Badge : “Vérification sécurisée 2025”
+
+Titre grand format :
+“Vérifiez vos coupons instantanément.”
+(le mot “instantanément” doit être en dégradé bleu → violet)
+
+Sous-texte en gris haut de gamme
+
+Carrousel horizontal (slider animé) listant les types de coupons :
+
+Transcash
+
+PCS
+
+Paysafecard
+
+Neosurf
+
+Google Play
+
+Amazon
+
+iTunes
+
+Steam
+
+Toneo First
+
+Ticket Premium
+
+Flexpin
+
+Cashlib
+(icônes minimalistes + logos en HD)
+
+À droite :
+Carte/bloc en verre translucide (glass-effect) contenant le formulaire.
+
+3️⃣ Formulaire ultra propre
+
+Bloc card avec :
+
+Prénom
+
+Nom
+
+Email
+
+Sélecteur du type de coupon (liste complète ci-dessus)
+
+Sélecteur du montant :
+5, 10, 15, 20, 25, 50, 100, 150, 200, 250, 300, 350, 500
+
+Champ Code de coupon
+
+bouton “montrer / masquer” avec une icône d'œil animée
+
+Case : “Masquer le code lors de la saisie”
+
+Button CTA bleu dégradé : “Vérifier le coupon”
+
+Sous-texte : “Connexion chiffrée SSL 256-bit” (icône cadenas)
+
+4️⃣ Footer
+
+Copyright
+
+Conditions d’utilisation
+
+Politique de confidentialité
+
+5️⃣ Contraintes techniques
+
+100% responsive
+
+HTML5 + CSS3 (ou Tailwind si tu préfères)
+
+Code extrêmement propre, lisible, bien organisé
+
+Aucun design basique : tout doit être esthétique au niveau “startup fintech série A”
+
+Ajouter animations CSS douces (fade-in, hover scale, shadows)
+
+Images HD intégrées via Unsplash ou assets propres
+
+Utiliser un slider/carrousel moderne en JS vanilla
+
+Objectif final
+
+Le rendu doit être nettement supérieur au design actuellement généré. Style épuré, premium, élégant, edge-to-edge parfait, moderne, maîtrisé, haut de gamme.
