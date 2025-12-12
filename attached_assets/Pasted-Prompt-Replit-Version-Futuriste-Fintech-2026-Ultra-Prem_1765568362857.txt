@@ -1,0 +1,151 @@
+Prompt Replit – Version “Futuriste Fintech 2026 / Ultra-Premium / Next-Gen UI”
+
+(Copie/colle tel quel dans Replit pour forcer un design radicalement plus évolué)
+
+PROMPT :
+
+Crée un site one-page HTML5 futuriste, ultra-premium et spectaculaire, inspiré de l’esthétique 2025–2026 : un mélange de glassmorphism, néon dégradé, light 3D shadows, effet holographique, flou optique, reflets subtils, et micro-animations fluides.
+L’objectif est d’obtenir une page aussi moderne que celles de Arc Browser, Nothing.tech, Revolut 2026 UI, ou Apple VisionOS.
+
+🎨 STYLE GLOBAL (OBLIGATOIRE)
+
+Fond : dégradé spatial (bleu nuit → violet → cyan) avec brumes floues (blobs lumineux).
+
+Cartes : panels en verre translucide, avec light glow bleu/violet.
+
+Boutons : dégradé neon (bleu → violet → rose), léger halo.
+
+Typographie : Inter, Satoshi, ou Poppins Semi-Bold, grosse présence visuelle.
+
+Icônes : fines, vectorielles, légèrement lumineuses.
+
+Animations :
+
+hover scale + glow
+
+apparition en fade-up
+
+slider fluide façon motion design
+
+Effet futuriste premium digne d’une fintech de 2026.
+
+🧱 STRUCTURE DE LA PAGE (OBLIGATOIRE)
+1️⃣ Header futuriste
+
+Transparent, floating, effet verre.
+
+Logo modulaire moderne + glow.
+
+Menu minimaliste : “Comment ça marche”, “Sécurité”, “Support”.
+
+Survol avec halo.
+
+2️⃣ HERO SECTION (doit être spectaculaire)
+
+À gauche :
+
+Badge futuriste “Vérification Sécurisée 2026” (glow cyan).
+
+Grand titre split-gradient :
+“Vérifiez vos coupons instantanément.”
+Le mot instantanément doit avoir un dégradé animé (gradient shift).
+
+Texte court, sobre, professionnel.
+
+Carrousel néon horizontal des types de coupons :
+
+Transcash
+
+PCS
+
+Paysafecard
+
+Neosurf
+
+Google Play
+
+Amazon
+
+iTunes
+
+Steam
+
+Toneo First
+
+Ticket Premium
+
+Flexpin
+
+Cashlib
+
+Apple Gift Card
+
+Crypto vouchers (BTC, ETH…)
+Chaque carte doit :
+
+avoir une aura lumineuse,
+
+un hover 3D,
+
+glisser automatiquement (auto-scroll).
+
+À droite :
+
+Bloc en glassmorphism avec reflets, ombres profondes et halo léger.
+
+Formulaire vertical premium :
+
+Prénom
+
+Nom
+
+Email
+
+Type de coupon (liste complète ci-dessus)
+
+Montant (5 → 500)
+
+Code du coupon (champ futuriste, icône d’œil animée)
+
+Upload photo du coupon (avec icône futuriste + dropzone néon)
+
+Case “Masquer le code lors de la saisie”
+
+Bouton CTA :
+“Vérifier le coupon →”
+avec dégradé néon + animation sur clic.
+
+Petit label : “Données chiffrées de bout en bout (SSL 256-bit)”.
+
+3️⃣ FOOTER
+
+Minimaliste.
+
+Logo blanc.
+
+Liens légers : Conditions / Confidentialité.
+
+Effet “ligne lumineuse” en hover.
+
+⚙️ TECHNIQUE
+
+HTML5 + CSS3 pro et structuré
+
+Utilisation de variables CSS pour les couleurs néon
+
+Animations CSS custom
+
+JS pour le carrousel glissant
+
+Responsive mobile/tablette
+
+Code lisible et commenté
+
+Images HD libres (Unsplash, SVG HQ)
+
+Aucune esthétique simpliste : tout doit être futuriste et premium.
+
+🎯 Objectif final
+
+Un site qui semble sortir d’un produit Apple VisionOS ou d’une fintech 2026, niveau premium +++
+→ pas un site “propre”, un site qui impressionne instantanément.

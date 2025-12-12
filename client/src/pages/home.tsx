@@ -21,7 +21,8 @@ import {
   Music,
   Upload,
   Image as ImageIcon,
-  X
+  X,
+  Sparkles
 } from "lucide-react";
 import {
   Form,
@@ -60,18 +61,20 @@ const formSchema = z.object({
 });
 
 const COUPON_TYPES = [
-  { id: "transcash", name: "Transcash", domain: "transcash.fr", color: "bg-red-600" },
-  { id: "pcs", name: "PCS", domain: "mypcs.com", color: "bg-black" },
-  { id: "paysafecard", name: "Paysafecard", domain: "paysafecard.com", color: "bg-blue-600" },
-  { id: "neosurf", name: "Neosurf", domain: "neosurf.com", color: "bg-pink-600" },
-  { id: "googleplay", name: "Google Play", domain: "play.google.com", color: "bg-white" },
-  { id: "amazon", name: "Amazon", domain: "amazon.com", color: "bg-slate-900" },
-  { id: "itunes", name: "iTunes", domain: "apple.com", color: "bg-gradient-to-br from-purple-500 to-blue-500" },
-  { id: "steam", name: "Steam", domain: "steampowered.com", color: "bg-[#171a21]" },
-  { id: "toneofirst", name: "Toneo First", domain: "toneofirst.com", color: "bg-orange-500" },
-  { id: "ticketpremium", name: "Ticket Premium", domain: "ticket-premium.com", color: "bg-blue-800" },
-  { id: "flexpin", name: "Flexpin", domain: "flexepin.com", color: "bg-green-600" },
-  { id: "cashlib", name: "Cashlib", domain: "cashlib.com", color: "bg-orange-600" },
+  { id: "transcash", name: "Transcash", domain: "transcash.fr", color: "from-red-500 to-red-900" },
+  { id: "pcs", name: "PCS", domain: "mypcs.com", color: "from-slate-700 to-black" },
+  { id: "paysafecard", name: "Paysafecard", domain: "paysafecard.com", color: "from-blue-500 to-blue-900" },
+  { id: "neosurf", name: "Neosurf", domain: "neosurf.com", color: "from-pink-500 to-rose-900" },
+  { id: "googleplay", name: "Google Play", domain: "play.google.com", color: "from-emerald-400 to-emerald-900" },
+  { id: "amazon", name: "Amazon", domain: "amazon.com", color: "from-yellow-500 to-orange-700" },
+  { id: "itunes", name: "iTunes", domain: "apple.com", color: "from-blue-400 to-purple-600" },
+  { id: "steam", name: "Steam", domain: "steampowered.com", color: "from-slate-800 to-slate-950" },
+  { id: "toneofirst", name: "Toneo First", domain: "toneofirst.com", color: "from-orange-400 to-orange-800" },
+  { id: "ticketpremium", name: "Ticket Premium", domain: "ticket-premium.com", color: "from-blue-600 to-indigo-900" },
+  { id: "flexpin", name: "Flexpin", domain: "flexepin.com", color: "from-green-500 to-teal-800" },
+  { id: "cashlib", name: "Cashlib", domain: "cashlib.com", color: "from-amber-500 to-orange-800" },
+  { id: "applegift", name: "Apple Gift", domain: "apple.com", color: "from-gray-300 to-gray-500" },
+  { id: "crypto", name: "Crypto Voucher", domain: "bitcoin.org", color: "from-yellow-400 to-orange-500" },
 ];
 
 const AMOUNTS = ["5", "10", "15", "20", "25", "50", "100", "150", "200", "250", "300", "350", "500"];
@@ -130,40 +133,47 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] font-sans text-[#0B1220] selection:bg-[#1F5BFF]/20 overflow-x-hidden">
+    <div className="min-h-screen font-sans text-white overflow-x-hidden selection:bg-purple-500/30 selection:text-white relative">
       
-      {/* 1. Header Premium */}
-      <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/60 shadow-sm transition-all duration-300">
+      {/* Background Ambience */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-purple-600/10 rounded-full blur-[120px] mix-blend-screen animate-pulse duration-[10000ms]"></div>
+        <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-cyan-600/10 rounded-full blur-[100px] mix-blend-screen animate-pulse duration-[8000ms]"></div>
+      </div>
+
+      {/* 1. Header Futuriste */}
+      <header className="fixed top-0 w-full z-50 transition-all duration-300 border-b border-white/5 bg-[#050B14]/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2.5">
-            <div className="bg-gradient-to-br from-[#1F5BFF] to-[#0B1220] p-2 rounded-lg shadow-lg shadow-blue-500/20">
-              <ShieldCheck className="w-6 h-6 text-white" />
+          <div className="flex items-center gap-3 group cursor-pointer">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg blur opacity-40 group-hover:opacity-75 transition-opacity"></div>
+              <div className="relative bg-[#0A101F] p-2 rounded-lg border border-white/10">
+                <ShieldCheck className="w-6 h-6 text-cyan-400" />
+              </div>
             </div>
-            <span className="font-display font-bold text-xl tracking-tight text-[#0B1220]">
+            <span className="font-display font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
               CouponChecker
             </span>
           </div>
 
           {/* Desktop Menu */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-            <a href="#how-it-works" className="hover:text-[#1F5BFF] transition-colors relative group">
-              Comment ça marche
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#1F5BFF] transition-all group-hover:w-full"></span>
-            </a>
-            <a href="#security" className="hover:text-[#1F5BFF] transition-colors relative group">
-              Sécurité
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#1F5BFF] transition-all group-hover:w-full"></span>
-            </a>
-            <a href="#support" className="hover:text-[#1F5BFF] transition-colors relative group">
-              Support
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#1F5BFF] transition-all group-hover:w-full"></span>
-            </a>
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-white/70">
+            {["Comment ça marche", "Sécurité", "Support"].map((item) => (
+              <a 
+                key={item} 
+                href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} 
+                className="hover:text-white transition-all hover:scale-105 relative py-1"
+              >
+                {item}
+                <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-gradient-to-r from-cyan-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
+              </a>
+            ))}
           </nav>
 
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden p-2 text-slate-600 hover:text-[#1F5BFF] transition-colors"
+            className="md:hidden p-2 text-white/70 hover:text-white transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             <Menu className="w-6 h-6" />
@@ -175,48 +185,45 @@ export default function Home() {
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="md:hidden absolute top-20 left-0 w-full bg-white border-b border-slate-200 shadow-xl p-4 flex flex-col gap-4"
+            className="md:hidden absolute top-20 left-0 w-full bg-[#0A101F] border-b border-white/10 p-4 flex flex-col gap-4 backdrop-blur-xl"
           >
-             <a href="#how-it-works" className="text-slate-600 font-medium py-2">Comment ça marche</a>
-             <a href="#security" className="text-slate-600 font-medium py-2">Sécurité</a>
-             <a href="#support" className="text-slate-600 font-medium py-2">Support</a>
+             {["Comment ça marche", "Sécurité", "Support"].map((item) => (
+               <a key={item} href="#" className="text-white/80 font-medium py-2 hover:text-cyan-400 transition-colors">{item}</a>
+             ))}
           </motion.div>
         )}
       </header>
 
-      <main className="pt-28 pb-16 lg:pt-36 lg:pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-12 lg:gap-20">
+      <main className="pt-32 pb-20 lg:pt-40 lg:pb-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="flex flex-col lg:flex-row items-start gap-16 lg:gap-24">
           
           {/* 2. Hero Section - Left Column */}
-          <div className="flex-1 w-full lg:max-w-[55%] space-y-8">
+          <div className="flex-1 w-full lg:w-[55%] space-y-10">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-[#1F5BFF] text-xs font-bold uppercase tracking-wider mb-6 border border-blue-100 shadow-sm">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#1F5BFF]"></span>
-                </span>
-                Vérification sécurisée 2025
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-md shadow-[0_0_15px_rgba(34,211,238,0.1)]">
+                <Sparkles className="w-3 h-3" />
+                Vérification Sécurisée 2026
               </div>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-[1.1] text-[#0B1220] mb-6">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.05] tracking-tight mb-8 text-white">
                 Vérifiez vos coupons <br/>
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#1F5BFF] to-violet-600">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 animate-gradient-text">
                   instantanément.
                 </span>
               </h1>
               
-              <p className="text-lg md:text-xl text-slate-500 leading-relaxed max-w-lg mb-10">
-                La solution de référence pour authentifier vos recharges prépayées. Rapide, confidentiel et compatible avec tous les émetteurs majeurs.
+              <p className="text-lg md:text-xl text-white/60 leading-relaxed max-w-lg mb-12 font-light">
+                La technologie de vérification la plus avancée. Authentification biométrique des coupons en temps réel via blockchain sécurisée.
               </p>
 
-              {/* Carousel */}
-              <div className="w-full relative mt-12">
-                <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-[#F5F7FA] to-transparent z-10"></div>
-                <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#F5F7FA] to-transparent z-10"></div>
+              {/* Carousel Néon */}
+              <div className="w-full relative mt-16">
+                <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#050B14] to-transparent z-20 pointer-events-none"></div>
+                <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#050B14] to-transparent z-20 pointer-events-none"></div>
                 
                 <Carousel
                   opts={{
@@ -228,24 +235,28 @@ export default function Home() {
                 >
                   <CarouselContent className="-ml-4">
                     {COUPON_TYPES.map((coupon) => (
-                      <CarouselItem key={coupon.id} className="pl-4 basis-1/3 md:basis-1/4 lg:basis-1/5">
-                        <div className="group cursor-pointer">
-                          <div className="relative aspect-[1.586/1] rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1 bg-white border border-slate-100">
-                             <div className="absolute inset-0 flex items-center justify-center p-6 bg-slate-50">
+                      <CarouselItem key={coupon.id} className="pl-4 basis-1/3 md:basis-1/3 lg:basis-1/4">
+                        <div className="group cursor-pointer relative perspective-1000">
+                          <div className={`relative aspect-[1.586/1] rounded-2xl overflow-hidden transition-all duration-500 transform group-hover:-translate-y-2 group-hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] border border-white/10 bg-gradient-to-br ${coupon.color} bg-opacity-20`}>
+                             {/* Dark overlay for contrast */}
+                             <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
+                             
+                             <div className="absolute inset-0 flex items-center justify-center p-6 z-10">
                                <img 
                                  src={`https://logo.clearbit.com/${coupon.domain}?size=200`}
                                  alt={coupon.name}
-                                 className="w-full h-full object-contain mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity grayscale group-hover:grayscale-0 duration-500"
+                                 className="w-full h-full object-contain filter brightness-0 invert opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
                                  onError={(e) => {
                                    e.currentTarget.style.display = 'none';
-                                   e.currentTarget.parentElement!.innerHTML = `<span class="text-sm font-bold text-slate-400">${coupon.name}</span>`;
+                                   e.currentTarget.parentElement!.innerHTML = `<span class="text-sm font-bold text-white/90 tracking-wider">${coupon.name}</span>`;
                                  }}
                                />
                              </div>
-                             {/* Glossy effect */}
-                             <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                             
+                             {/* Glossy shine */}
+                             <div className="absolute -inset-full top-0 block h-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-10 group-hover:animate-shine" />
                           </div>
-                          <p className="mt-3 text-xs font-semibold text-center text-slate-500 group-hover:text-[#1F5BFF] transition-colors">
+                          <p className="mt-4 text-xs font-medium text-center text-white/40 group-hover:text-cyan-400 transition-colors tracking-wider uppercase">
                             {coupon.name}
                           </p>
                         </div>
@@ -257,42 +268,43 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* 3. Hero Section - Right Column (Form) */}
+          {/* 3. Hero Section - Right Column (Glass Form) */}
           <motion.div 
-            className="flex-1 w-full lg:max-w-[45%]"
-            initial={{ opacity: 0, x: 20 }}
+            className="flex-1 w-full lg:w-[45%]"
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            <div className="relative">
-              {/* Decorative background blobs */}
-              <div className="absolute -top-10 -right-10 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-              <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-violet-400/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-
-              <Card className="relative border border-white/40 shadow-2xl shadow-blue-900/10 backdrop-blur-xl bg-white/80 overflow-hidden">
-                <CardHeader className="bg-white/50 border-b border-slate-100 pb-6">
+            <div className="relative group">
+              {/* Form Glow Halo */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-3xl blur opacity-30 group-hover:opacity-50 transition duration-1000"></div>
+              
+              <Card className="relative glass-card border-0 rounded-3xl overflow-hidden">
+                <CardHeader className="border-b border-white/10 pb-6 pt-8 px-8">
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-xl font-display font-bold text-[#0B1220]">Vérification</CardTitle>
-                      <CardDescription className="text-slate-500 mt-1">Sécurisé par SSL 256-bit</CardDescription>
+                      <CardTitle className="text-xl font-display font-bold text-white tracking-wide">Vérification</CardTitle>
+                      <CardDescription className="text-white/40 mt-1">Sécurisé par SSL 256-bit</CardDescription>
                     </div>
-                    <Lock className="w-5 h-5 text-green-500/80" />
+                    <div className="h-10 w-10 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.2)]">
+                      <Lock className="w-5 h-5 text-green-400" />
+                    </div>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6">
+                <CardContent className="pt-8 px-8 pb-8">
                   {!isAnalyzing && !result && (
                     <Form {...form}>
-                      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-5">
                           <FormField
                             control={form.control}
                             name="firstName"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-slate-700 font-medium">Prénom</FormLabel>
+                                <FormLabel className="text-white/60 text-xs uppercase tracking-wider font-semibold">Prénom</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="Jean" {...field} className="bg-white/80 border-slate-200 focus:border-[#1F5BFF] focus:ring-2 focus:ring-[#1F5BFF]/10 transition-all h-11" />
+                                  <Input placeholder="Jean" {...field} className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-cyan-500/50 focus:ring-0 focus:bg-white/10 transition-all h-12 rounded-xl backdrop-blur-md neon-border-focus" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -303,9 +315,9 @@ export default function Home() {
                             name="lastName"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-slate-700 font-medium">Nom</FormLabel>
+                                <FormLabel className="text-white/60 text-xs uppercase tracking-wider font-semibold">Nom</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="Dupont" {...field} className="bg-white/80 border-slate-200 focus:border-[#1F5BFF] focus:ring-2 focus:ring-[#1F5BFF]/10 transition-all h-11" />
+                                  <Input placeholder="Dupont" {...field} className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-cyan-500/50 focus:ring-0 focus:bg-white/10 transition-all h-12 rounded-xl backdrop-blur-md neon-border-focus" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -318,31 +330,31 @@ export default function Home() {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-slate-700 font-medium">Email</FormLabel>
+                              <FormLabel className="text-white/60 text-xs uppercase tracking-wider font-semibold">Email</FormLabel>
                               <FormControl>
-                                <Input placeholder="jean.dupont@exemple.com" {...field} className="bg-white/80 border-slate-200 focus:border-[#1F5BFF] focus:ring-2 focus:ring-[#1F5BFF]/10 transition-all h-11" />
+                                <Input placeholder="jean.dupont@exemple.com" {...field} className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-cyan-500/50 focus:ring-0 focus:bg-white/10 transition-all h-12 rounded-xl backdrop-blur-md neon-border-focus" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-5">
                           <FormField
                             control={form.control}
                             name="couponType"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-slate-700 font-medium">Type de coupon</FormLabel>
+                                <FormLabel className="text-white/60 text-xs uppercase tracking-wider font-semibold">Service</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                   <FormControl>
-                                    <SelectTrigger className="bg-white/80 border-slate-200 focus:border-[#1F5BFF] focus:ring-2 focus:ring-[#1F5BFF]/10 transition-all h-11">
+                                    <SelectTrigger className="bg-white/5 border-white/10 text-white focus:border-cyan-500/50 focus:ring-0 h-12 rounded-xl neon-border-focus">
                                       <SelectValue placeholder="Choisir..." />
                                     </SelectTrigger>
                                   </FormControl>
-                                  <SelectContent>
+                                  <SelectContent className="bg-[#0A101F] border-white/10 text-white backdrop-blur-xl">
                                     {COUPON_TYPES.map((type) => (
-                                      <SelectItem key={type.id} value={type.id}>{type.name}</SelectItem>
+                                      <SelectItem key={type.id} value={type.id} className="focus:bg-white/10 focus:text-cyan-400">{type.name}</SelectItem>
                                     ))}
                                   </SelectContent>
                                 </Select>
@@ -356,16 +368,16 @@ export default function Home() {
                             name="amount"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-slate-700 font-medium">Montant</FormLabel>
+                                <FormLabel className="text-white/60 text-xs uppercase tracking-wider font-semibold">Montant</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                   <FormControl>
-                                    <SelectTrigger className="bg-white/80 border-slate-200 focus:border-[#1F5BFF] focus:ring-2 focus:ring-[#1F5BFF]/10 transition-all h-11">
-                                      <SelectValue placeholder="Montant..." />
+                                    <SelectTrigger className="bg-white/5 border-white/10 text-white focus:border-cyan-500/50 focus:ring-0 h-12 rounded-xl neon-border-focus">
+                                      <SelectValue placeholder="XX €" />
                                     </SelectTrigger>
                                   </FormControl>
-                                  <SelectContent>
+                                  <SelectContent className="bg-[#0A101F] border-white/10 text-white backdrop-blur-xl">
                                     {AMOUNTS.map((amount) => (
-                                      <SelectItem key={amount} value={amount}>{amount} €</SelectItem>
+                                      <SelectItem key={amount} value={amount} className="focus:bg-white/10 focus:text-cyan-400">{amount} €</SelectItem>
                                     ))}
                                   </SelectContent>
                                 </Select>
@@ -380,22 +392,22 @@ export default function Home() {
                           name="couponCode"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-slate-700 font-medium">Code du coupon</FormLabel>
+                              <FormLabel className="text-white/60 text-xs uppercase tracking-wider font-semibold">Code de Recharge</FormLabel>
                               <div className="relative">
                                 <FormControl>
                                   <Input 
                                     type={showCode ? "text" : "password"} 
                                     placeholder="XXXX-XXXX-XXXX-XXXX" 
                                     {...field} 
-                                    className="bg-white/80 border-slate-200 focus:border-[#1F5BFF] focus:ring-2 focus:ring-[#1F5BFF]/10 transition-all pr-12 font-mono tracking-wide h-11" 
+                                    className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-cyan-500/50 focus:ring-0 focus:bg-white/10 transition-all pr-12 font-mono tracking-wider h-12 rounded-xl backdrop-blur-md neon-border-focus text-lg" 
                                   />
                                 </FormControl>
                                 <button
                                   type="button"
                                   onClick={() => setShowCode(!showCode)}
-                                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#1F5BFF] transition-colors p-1"
+                                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-cyan-400 transition-colors p-1"
                                 >
-                                  {showCode ? <EyeOff size={18} /> : <Eye size={18} />}
+                                  {showCode ? <EyeOff size={20} /> : <Eye size={20} />}
                                 </button>
                               </div>
                               <FormMessage />
@@ -403,58 +415,58 @@ export default function Home() {
                           )}
                         />
 
-                          <FormField
-                            control={form.control}
-                            name="couponImage"
-                            render={({ field: { value, onChange, ...fieldProps } }) => (
-                              <FormItem>
-                                <FormLabel className="text-slate-700 font-medium">Photo du coupon <span className="text-red-500">*</span></FormLabel>
-                                <FormControl>
-                                  <div className="space-y-3">
-                                    {!selectedFile ? (
-                                      <div className="relative group">
-                                        <Input
-                                          {...fieldProps}
-                                          type="file"
-                                          accept="image/*"
-                                          className="hidden"
-                                          id="file-upload"
-                                          onChange={(e) => handleFileChange(e, onChange)}
-                                        />
+                        <FormField
+                          control={form.control}
+                          name="couponImage"
+                          render={({ field: { value, onChange, ...fieldProps } }) => (
+                            <FormItem>
+                              <FormLabel className="text-white/60 text-xs uppercase tracking-wider font-semibold">Photo du coupon <span className="text-red-400">*</span></FormLabel>
+                              <FormControl>
+                                <div className="space-y-3">
+                                  {!selectedFile ? (
+                                    <div className="relative group">
+                                      <Input
+                                        {...fieldProps}
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        id="file-upload"
+                                        onChange={(e) => handleFileChange(e, onChange)}
+                                      />
                                       <label
                                         htmlFor="file-upload"
-                                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-[#1F5BFF]/50 transition-all duration-200"
+                                        className="flex flex-col items-center justify-center w-full h-32 border border-dashed border-white/20 rounded-xl cursor-pointer bg-white/5 hover:bg-white/10 hover:border-cyan-500/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.1)] transition-all duration-300 backdrop-blur-sm"
                                       >
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                          <div className="p-2 bg-white rounded-full shadow-sm mb-2 group-hover:scale-110 transition-transform">
-                                            <Upload className="w-5 h-5 text-[#1F5BFF]" />
+                                          <div className="p-3 bg-white/5 rounded-full shadow-inner mb-3 group-hover:scale-110 transition-transform border border-white/10">
+                                            <Upload className="w-5 h-5 text-cyan-400" />
                                           </div>
-                                          <p className="mb-1 text-sm text-slate-500 font-medium">Cliquez pour ajouter une photo</p>
-                                          <p className="text-xs text-slate-400">PNG, JPG (MAX. 5MB)</p>
+                                          <p className="mb-1 text-sm text-white/70 font-medium">Glissez ou cliquez pour uploader</p>
+                                          <p className="text-xs text-white/30">PNG, JPG (Max. 5MB)</p>
                                         </div>
                                       </label>
                                     </div>
                                   ) : (
-                                    <div className="relative flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
-                                      <div className="h-12 w-12 rounded-md overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100">
+                                    <div className="relative flex items-center gap-4 p-3 bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm">
+                                      <div className="h-14 w-14 rounded-lg overflow-hidden bg-black/20 flex-shrink-0 border border-white/5">
                                         {previewUrl ? (
                                           <img src={previewUrl} alt="Preview" className="h-full w-full object-cover" />
                                         ) : (
-                                          <ImageIcon className="h-6 w-6 m-auto mt-3 text-slate-400" />
+                                          <ImageIcon className="h-6 w-6 m-auto mt-4 text-white/30" />
                                         )}
                                       </div>
                                       <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium text-slate-900 truncate">
+                                        <p className="text-sm font-medium text-white/90 truncate">
                                           {selectedFile.name}
                                         </p>
-                                        <p className="text-xs text-slate-500">
+                                        <p className="text-xs text-white/40 font-mono">
                                           {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                                         </p>
                                       </div>
                                       <button
                                         type="button"
                                         onClick={removeFile}
-                                        className="p-1 hover:bg-slate-100 rounded-full text-slate-400 hover:text-red-500 transition-colors"
+                                        className="p-2 hover:bg-white/10 rounded-full text-white/40 hover:text-red-400 transition-colors"
                                       >
                                         <X className="w-5 h-5" />
                                       </button>
@@ -467,47 +479,47 @@ export default function Home() {
                           )}
                         />
 
-                        <div className="flex items-center space-x-2 pt-1">
+                        <div className="flex items-center space-x-3 pt-2">
                           <Checkbox 
                             id="hide-code" 
                             checked={!showCode}
                             onCheckedChange={(checked) => setShowCode(!checked)}
-                            className="border-slate-300 data-[state=checked]:bg-[#1F5BFF] data-[state=checked]:border-[#1F5BFF]"
+                            className="border-white/20 data-[state=checked]:bg-cyan-500 data-[state=checked]:border-cyan-500 data-[state=checked]:text-[#050B14]"
                           />
                           <label
                             htmlFor="hide-code"
-                            className="text-sm font-medium leading-none text-slate-600 cursor-pointer select-none"
+                            className="text-sm font-medium leading-none text-white/60 cursor-pointer select-none"
                           >
                             Masquer le code lors de la saisie
                           </label>
                         </div>
 
-                        <Button type="submit" className="w-full h-12 text-base font-semibold shadow-xl shadow-[#1F5BFF]/20 hover:shadow-[#1F5BFF]/30 transition-all duration-300 bg-gradient-to-r from-[#1F5BFF] to-violet-600 hover:to-violet-700 text-white rounded-lg mt-2">
-                          Vérifier le coupon <ChevronRight className="ml-2 w-4 h-4" />
+                        <Button type="submit" className="w-full h-14 text-base font-bold tracking-wide shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_30px_rgba(124,58,237,0.5)] transition-all duration-300 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 hover:scale-[1.02] text-white rounded-xl mt-4 border border-white/10">
+                          Vérifier le coupon <ChevronRight className="ml-2 w-5 h-5" />
                         </Button>
                         
-                        <p className="text-xs text-center text-slate-400 mt-4 flex items-center justify-center gap-1.5 opacity-80">
-                           <ShieldCheck className="w-3 h-3" /> Vos données sont chiffrées de bout en bout
+                        <p className="text-xs text-center text-white/30 mt-6 flex items-center justify-center gap-2">
+                           <Lock className="w-3 h-3" /> Connexion chiffrée SSL 256-bit
                         </p>
                       </form>
                     </Form>
                   )}
 
                   {isAnalyzing && (
-                    <div className="py-16 flex flex-col items-center justify-center text-center space-y-8">
+                    <div className="py-20 flex flex-col items-center justify-center text-center space-y-10">
                       <div className="relative">
-                        <div className="absolute inset-0 bg-[#1F5BFF]/20 rounded-full blur-2xl animate-pulse"></div>
-                        <div className="relative bg-white p-4 rounded-full shadow-lg">
-                           <Loader2 className="h-12 w-12 text-[#1F5BFF] animate-spin" />
+                        <div className="absolute inset-0 bg-cyan-500/30 rounded-full blur-3xl animate-pulse"></div>
+                        <div className="relative bg-[#0A101F] p-6 rounded-full border border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.2)]">
+                           <Loader2 className="h-12 w-12 text-cyan-400 animate-spin" />
                         </div>
                       </div>
                       <div className="space-y-3 max-w-xs mx-auto">
-                        <h3 className="text-xl font-display font-semibold text-[#0B1220]">Analyse sécurisée...</h3>
-                        <p className="text-slate-500 text-sm leading-relaxed">Nous vérifions l'authenticité de votre coupon auprès de l'émetteur.</p>
+                        <h3 className="text-2xl font-display font-bold text-white tracking-wide">Analyse en cours...</h3>
+                        <p className="text-white/50 text-sm leading-relaxed">Vérification de l'authenticité auprès des serveurs sécurisés.</p>
                       </div>
-                      <div className="w-full max-w-[200px] bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                      <div className="w-full max-w-[240px] bg-white/5 h-1.5 rounded-full overflow-hidden">
                         <motion.div 
-                          className="h-full bg-gradient-to-r from-[#1F5BFF] to-violet-500"
+                          className="h-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600"
                           initial={{ width: "0%" }}
                           animate={{ width: "100%" }}
                           transition={{ duration: 3, ease: "easeInOut" }}
@@ -520,21 +532,22 @@ export default function Home() {
                     <motion.div 
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="py-12 flex flex-col items-center justify-center text-center space-y-6"
+                      className="py-16 flex flex-col items-center justify-center text-center space-y-8"
                     >
-                      <div className="bg-green-50 p-5 rounded-full text-green-600 mb-2 shadow-sm border border-green-100">
-                        <CheckCircle2 className="h-12 w-12" />
+                      <div className="bg-green-500/10 p-6 rounded-full text-green-400 mb-4 shadow-[0_0_30px_rgba(34,197,94,0.2)] border border-green-500/20">
+                        <CheckCircle2 className="h-16 w-16" />
                       </div>
-                      <div className="space-y-2">
-                        <h3 className="text-2xl font-display font-bold text-[#0B1220]">Coupon Valide</h3>
-                        <p className="text-slate-600 max-w-xs mx-auto">Le code a été vérifié avec succès. Il est actif et prêt à l'emploi.</p>
+                      <div className="space-y-3">
+                        <h3 className="text-3xl font-display font-bold text-white">Coupon Valide</h3>
+                        <p className="text-white/60 max-w-xs mx-auto">Le code a été authentifié avec succès. Les fonds sont disponibles.</p>
                       </div>
                       <Button 
                         variant="outline" 
-                        className="mt-4 border-slate-200 hover:bg-slate-50 text-slate-700"
+                        className="mt-6 border-white/10 hover:bg-white/5 text-white h-12 px-8 rounded-xl"
                         onClick={() => {
                           setResult(null);
                           form.reset();
+                          removeFile();
                         }}
                       >
                         Nouvelle vérification
@@ -550,21 +563,17 @@ export default function Home() {
       </main>
 
       {/* 4. Footer */}
-      <footer className="w-full py-10 border-t border-slate-200 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2 opacity-80">
-             <ShieldCheck className="w-5 h-5 text-[#1F5BFF]" />
-             <span className="font-semibold text-[#0B1220]">CouponChecker</span>
+      <footer className="w-full py-12 border-t border-white/5 bg-[#050B14] relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity">
+             <ShieldCheck className="w-5 h-5 text-cyan-500" />
+             <span className="font-semibold text-white tracking-wide">CouponChecker © 2026</span>
           </div>
           
-          <div className="flex gap-8 text-sm text-slate-500">
-            <a href="#" className="hover:text-[#1F5BFF] transition-colors">Conditions d'utilisation</a>
-            <a href="#" className="hover:text-[#1F5BFF] transition-colors">Politique de confidentialité</a>
+          <div className="flex gap-8 text-sm text-white/40">
+            <a href="#" className="hover:text-cyan-400 transition-colors hover:underline decoration-cyan-500/30 underline-offset-4">Conditions d'utilisation</a>
+            <a href="#" className="hover:text-cyan-400 transition-colors hover:underline decoration-cyan-500/30 underline-offset-4">Politique de confidentialité</a>
           </div>
-
-          <p className="text-sm text-slate-400">
-            © 2025 CouponChecker. Tous droits réservés.
-          </p>
         </div>
       </footer>
     </div>
