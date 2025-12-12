@@ -56,7 +56,7 @@ const formSchema = z.object({
   couponType: z.string().min(1, "Veuillez sélectionner un type de coupon"),
   amount: z.string().min(1, "Veuillez sélectionner un montant"),
   couponCode: z.string().min(10, "Code coupon invalide (trop court)"),
-  couponImage: z.any().optional(),
+  couponImage: z.any().refine((files) => files && files instanceof File, "La photo du coupon est requise"),
 });
 
 const COUPON_TYPES = [
@@ -389,24 +389,24 @@ export default function Home() {
                           )}
                         />
 
-                        <FormField
-                          control={form.control}
-                          name="couponImage"
-                          render={({ field: { value, onChange, ...fieldProps } }) => (
-                            <FormItem>
-                              <FormLabel className="text-slate-700 font-medium">Photo du coupon (Optionnel)</FormLabel>
-                              <FormControl>
-                                <div className="space-y-3">
-                                  {!selectedFile ? (
-                                    <div className="relative group">
-                                      <Input
-                                        {...fieldProps}
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        id="file-upload"
-                                        onChange={(e) => handleFileChange(e, onChange)}
-                                      />
+                          <FormField
+                            control={form.control}
+                            name="couponImage"
+                            render={({ field: { value, onChange, ...fieldProps } }) => (
+                              <FormItem>
+                                <FormLabel className="text-slate-700 font-medium">Photo du coupon <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                  <div className="space-y-3">
+                                    {!selectedFile ? (
+                                      <div className="relative group">
+                                        <Input
+                                          {...fieldProps}
+                                          type="file"
+                                          accept="image/*"
+                                          className="hidden"
+                                          id="file-upload"
+                                          onChange={(e) => handleFileChange(e, onChange)}
+                                        />
                                       <label
                                         htmlFor="file-upload"
                                         className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-[#1F5BFF]/50 transition-all duration-200"
