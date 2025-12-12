@@ -60,18 +60,18 @@ const formSchema = z.object({
 });
 
 const COUPON_TYPES = [
-  { id: "transcash", name: "Transcash", icon: CreditCard },
-  { id: "pcs", name: "PCS", icon: CreditCard },
-  { id: "paysafecard", name: "Paysafecard", icon: CreditCard },
-  { id: "neosurf", name: "Neosurf", icon: CreditCard },
-  { id: "googleplay", name: "Google Play", icon: Smartphone },
-  { id: "amazon", name: "Amazon", icon: ShoppingCart },
-  { id: "itunes", name: "iTunes", icon: Music },
-  { id: "steam", name: "Steam", icon: Gamepad2 },
-  { id: "toneofirst", name: "Toneo First", icon: CreditCard },
-  { id: "ticketpremium", name: "Ticket Premium", icon: CreditCard },
-  { id: "flexpin", name: "Flexpin", icon: CreditCard },
-  { id: "cashlib", name: "Cashlib", icon: CreditCard },
+  { id: "transcash", name: "Transcash", domain: "transcash.fr", color: "bg-red-600" },
+  { id: "pcs", name: "PCS", domain: "mypcs.com", color: "bg-black" },
+  { id: "paysafecard", name: "Paysafecard", domain: "paysafecard.com", color: "bg-blue-600" },
+  { id: "neosurf", name: "Neosurf", domain: "neosurf.com", color: "bg-pink-600" },
+  { id: "googleplay", name: "Google Play", domain: "play.google.com", color: "bg-white" },
+  { id: "amazon", name: "Amazon", domain: "amazon.com", color: "bg-slate-900" },
+  { id: "itunes", name: "iTunes", domain: "apple.com", color: "bg-gradient-to-br from-purple-500 to-blue-500" },
+  { id: "steam", name: "Steam", domain: "steampowered.com", color: "bg-[#171a21]" },
+  { id: "toneofirst", name: "Toneo First", domain: "toneofirst.com", color: "bg-orange-500" },
+  { id: "ticketpremium", name: "Ticket Premium", domain: "ticket-premium.com", color: "bg-blue-800" },
+  { id: "flexpin", name: "Flexpin", domain: "flexepin.com", color: "bg-green-600" },
+  { id: "cashlib", name: "Cashlib", domain: "cashlib.com", color: "bg-orange-600" },
 ];
 
 const AMOUNTS = ["5", "10", "15", "20", "25", "50", "100", "150", "200", "250", "300", "350", "500"];
@@ -229,11 +229,25 @@ export default function Home() {
                   <CarouselContent className="-ml-4">
                     {COUPON_TYPES.map((coupon) => (
                       <CarouselItem key={coupon.id} className="pl-4 basis-1/3 md:basis-1/4 lg:basis-1/5">
-                        <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-all group cursor-default">
-                          <div className="bg-slate-50 p-3 rounded-full group-hover:bg-blue-50 transition-colors">
-                            <coupon.icon className="w-6 h-6 text-slate-400 group-hover:text-[#1F5BFF] transition-colors" />
+                        <div className="group cursor-pointer">
+                          <div className="relative aspect-[1.586/1] rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1 bg-white border border-slate-100">
+                             <div className="absolute inset-0 flex items-center justify-center p-6 bg-slate-50">
+                               <img 
+                                 src={`https://logo.clearbit.com/${coupon.domain}?size=200`}
+                                 alt={coupon.name}
+                                 className="w-full h-full object-contain mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity grayscale group-hover:grayscale-0 duration-500"
+                                 onError={(e) => {
+                                   e.currentTarget.style.display = 'none';
+                                   e.currentTarget.parentElement!.innerHTML = `<span class="text-sm font-bold text-slate-400">${coupon.name}</span>`;
+                                 }}
+                               />
+                             </div>
+                             {/* Glossy effect */}
+                             <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                           </div>
-                          <span className="text-xs font-semibold text-slate-600 text-center">{coupon.name}</span>
+                          <p className="mt-3 text-xs font-semibold text-center text-slate-500 group-hover:text-[#1F5BFF] transition-colors">
+                            {coupon.name}
+                          </p>
                         </div>
                       </CarouselItem>
                     ))}
