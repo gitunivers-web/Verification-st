@@ -598,7 +598,7 @@ export default function Home() {
         </section>
 
         {/* 4. Technologie */}
-        <section className="py-12 sm:py-24 relative bg-slate-50">
+        <section id="securite" className="py-12 sm:py-24 relative bg-slate-50">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex flex-col lg:flex-row items-center gap-8 sm:gap-16">
               <div className="flex-1 space-y-4 sm:space-y-8">
@@ -746,7 +746,7 @@ export default function Home() {
         </section>
 
         {/* 6. FAQ */}
-        <section className="py-12 sm:py-24 bg-slate-50">
+        <section id="support" className="py-12 sm:py-24 bg-slate-50">
           <div className="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
             <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 mb-8 sm:mb-12 text-center">Questions Fréquentes</h2>
             <Accordion type="single" collapsible className="space-y-4">
