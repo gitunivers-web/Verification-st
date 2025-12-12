@@ -1,0 +1,177 @@
+PROMPT :
+
+Crée une landing page ultra-complète, futuriste, 2025–2026, en HTML5 + CSS3 + JS, inspirée de l’esthétique VisionOS / Revolut / Nothing.tech / Stripe.
+Le design doit être spectaculaire, élégant, professionnel et immersif.
+
+🎨 STYLE GÉNÉRAL OBLIGATOIRE
+
+Couleurs néon (bleu → violet → rose) + noir profond
+
+Glassmorphism et effets holographiques
+
+Blobs lumineux en arrière-plan
+
+Slider avec images HD
+
+Typographie moderne : Inter / Satoshi
+
+Animation fluide, micro-interactions
+
+UI futuriste mais corporative (fintech)
+
+Haute lisibilité + design premium
+
+🏆 STRUCTURE DEMANDÉE
+1️⃣ Header :
+
+Transparent, glass-blur, lumineux
+
+Logo “CouponChecker” futuriste
+
+Menu :
+“Comment ça marche” – “Sécurité” – “Émetteurs compatibles” – “Support”
+
+2️⃣ HERO SECTION (CONTENU TRÈS RICHE)
+Le hero doit comporter :
+👉 UN SLIDER D’IMAGES HD
+
+Des images défilantes de coupons, cartes prépayées, patterns sci-fi, holographiques, etc.
+Animations douces, fondu, embruns lumineux.
+
+👉 UN TITRE FORT
+
+“Vérifiez vos coupons instantanément, avec la technologie de validation la plus avancée.”
+
+👉 SOUS-TITRE LONG (EXEMPLE :)
+
+“CouponChecker utilise un moteur d’analyse intelligent combinant IA, détection de fraude, vérification cryptographique et analyse visuelle haute précision. Une solution de confiance adoptée par des milliers d’utilisateurs pour authentifier leurs coupons Transcash, PCS, Neosurf, Paysafecard et bien d’autres en quelques secondes.”
+
+👉 LISTE DES AVANTAGES
+
+Vérification instantanée
+
+Analyse visuelle IA du coupon
+
+Protection biométrique
+
+Résultats certifiés
+
+Compatible avec tous les émetteurs majeurs
+
+Aucune donnée stockée – confidentialité totale
+
+👉 CARROUSEL DE COUPONS AVEC GLOW
+
+Types :
+Transcash, PCS, Neosurf, Paysafecard, Toneo, Amazon, Google Play, Steam, Apple, Ticket Premium, Flexpin, Cashlib, Crypto Vouchers, Razer Gold…
+
+👉 CTA et texte rassurant
+
+Bouton : “Vérifier un coupon maintenant”
+Sous-texte : “Vérification chiffrée SSL 256-bit – Conforme RGPD”
+
+3️⃣ SECTION : COMMENT ÇA MARCHE (PASSE 3 ÉTAPES)
+
+Un bloc moderne avec icônes lumineuses :
+
+Téléversez votre coupon (photo ou code)
+
+Analyse IA + validation cryptographique
+
+Résultat instantané (valide / déjà utilisé / incohérence)
+
+Chaque étape doit avoir une animation (fade-up).
+
+4️⃣ SECTION : TECHNOLOGIE UTILISÉE
+
+Texte riche incluant :
+
+IA d’analyse textuelle
+
+Vérification des patterns de série
+
+Analyse d’image (OCR avancé)
+
+Modèle anti-fraude
+
+Système propriétaire de reconstruction de codes
+
+Réseau de validation multi-API
+
+Bloc futuriste avec effet holographique + icônes.
+
+5️⃣ SECTION : SÉCURITÉ & CONFORMITÉ
+
+Long paragraphe + liste :
+
+Chiffrement SSL 256-bit
+
+Suppression automatique des données
+
+Protection anti-hameçonnage
+
+Système certifié RGPD
+
+Aucun stockage des photos ou codes
+
+Isolation sandbox
+
+Système anti-bot et anti-spam
+
+6️⃣ SECTION : ÉMETTEURS COMPATIBLES
+
+Liste complète, organisée en catégories :
+
+🎮 Gaming
+
+Steam, Playstation, Xbox, Razer Gold…
+
+💳 Paiement prépayé
+
+Transcash, PCS, Toneo, Neosurf, Cashlib, Flexpin…
+
+🛍 Cartes cadeaux
+
+Amazon, Google Play, Apple, Zalando, Ikea…
+
+🎥 Divertissement
+
+Netflix, Spotify, Disney+…
+
+Avec icônes + blocs glassmorphism.
+
+7️⃣ FAQ futuriste
+
+Avec questions / réponses animées (accordéon) :
+
+Pourquoi vérifier mon coupon ?
+
+Combien de temps prend la vérification ?
+
+Est-ce anonyme ?
+
+Quelle précision ?
+
+Est-ce compatible avec tous les coupons ?
+
+Comment mes données sont-elles protégées ?
+
+8️⃣ FOOTER COMPLET
+
+Avec liens, crédits, copyright, mentions légales, mail support, etc.
+
+⚙️ TECHNIQUE
+
+HTML5 + CSS3 moderne
+
+JS pour sliders, animations, accordéons
+
+Sections bien espacées
+
+Effets visuels maîtrisés
+
+Code propre et organisé
+
+🎯 OBJECTIF
+
+Produire un site complet, immersif, futuriste, riche en contenu**, visuellement impressionnant, digne d’une fintech 2026 haut de gamme.
