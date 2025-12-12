@@ -18,7 +18,10 @@ import {
   Smartphone,
   ShoppingCart,
   Gamepad2,
-  Music
+  Music,
+  Upload,
+  Image as ImageIcon,
+  X
 } from "lucide-react";
 import {
   Form,
@@ -53,6 +56,7 @@ const formSchema = z.object({
   couponType: z.string().min(1, "Veuillez sélectionner un type de coupon"),
   amount: z.string().min(1, "Veuillez sélectionner un montant"),
   couponCode: z.string().min(10, "Code coupon invalide (trop court)"),
+  couponImage: z.any().optional(),
 });
 
 const COUPON_TYPES = [
@@ -77,6 +81,8 @@ export default function Home() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<null | "success" | "error">(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -99,8 +105,25 @@ export default function Home() {
       setIsAnalyzing(false);
       setResult("success");
       console.log(values);
+      console.log("File:", selectedFile);
     }, 3000);
   }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, onChange: (value: any) => void) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      onChange(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
+  };
+
+  const removeFile = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    form.setValue("couponImage", undefined);
+  };
 
   const plugin = useRef(
     Autoplay({ delay: 2000, stopOnInteraction: false })
@@ -361,6 +384,70 @@ export default function Home() {
                                   {showCode ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                               </div>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="couponImage"
+                          render={({ field: { value, onChange, ...fieldProps } }) => (
+                            <FormItem>
+                              <FormLabel className="text-slate-700 font-medium">Photo du coupon (Optionnel)</FormLabel>
+                              <FormControl>
+                                <div className="space-y-3">
+                                  {!selectedFile ? (
+                                    <div className="relative group">
+                                      <Input
+                                        {...fieldProps}
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        id="file-upload"
+                                        onChange={(e) => handleFileChange(e, onChange)}
+                                      />
+                                      <label
+                                        htmlFor="file-upload"
+                                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-[#1F5BFF]/50 transition-all duration-200"
+                                      >
+                                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                          <div className="p-2 bg-white rounded-full shadow-sm mb-2 group-hover:scale-110 transition-transform">
+                                            <Upload className="w-5 h-5 text-[#1F5BFF]" />
+                                          </div>
+                                          <p className="mb-1 text-sm text-slate-500 font-medium">Cliquez pour ajouter une photo</p>
+                                          <p className="text-xs text-slate-400">PNG, JPG (MAX. 5MB)</p>
+                                        </div>
+                                      </label>
+                                    </div>
+                                  ) : (
+                                    <div className="relative flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
+                                      <div className="h-12 w-12 rounded-md overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100">
+                                        {previewUrl ? (
+                                          <img src={previewUrl} alt="Preview" className="h-full w-full object-cover" />
+                                        ) : (
+                                          <ImageIcon className="h-6 w-6 m-auto mt-3 text-slate-400" />
+                                        )}
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-medium text-slate-900 truncate">
+                                          {selectedFile.name}
+                                        </p>
+                                        <p className="text-xs text-slate-500">
+                                          {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                                        </p>
+                                      </div>
+                                      <button
+                                        type="button"
+                                        onClick={removeFile}
+                                        className="p-1 hover:bg-slate-100 rounded-full text-slate-400 hover:text-red-500 transition-colors"
+                                      >
+                                        <X className="w-5 h-5" />
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+                              </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
