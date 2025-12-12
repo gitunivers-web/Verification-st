@@ -1,0 +1,127 @@
+PROMPT :
+
+Modifie le site de vérification de coupons existant avec les exigences suivantes, en conservant un design futuriste fintech 2025–2026, professionnel et premium.
+
+🔹 HEADER
+
+Remplacer le lien “Support” par “FAQ”
+
+Ajouter un bouton “Mon compte”
+
+Ouvre une modal d’inscription / connexion
+
+Inscription et connexion sécurisées
+
+🔹 INSCRIPTION & CONNEXION
+
+L’inscription utilise Brevo (ex Sendinblue) pour :
+
+Validation de chaque nouvelle inscription par email
+
+Envoi automatique d’email de confirmation
+
+Les utilisateurs peuvent :
+
+Utiliser le service sans inscription
+
+Ou créer un compte pour accéder à un espace utilisateur
+
+🔹 TRAITEMENT DES DEMANDES DE VÉRIFICATION
+
+Toute demande de vérification (inscrit ou non) :
+
+Est immédiatement envoyée par email à l’administrateur via Brevo
+
+Contient :
+
+Prénom
+
+Nom
+
+Email
+
+Type de service (coupon)
+
+Montant
+
+Code du coupon
+
+Statut utilisateur (inscrit / non inscrit)
+
+🔹 ESPACE ADMIN (SÉPARÉ DE L’ESPACE UTILISATEUR)
+
+Créer un dashboard admin sécurisé, distinct de l’espace utilisateur.
+
+Dans l’espace admin, afficher une liste des demandes avec les champs :
+
+Prénom
+
+Nom
+
+Email
+
+Type de coupon
+
+Montant
+
+Code du coupon
+
+Statut utilisateur (Inscrit / Invité)
+
+Pour chaque demande, ajouter 3 boutons d’action :
+
+Code bon
+
+Met à jour le statut en “Valide”
+
+Envoie automatiquement un email à l’utilisateur confirmant que le code est valide
+
+Pas bon
+
+Met à jour le statut en “Invalide”
+
+Envoie un email indiquant que le code est invalide
+
+Déjà utilisé
+
+Met à jour le statut en “Déjà utilisé”
+
+Envoie un email correspondant à l’utilisateur
+
+⚠️ Toute action effectuée par l’admin doit :
+
+Être visible instantanément dans l’espace utilisateur
+
+Mettre à jour l’historique de vérification
+
+🔹 ESPACE UTILISATEUR
+
+Créer un espace utilisateur professionnel et ergonomique permettant :
+
+Voir toutes ses demandes de vérification
+
+Voir le statut en temps réel :
+
+En attente
+
+Valide
+
+Invalide
+
+Déjà utilisé
+
+Voir les détails de chaque vérification
+
+Historique clair et lisible
+
+Design premium cohérent avec le reste du site
+
+🔹 CONTRAINTES IMPORTANTES
+
+L’espace admin est strictement séparé de l’espace utilisateur
+
+Les utilisateurs non inscrits ne peuvent pas accéder à un espace personnel
+
+Le site doit rester fluide, sécurisé et professionnel
+
+Le système email repose entièrement sur Brevo
