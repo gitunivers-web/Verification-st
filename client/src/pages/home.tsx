@@ -35,6 +35,10 @@ import {
   Mail,
   ArrowRight
 } from "lucide-react";
+import novaLogo from "@assets/generated_images/novaverify_professional_logo_design.png";
+import heroImage1 from "@assets/stock_images/credit_card_payment__9162d98f.jpg";
+import heroImage2 from "@assets/stock_images/credit_card_payment__13f28455.jpg";
+import heroImage3 from "@assets/stock_images/credit_card_payment__468a23e0.jpg";
 import {
   Form,
   FormControl,
@@ -69,24 +73,24 @@ import {
 // --- Data & Constants ---
 
 const COUPON_TYPES = [
-  { id: "transcash", name: "Transcash", domain: "transcash.fr", color: "from-red-50 to-red-100", category: "payment" },
-  { id: "pcs", name: "PCS", domain: "mypcs.com", color: "from-slate-50 to-slate-200", category: "payment" },
-  { id: "paysafecard", name: "Paysafecard", domain: "paysafecard.com", color: "from-blue-50 to-blue-100", category: "payment" },
-  { id: "neosurf", name: "Neosurf", domain: "neosurf.com", color: "from-pink-50 to-rose-100", category: "payment" },
-  { id: "googleplay", name: "Google Play", domain: "play.google.com", color: "from-emerald-50 to-emerald-100", category: "gift" },
-  { id: "amazon", name: "Amazon", domain: "amazon.com", color: "from-orange-50 to-orange-100", category: "gift" },
-  { id: "itunes", name: "iTunes", domain: "apple.com", color: "from-blue-50 to-purple-100", category: "gift" },
-  { id: "steam", name: "Steam", domain: "steampowered.com", color: "from-slate-100 to-slate-300", category: "gaming" },
-  { id: "toneofirst", name: "Toneo First", domain: "toneofirst.com", color: "from-orange-50 to-orange-100", category: "payment" },
-  { id: "ticketpremium", name: "Ticket Premium", domain: "ticket-premium.com", color: "from-blue-50 to-indigo-100", category: "payment" },
-  { id: "flexpin", name: "Flexpin", domain: "flexepin.com", color: "from-green-50 to-teal-100", category: "payment" },
-  { id: "cashlib", name: "Cashlib", domain: "cashlib.com", color: "from-amber-50 to-orange-100", category: "payment" },
-  { id: "netflix", name: "Netflix", domain: "netflix.com", color: "from-red-50 to-red-100", category: "entertainment" },
-  { id: "spotify", name: "Spotify", domain: "spotify.com", color: "from-green-50 to-green-100", category: "entertainment" },
-  { id: "razer", name: "Razer Gold", domain: "razer.com", color: "from-green-50 to-green-100", category: "gaming" },
-  { id: "xbox", name: "Xbox", domain: "xbox.com", color: "from-green-50 to-green-100", category: "gaming" },
-  { id: "playstation", name: "PlayStation", domain: "playstation.com", color: "from-blue-50 to-indigo-100", category: "gaming" },
-  { id: "zalando", name: "Zalando", domain: "zalando.com", color: "from-orange-50 to-orange-100", category: "gift" },
+  { id: "transcash", name: "Transcash", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/200px-Mastercard-logo.svg.png", color: "from-red-50 to-red-100", category: "payment" },
+  { id: "pcs", name: "PCS Mastercard", logoUrl: "https://www.mypcs.fr/sites/default/files/inline-images/logo-pcs.png", color: "from-slate-50 to-slate-200", category: "payment" },
+  { id: "paysafecard", name: "Paysafecard", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/PaysafeCard_Logo_2024.svg/300px-PaysafeCard_Logo_2024.svg.png", color: "from-blue-50 to-blue-100", category: "payment" },
+  { id: "neosurf", name: "Neosurf", logoUrl: "https://www.neosurf.com/themes/custom/neosurf/logo.svg", color: "from-pink-50 to-rose-100", category: "payment" },
+  { id: "googleplay", name: "Google Play", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/200px-Google_Play_Store_badge_EN.svg.png", color: "from-emerald-50 to-emerald-100", category: "gift" },
+  { id: "amazon", name: "Amazon", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png", color: "from-orange-50 to-orange-100", category: "gift" },
+  { id: "itunes", name: "iTunes", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/ITunes_logo.svg/200px-ITunes_logo.svg.png", color: "from-blue-50 to-purple-100", category: "gift" },
+  { id: "steam", name: "Steam", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/200px-Steam_icon_logo.svg.png", color: "from-slate-100 to-slate-300", category: "gaming" },
+  { id: "toneofirst", name: "Toneo First", logoUrl: "https://www.toneofirst.com/templates/yootheme/cache/toneo-logo-9f3c80d6.png", color: "from-orange-50 to-orange-100", category: "payment" },
+  { id: "ticketpremium", name: "Ticket Premium", logoUrl: "https://www.ticket-premium.com/images/logo-ticket-premium.svg", color: "from-blue-50 to-indigo-100", category: "payment" },
+  { id: "flexpin", name: "Flexepin", logoUrl: "https://www.flexepin.com/assets/flexepin_logo.svg", color: "from-green-50 to-teal-100", category: "payment" },
+  { id: "cashlib", name: "Cashlib", logoUrl: "https://www.cashlib.com/themes/custom/cashlib/images/cashlib-logo.svg", color: "from-amber-50 to-orange-100", category: "payment" },
+  { id: "netflix", name: "Netflix", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/200px-Netflix_2015_logo.svg.png", color: "from-red-50 to-red-100", category: "entertainment" },
+  { id: "spotify", name: "Spotify", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/200px-Spotify_logo_without_text.svg.png", color: "from-green-50 to-green-100", category: "entertainment" },
+  { id: "razer", name: "Razer Gold", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Razer_Snake_Logo.svg/200px-Razer_Snake_Logo.svg.png", color: "from-green-50 to-green-100", category: "gaming" },
+  { id: "xbox", name: "Xbox", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/200px-Xbox_one_logo.svg.png", color: "from-green-50 to-green-100", category: "gaming" },
+  { id: "playstation", name: "PlayStation", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/PlayStation_logo.svg/200px-PlayStation_logo.svg.png", color: "from-blue-50 to-indigo-100", category: "gaming" },
+  { id: "zalando", name: "Zalando", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Zalando_logo.svg/200px-Zalando_logo.svg.png", color: "from-orange-50 to-orange-100", category: "gift" },
 ];
 
 const AMOUNTS = ["10", "20", "50", "100", "150", "200", "250", "300", "500"];
@@ -199,37 +203,44 @@ export default function Home() {
         <div className="absolute top-[40%] left-[20%] w-[400px] h-[400px] bg-cyan-400/10 rounded-full blur-[80px] mix-blend-multiply"></div>
       </div>
 
-      {/* 1. Header */}
-      <header className="fixed top-0 w-full z-50 transition-all duration-300 border-b border-slate-200/60 bg-white/80 backdrop-blur-xl">
+      {/* 1. Header - Ultra Professional */}
+      <header className="fixed top-0 w-full z-50 transition-all duration-300 border-b border-slate-200/40 bg-white/95 backdrop-blur-2xl shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3 group cursor-pointer">
+          <div className="flex items-center gap-4 group cursor-pointer" data-testid="link-logo">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition-opacity"></div>
-              <div className="relative bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
-                <ShieldCheck className="w-6 h-6 text-blue-600" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-600 to-blue-500 rounded-xl blur-md opacity-30 group-hover:opacity-50 transition-all duration-500"></div>
+              <div className="relative">
+                <img src={novaLogo} alt="NovaVerify" className="h-12 w-12 object-contain rounded-xl" />
               </div>
             </div>
-            <span className="font-display font-bold text-xl tracking-tight text-slate-900">
-              CouponChecker
-            </span>
+            <div className="flex flex-col">
+              <span className="font-display font-bold text-2xl tracking-tight bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 bg-clip-text text-transparent">
+                NovaVerify
+              </span>
+              <span className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">
+                Verification Platform
+              </span>
+            </div>
           </div>
 
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+          <nav className="hidden md:flex items-center gap-10 text-sm font-semibold text-slate-600">
             {["Comment ça marche", "Sécurité", "Émetteurs", "Support"].map((item) => (
               <a 
                 key={item} 
                 href={`#${item.toLowerCase().replace(/\s+/g, '-').replace(/[éè]/g, 'e')}`} 
-                className="hover:text-blue-600 transition-all hover:scale-105 relative py-1"
+                className="hover:text-blue-600 transition-all relative py-1 group/link"
+                data-testid={`link-${item.toLowerCase().replace(/\s+/g, '-')}`}
               >
                 {item}
-                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 group-hover/link:w-full"></span>
               </a>
             ))}
           </nav>
 
           <button 
-            className="md:hidden p-2 text-slate-600 hover:text-blue-600 transition-colors"
+            className="md:hidden p-2 text-slate-600 hover:text-blue-600 transition-colors rounded-lg hover:bg-slate-50"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            data-testid="button-mobile-menu"
           >
             <Menu className="w-6 h-6" />
           </button>
@@ -238,8 +249,45 @@ export default function Home() {
 
       <main className="relative z-10 pt-28">
         
-        {/* 2. Hero Section */}
+        {/* 2. Hero Section with Image Carousel */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 lg:mb-32">
+          {/* Hero Images Carousel - Full width above content */}
+          <div className="w-full mb-16">
+            <Carousel
+              opts={{ align: "center", loop: true }}
+              plugins={[useRef(Autoplay({ delay: 4000, stopOnInteraction: false })).current]}
+              className="w-full"
+            >
+              <CarouselContent>
+                {[heroImage1, heroImage2, heroImage3].map((img, idx) => (
+                  <CarouselItem key={idx}>
+                    <div className="relative h-[400px] lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
+                      <img 
+                        src={img} 
+                        alt={`NovaVerify Hero ${idx + 1}`} 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-blue-900/60 to-purple-900/80 flex items-center justify-center">
+                        <div className="text-center text-white px-6">
+                          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 drop-shadow-lg">
+                            {idx === 0 && "Vérification Sécurisée"}
+                            {idx === 1 && "Technologie IA Avancée"}
+                            {idx === 2 && "Protection Maximale"}
+                          </h2>
+                          <p className="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto drop-shadow">
+                            {idx === 0 && "Validez instantanément tous vos coupons prépayés"}
+                            {idx === 1 && "Détection de fraude en temps réel par intelligence artificielle"}
+                            {idx === 2 && "Vos données chiffrées de bout en bout"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          </div>
+
           <div className="flex flex-col lg:flex-row items-start gap-16 lg:gap-24">
             
             {/* Left: Content & Slider */}
@@ -262,7 +310,7 @@ export default function Home() {
                 </h1>
                 
                 <p className="text-lg text-slate-600 leading-relaxed max-w-xl mb-12 font-light">
-                  CouponChecker utilise un moteur d’analyse intelligent combinant IA, détection de fraude, vérification cryptographique et analyse visuelle haute précision. Une solution de confiance adoptée par des milliers d’utilisateurs.
+                  NovaVerify utilise un moteur d’analyse intelligent combinant IA, détection de fraude, vérification cryptographique et analyse visuelle haute précision. Une solution de confiance adoptée par des milliers d’utilisateurs.
                 </p>
 
                 {/* Benefits Grid */}
@@ -300,12 +348,11 @@ export default function Home() {
                                
                                <div className="absolute inset-0 flex items-center justify-center p-5 z-10">
                                  <img 
-                                   src={`https://logo.clearbit.com/${coupon.domain}?size=200`}
+                                   src={coupon.logoUrl}
                                    alt={coupon.name}
-                                   className="w-full h-full object-contain opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 mix-blend-multiply"
+                                   className="w-full h-full object-contain opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
                                    onError={(e) => {
-                                     e.currentTarget.style.display = 'none';
-                                     e.currentTarget.parentElement!.innerHTML = `<span class="text-sm font-bold text-slate-700 tracking-wider">${coupon.name}</span>`;
+                                     e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%23333" font-size="14" font-weight="bold">' + coupon.name + '</text></svg>';
                                    }}
                                  />
                                </div>
@@ -394,9 +441,37 @@ export default function Home() {
 
                           <FormField control={form.control} name="couponCode" render={({ field }) => (
                             <FormItem>
+                              <FormLabel className="text-slate-700 text-sm font-semibold flex items-center justify-between">
+                                <span>Code du Coupon</span>
+                                <button 
+                                  type="button" 
+                                  onClick={() => setShowCode(!showCode)} 
+                                  className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                                  data-testid="button-toggle-code"
+                                >
+                                  {showCode ? (
+                                    <>
+                                      <EyeOff size={14} />
+                                      <span>Cacher le code</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Eye size={14} />
+                                      <span>Afficher le code</span>
+                                    </>
+                                  )}
+                                </button>
+                              </FormLabel>
                               <div className="relative">
-                                <FormControl><Input type={showCode ? "text" : "password"} placeholder="Code du coupon" {...field} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all pr-10 font-mono tracking-widest" /></FormControl>
-                                <button type="button" onClick={() => setShowCode(!showCode)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 p-1">{showCode ? <EyeOff size={18} /> : <Eye size={18} />}</button>
+                                <FormControl>
+                                  <Input 
+                                    type={showCode ? "text" : "password"} 
+                                    placeholder="Entrez le code de votre coupon" 
+                                    {...field} 
+                                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
+                                    data-testid="input-coupon-code"
+                                  />
+                                </FormControl>
                               </div>
                               <FormMessage />
                             </FormItem>
@@ -529,9 +604,16 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {filteredCoupons.map((coupon) => (
-                <div key={coupon.id} className="group p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-200 hover:bg-white hover:shadow-lg transition-all cursor-pointer text-center">
-                   <div className="w-12 h-12 mx-auto mb-3 bg-white rounded-full p-2 flex items-center justify-center shadow-sm border border-slate-100">
-                     <img src={`https://logo.clearbit.com/${coupon.domain}`} className="w-full h-full object-contain" onError={(e) => e.currentTarget.style.display='none'} />
+                <div key={coupon.id} className="group p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-200 hover:bg-white hover:shadow-lg transition-all cursor-pointer text-center" data-testid={`card-coupon-${coupon.id}`}>
+                   <div className="w-16 h-16 mx-auto mb-3 bg-white rounded-xl p-2 flex items-center justify-center shadow-sm border border-slate-100">
+                     <img 
+                       src={coupon.logoUrl} 
+                       alt={coupon.name}
+                       className="w-full h-full object-contain" 
+                       onError={(e) => {
+                         e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%23333" font-size="10" font-weight="bold">' + coupon.name + '</text></svg>';
+                       }}
+                     />
                    </div>
                    <p className="text-xs font-medium text-slate-600 group-hover:text-blue-600">{coupon.name}</p>
                 </div>
@@ -561,8 +643,8 @@ export default function Home() {
             <div className="grid md:grid-cols-4 gap-12 mb-12">
               <div className="col-span-1 md:col-span-2">
                 <div className="flex items-center gap-3 mb-6">
-                  <ShieldCheck className="w-6 h-6 text-blue-600" />
-                  <span className="font-bold text-xl text-slate-900">CouponChecker</span>
+                  <img src={novaLogo} alt="NovaVerify" className="h-10 w-10 object-contain" />
+                  <span className="font-bold text-2xl bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 bg-clip-text text-transparent">NovaVerify</span>
                 </div>
                 <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
                   La référence mondiale pour la vérification sécurisée de titres prépayés. Technologie certifiée ISO 27001.
@@ -586,7 +668,7 @@ export default function Home() {
               </div>
             </div>
             <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-xs text-slate-400">© 2026 CouponChecker Inc. Tous droits réservés.</p>
+              <p className="text-xs text-slate-400">© 2026 NovaVerify Inc. Tous droits réservés.</p>
               <div className="flex gap-4">
                  {/* Social Icons Placeholder */}
                  <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center hover:bg-blue-50 transition-colors cursor-pointer"><Globe className="w-4 h-4 text-slate-500" /></div>
