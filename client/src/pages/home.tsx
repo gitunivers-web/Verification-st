@@ -221,7 +221,7 @@ export default function Home() {
           </div>
 
           <nav className="hidden md:flex items-center gap-10 text-sm font-semibold text-slate-600">
-            {["Comment ça marche", "Sécurité", "Émetteurs", "Support"].map((item) => (
+            {["Comment ça marche", "Sécurité", "Émetteurs", "FAQ"].map((item) => (
               <a 
                 key={item} 
                 href={`#${item.toLowerCase().replace(/\s+/g, '-').replace(/[éè]/g, 'e').replace(/ç/g, 'c')}`} 
@@ -242,6 +242,32 @@ export default function Home() {
             <Menu className="w-6 h-6" />
           </button>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-slate-200/40 bg-white/95 backdrop-blur-2xl"
+            >
+              <nav className="flex flex-col px-4 py-4 space-y-1">
+                {["Comment ça marche", "Sécurité", "Émetteurs", "FAQ"].map((item) => (
+                  <a
+                    key={item}
+                    href={`#${item.toLowerCase().replace(/\s+/g, '-').replace(/[éè]/g, 'e').replace(/ç/g, 'c')}`}
+                    className="px-4 py-3 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-slate-50 rounded-lg transition-all"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    data-testid={`link-mobile-${item.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    {item}
+                  </a>
+                ))}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       <main className="relative z-10 pt-28">
@@ -746,7 +772,7 @@ export default function Home() {
         </section>
 
         {/* 6. FAQ */}
-        <section id="support" className="py-12 sm:py-24 bg-slate-50">
+        <section id="faq" className="py-12 sm:py-24 bg-slate-50">
           <div className="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
             <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 mb-8 sm:mb-12 text-center">Questions Fréquentes</h2>
             <Accordion type="single" collapsible className="space-y-4">
