@@ -247,26 +247,26 @@ export default function Home() {
       <main className="relative z-10 pt-28">
         
         {/* 2. Hero Section - Futuristic Tech Design */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 lg:mb-32">
+        <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mb-16 sm:mb-24 lg:mb-32">
           {/* Tech Hero Banner */}
-          <div className="w-full mb-16 relative">
-            <div className="relative h-[400px] lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-900 via-blue-950 to-purple-950">
+          <div className="w-full mb-8 sm:mb-16 relative">
+            <div className="relative h-[320px] sm:h-[400px] lg:h-[500px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-900 via-blue-950 to-purple-950">
               {/* Animated Grid Background */}
               <div className="absolute inset-0 opacity-30">
                 <div className="absolute inset-0" style={{
                   backgroundImage: `linear-gradient(rgba(59, 130, 246, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)`,
-                  backgroundSize: '60px 60px',
+                  backgroundSize: '40px 40px',
                   animation: 'grid-move 20s linear infinite'
                 }}></div>
               </div>
               
-              {/* Floating Orbs */}
-              <div className="absolute top-20 left-[20%] w-32 h-32 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
-              <div className="absolute bottom-20 right-[20%] w-40 h-40 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-              <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+              {/* Floating Orbs - smaller on mobile */}
+              <div className="absolute top-10 sm:top-20 left-[10%] sm:left-[20%] w-20 sm:w-32 h-20 sm:h-32 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-10 sm:bottom-20 right-[10%] sm:right-[20%] w-24 sm:w-40 h-24 sm:h-40 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+              <div className="absolute top-1/2 left-1/2 w-32 sm:w-48 h-32 sm:h-48 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
               
-              {/* Code Matrix Effect - Left Side */}
-              <div className="absolute left-8 top-8 bottom-8 w-48 opacity-40 overflow-hidden font-mono text-xs text-green-400/60 leading-relaxed pointer-events-none">
+              {/* Code Matrix Effect - Hidden on small mobile, visible on sm+ */}
+              <div className="hidden sm:block absolute left-4 lg:left-8 top-8 bottom-8 w-32 lg:w-48 opacity-40 overflow-hidden font-mono text-[10px] lg:text-xs text-green-400/60 leading-relaxed pointer-events-none">
                 <div className="animate-code-scroll">
                   {Array.from({ length: 30 }).map((_, i) => (
                     <div key={i} className="whitespace-nowrap">
@@ -276,8 +276,8 @@ export default function Home() {
                 </div>
               </div>
               
-              {/* Code Matrix Effect - Right Side */}
-              <div className="absolute right-8 top-8 bottom-8 w-48 opacity-40 overflow-hidden font-mono text-xs text-blue-400/60 leading-relaxed pointer-events-none text-right">
+              {/* Code Matrix Effect - Right Side - Hidden on small mobile */}
+              <div className="hidden sm:block absolute right-4 lg:right-8 top-8 bottom-8 w-32 lg:w-48 opacity-40 overflow-hidden font-mono text-[10px] lg:text-xs text-blue-400/60 leading-relaxed pointer-events-none text-right">
                 <div className="animate-code-scroll-reverse">
                   {Array.from({ length: 30 }).map((_, i) => (
                     <div key={i} className="whitespace-nowrap">
@@ -289,83 +289,83 @@ export default function Home() {
               
               {/* Central Content */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center text-white px-6 relative z-10">
+                <div className="text-center text-white px-4 sm:px-6 relative z-10">
                   {/* Tech Badge */}
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-sm font-semibold text-white/90 mb-8">
+                  <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-xs sm:text-sm font-semibold text-white/90 mb-4 sm:mb-8">
                     <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
                     SYSTEME ACTIF
                   </div>
                   
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 drop-shadow-lg">
+                  <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-3 sm:mb-6 drop-shadow-lg leading-tight">
                     Infrastructure de
                     <span className="block bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
                       Vérification Avancée
                     </span>
                   </h2>
-                  <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto drop-shadow mb-8">
+                  <p className="text-sm sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto drop-shadow mb-4 sm:mb-8 px-2">
                     Analyse cryptographique multi-couche. Détection de fraude par IA. Protection en temps réel.
                   </p>
                   
-                  {/* Stats Row */}
-                  <div className="flex items-center justify-center gap-8 md:gap-16 text-sm">
+                  {/* Stats Row - responsive grid on mobile */}
+                  <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 md:gap-16 text-sm">
                     <div className="text-center">
-                      <div className="text-2xl md:text-3xl font-bold text-cyan-400">99.9%</div>
-                      <div className="text-slate-400 text-xs uppercase tracking-wider">Précision</div>
+                      <div className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-400">99.9%</div>
+                      <div className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider">Précision</div>
                     </div>
-                    <div className="w-px h-12 bg-white/20"></div>
+                    <div className="hidden sm:block w-px h-12 bg-white/20"></div>
                     <div className="text-center">
-                      <div className="text-2xl md:text-3xl font-bold text-blue-400">&lt;0.3s</div>
-                      <div className="text-slate-400 text-xs uppercase tracking-wider">Latence</div>
+                      <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400">&lt;0.3s</div>
+                      <div className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider">Latence</div>
                     </div>
-                    <div className="w-px h-12 bg-white/20"></div>
+                    <div className="hidden sm:block w-px h-12 bg-white/20"></div>
                     <div className="text-center">
-                      <div className="text-2xl md:text-3xl font-bold text-purple-400">256-bit</div>
-                      <div className="text-slate-400 text-xs uppercase tracking-wider">Chiffrement</div>
+                      <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-400">256-bit</div>
+                      <div className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider">Chiffrement</div>
                     </div>
                   </div>
                 </div>
               </div>
               
               {/* Bottom Gradient Fade */}
-              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-slate-900 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-24 bg-gradient-to-t from-slate-900 to-transparent"></div>
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row items-start gap-16 lg:gap-24">
+          <div className="flex flex-col lg:flex-row items-start gap-8 sm:gap-12 lg:gap-24">
             
             {/* Left: Content & Slider */}
-            <div className="flex-1 w-full lg:w-[55%] space-y-10 pt-8">
+            <div className="flex-1 w-full lg:w-[55%] space-y-6 sm:space-y-10 pt-4 sm:pt-8">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
               >
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-bold uppercase tracking-widest mb-8 shadow-sm">
+                <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-4 sm:mb-8 shadow-sm">
                   <Sparkles className="w-3 h-3" />
                   Technologie 2026
                 </div>
                 
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.05] tracking-tight mb-8 text-slate-900">
-                  Vérifiez vos coupons <br/>
+                <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight sm:leading-[1.05] tracking-tight mb-4 sm:mb-8 text-slate-900">
+                  Vérifiez vos coupons <br className="hidden sm:block"/>
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-gradient-text">
                     instantanément.
                   </span>
                 </h1>
                 
-                <p className="text-lg text-slate-600 leading-relaxed max-w-xl mb-12 font-light">
+                <p className="text-sm sm:text-lg text-slate-600 leading-relaxed max-w-xl mb-6 sm:mb-12 font-light">
                   NovaVerify utilise un moteur d’analyse intelligent combinant IA, détection de fraude, vérification cryptographique et analyse visuelle haute précision. Une solution de confiance adoptée par des milliers d’utilisateurs.
                 </p>
 
                 {/* Benefits Grid */}
-                <div className="grid grid-cols-2 gap-4 mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-12">
                   {FEATURES.slice(0, 4).map((feature, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <div className="mt-1 p-1.5 rounded bg-white border border-slate-200 text-blue-600 shadow-sm">
-                        <feature.icon className="w-4 h-4" />
+                    <div key={i} className="flex items-start gap-2 sm:gap-3">
+                      <div className="mt-0.5 sm:mt-1 p-1 sm:p-1.5 rounded bg-white border border-slate-200 text-blue-600 shadow-sm flex-shrink-0">
+                        <feature.icon className="w-3 h-3 sm:w-4 sm:h-4" />
                       </div>
-                      <div>
-                        <h4 className="text-sm font-semibold text-slate-900">{feature.title}</h4>
-                        <p className="text-xs text-slate-500">{feature.desc}</p>
+                      <div className="min-w-0">
+                        <h4 className="text-xs sm:text-sm font-semibold text-slate-900 leading-tight">{feature.title}</h4>
+                        <p className="text-[10px] sm:text-xs text-slate-500 leading-snug">{feature.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -373,23 +373,23 @@ export default function Home() {
 
                 {/* Carousel */}
                 <div className="w-full relative">
-                  <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-slate-50 to-transparent z-20 pointer-events-none"></div>
-                  <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-slate-50 to-transparent z-20 pointer-events-none"></div>
+                  <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-24 bg-gradient-to-r from-slate-50 to-transparent z-20 pointer-events-none"></div>
+                  <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-24 bg-gradient-to-l from-slate-50 to-transparent z-20 pointer-events-none"></div>
                   
                   <Carousel
                     opts={{ align: "start", loop: true }}
                     plugins={[plugin.current]}
                     className="w-full"
                   >
-                    <CarouselContent className="-ml-4">
+                    <CarouselContent className="-ml-2 sm:-ml-4">
                       {COUPON_TYPES.map((coupon) => (
-                        <CarouselItem key={coupon.id} className="pl-4 basis-1/3 md:basis-1/3 lg:basis-1/4">
+                        <CarouselItem key={coupon.id} className="pl-2 sm:pl-4 basis-1/2 sm:basis-1/3 lg:basis-1/4">
                           <div className="group cursor-pointer relative perspective-1000">
-                            <div className={`relative aspect-[1.586/1] rounded-2xl overflow-hidden transition-all duration-500 transform group-hover:-translate-y-2 group-hover:shadow-xl border border-slate-200 bg-white shadow-md`}>
+                            <div className={`relative aspect-[1.586/1] rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-500 transform group-hover:-translate-y-2 group-hover:shadow-xl border border-slate-200 bg-white shadow-md`}>
                                {/* Background subtle tint */}
                                <div className={`absolute inset-0 bg-gradient-to-br ${coupon.color} opacity-20 group-hover:opacity-30 transition-opacity`}></div>
                                
-                               <div className="absolute inset-0 flex items-center justify-center p-5 z-10">
+                               <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-5 z-10">
                                  <img 
                                    src={coupon.logoUrl}
                                    alt={coupon.name}
@@ -402,7 +402,7 @@ export default function Home() {
                                {/* Shine effect */}
                                <div className="absolute -inset-full top-0 block h-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-40 group-hover:animate-shine" />
                             </div>
-                            <p className="mt-4 text-xs font-medium text-center text-slate-400 group-hover:text-blue-600 transition-colors tracking-wider uppercase">
+                            <p className="mt-2 sm:mt-4 text-[10px] sm:text-xs font-medium text-center text-slate-400 group-hover:text-blue-600 transition-colors tracking-wider uppercase truncate">
                               {coupon.name}
                             </p>
                           </div>
@@ -423,21 +423,21 @@ export default function Home() {
             >
               <div className="relative group sticky top-24">
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-[2rem] blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
-                <Card className="relative glass-card-strong border-0 rounded-[2rem] overflow-hidden shadow-2xl">
-                  <CardHeader className="border-b border-slate-100 pb-6 pt-8 px-8 bg-white/50">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-xl font-display font-bold text-slate-900 tracking-wide">Vérification Sécurisée</CardTitle>
-                        <CardDescription className="text-slate-500 mt-1 flex items-center gap-2">
-                          <Lock className="w-3 h-3 text-green-600" /> SSL 256-bit Encrypted
+                <Card className="relative glass-card-strong border-0 rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl">
+                  <CardHeader className="border-b border-slate-100 pb-4 sm:pb-6 pt-5 sm:pt-8 px-4 sm:px-8 bg-white/50">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <CardTitle className="text-base sm:text-xl font-display font-bold text-slate-900 tracking-wide">Vérification Sécurisée</CardTitle>
+                        <CardDescription className="text-slate-500 mt-1 flex items-center gap-2 text-xs sm:text-sm">
+                          <Lock className="w-3 h-3 text-green-600 flex-shrink-0" /> <span className="truncate">SSL 256-bit Encrypted</span>
                         </CardDescription>
                       </div>
-                      <div className="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center border border-green-100 shadow-sm">
-                        <Shield className="w-5 h-5 text-green-600" />
+                      <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-green-50 flex items-center justify-center border border-green-100 shadow-sm flex-shrink-0">
+                        <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="pt-8 px-8 pb-8 bg-white/40">
+                  <CardContent className="pt-5 sm:pt-8 px-4 sm:px-8 pb-5 sm:pb-8 bg-white/40">
                     {!isAnalyzing && !result && (
                       <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -575,13 +575,13 @@ export default function Home() {
         </section>
 
         {/* 3. Comment ça marche */}
-        <section id="comment-ca-marche" className="py-24 relative bg-white border-y border-slate-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900 mb-4">Processus de Validation</h2>
-              <p className="text-slate-500 max-w-2xl mx-auto">Une technologie complexe rendue simple pour l'utilisateur. 3 étapes sécurisées.</p>
+        <section id="comment-ca-marche" className="py-12 sm:py-24 relative bg-white border-y border-slate-100">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div className="text-center mb-8 sm:mb-16">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-slate-900 mb-3 sm:mb-4">Processus de Validation</h2>
+              <p className="text-sm sm:text-base text-slate-500 max-w-2xl mx-auto px-2">Une technologie complexe rendue simple pour l'utilisateur. 3 étapes sécurisées.</p>
             </div>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
               {STEPS.map((step, i) => (
                 <div key={i} className="relative p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-lg transition-all group">
                   <div className="relative">
@@ -598,12 +598,12 @@ export default function Home() {
         </section>
 
         {/* 4. Technologie */}
-        <section className="py-24 relative bg-slate-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col lg:flex-row items-center gap-16">
-              <div className="flex-1 space-y-8">
-                <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900">Infrastructure Intelligence</h2>
-                <p className="text-slate-600 text-lg leading-relaxed">
+        <section className="py-12 sm:py-24 relative bg-slate-50">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div className="flex flex-col lg:flex-row items-center gap-8 sm:gap-16">
+              <div className="flex-1 space-y-4 sm:space-y-8">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-slate-900">Infrastructure Intelligence</h2>
+                <p className="text-slate-600 text-sm sm:text-lg leading-relaxed">
                   Notre cœur technologique repose sur un réseau neuronal propriétaire capable de détecter les fraudes et de valider les codes en millisecondes. Nous croisons les données avec les serveurs émetteurs via des tunnels chiffrés.
                 </p>
                 <div className="grid grid-cols-2 gap-4">
@@ -709,23 +709,23 @@ export default function Home() {
         </section>
 
         {/* 5. Émetteurs Compatibles */}
-        <section id="emetteurs" className="py-24 bg-white border-y border-slate-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900 mb-4">Écosystème Compatible</h2>
-              <div className="flex justify-center gap-4 mt-8">
+        <section id="emetteurs" className="py-12 sm:py-24 bg-white border-y border-slate-100">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-slate-900 mb-4">Écosystème Compatible</h2>
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-6 sm:mt-8">
                 {["all", "payment", "gift", "gaming", "entertainment"].map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setActiveTab(cat)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === cat ? "bg-slate-900 text-white shadow-lg" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
+                    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${activeTab === cat ? "bg-slate-900 text-white shadow-lg" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
                   >
                     {cat.charAt(0).toUpperCase() + cat.slice(1)}
                   </button>
                 ))}
               </div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
               {filteredCoupons.map((coupon) => (
                 <div key={coupon.id} className="group p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-200 hover:bg-white hover:shadow-lg transition-all cursor-pointer text-center" data-testid={`card-coupon-${coupon.id}`}>
                    <div className="w-16 h-16 mx-auto mb-3 bg-white rounded-xl p-2 flex items-center justify-center shadow-sm border border-slate-100">
@@ -746,9 +746,9 @@ export default function Home() {
         </section>
 
         {/* 6. FAQ */}
-        <section className="py-24 bg-slate-50">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-display font-bold text-slate-900 mb-12 text-center">Questions Fréquentes</h2>
+        <section className="py-12 sm:py-24 bg-slate-50">
+          <div className="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 mb-8 sm:mb-12 text-center">Questions Fréquentes</h2>
             <Accordion type="single" collapsible className="space-y-4">
               {FAQ_ITEMS.map((item, i) => (
                 <AccordionItem key={i} value={`item-${i}`} className="border border-slate-200 rounded-2xl bg-white px-6 shadow-sm">
@@ -761,9 +761,9 @@ export default function Home() {
         </section>
 
         {/* 7. Footer */}
-        <footer className="py-16 border-t border-slate-200 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-4 gap-12 mb-12">
+        <footer className="py-10 sm:py-16 border-t border-slate-200 bg-white">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-12 mb-8 sm:mb-12">
               <div className="col-span-1 md:col-span-2">
                 <div className="flex items-center gap-3 mb-6">
                   <img src={novaLogo} alt="NovaVerify" className="h-10 w-10 object-contain" />
