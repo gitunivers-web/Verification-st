@@ -224,7 +224,7 @@ export default function Home() {
             {["Comment ça marche", "Sécurité", "Émetteurs", "Support"].map((item) => (
               <a 
                 key={item} 
-                href={`#${item.toLowerCase().replace(/\s+/g, '-').replace(/[éè]/g, 'e')}`} 
+                href={`#${item.toLowerCase().replace(/\s+/g, '-').replace(/[éè]/g, 'e').replace(/ç/g, 'c')}`} 
                 className="hover:text-blue-600 transition-all relative py-1 group/link"
                 data-testid={`link-${item.toLowerCase().replace(/\s+/g, '-')}`}
               >
