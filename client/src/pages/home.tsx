@@ -36,9 +36,6 @@ import {
   ArrowRight
 } from "lucide-react";
 import novaLogo from "@assets/generated_images/novaverify_professional_logo_design.png";
-import heroImage1 from "@assets/stock_images/credit_card_payment__9162d98f.jpg";
-import heroImage2 from "@assets/stock_images/credit_card_payment__13f28455.jpg";
-import heroImage3 from "@assets/stock_images/credit_card_payment__468a23e0.jpg";
 import {
   Form,
   FormControl,
@@ -249,43 +246,89 @@ export default function Home() {
 
       <main className="relative z-10 pt-28">
         
-        {/* 2. Hero Section with Image Carousel */}
+        {/* 2. Hero Section - Futuristic Tech Design */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 lg:mb-32">
-          {/* Hero Images Carousel - Full width above content */}
-          <div className="w-full mb-16">
-            <Carousel
-              opts={{ align: "center", loop: true }}
-              plugins={[useRef(Autoplay({ delay: 4000, stopOnInteraction: false })).current]}
-              className="w-full"
-            >
-              <CarouselContent>
-                {[heroImage1, heroImage2, heroImage3].map((img, idx) => (
-                  <CarouselItem key={idx}>
-                    <div className="relative h-[400px] lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
-                      <img 
-                        src={img} 
-                        alt={`NovaVerify Hero ${idx + 1}`} 
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-blue-900/60 to-purple-900/80 flex items-center justify-center">
-                        <div className="text-center text-white px-6">
-                          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 drop-shadow-lg">
-                            {idx === 0 && "Vérification Sécurisée"}
-                            {idx === 1 && "Technologie IA Avancée"}
-                            {idx === 2 && "Protection Maximale"}
-                          </h2>
-                          <p className="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto drop-shadow">
-                            {idx === 0 && "Validez instantanément tous vos coupons prépayés"}
-                            {idx === 1 && "Détection de fraude en temps réel par intelligence artificielle"}
-                            {idx === 2 && "Vos données chiffrées de bout en bout"}
-                          </p>
-                        </div>
-                      </div>
+          {/* Tech Hero Banner */}
+          <div className="w-full mb-16 relative">
+            <div className="relative h-[400px] lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-900 via-blue-950 to-purple-950">
+              {/* Animated Grid Background */}
+              <div className="absolute inset-0 opacity-30">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: `linear-gradient(rgba(59, 130, 246, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)`,
+                  backgroundSize: '60px 60px',
+                  animation: 'grid-move 20s linear infinite'
+                }}></div>
+              </div>
+              
+              {/* Floating Orbs */}
+              <div className="absolute top-20 left-[20%] w-32 h-32 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-20 right-[20%] w-40 h-40 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+              <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+              
+              {/* Code Matrix Effect - Left Side */}
+              <div className="absolute left-8 top-8 bottom-8 w-48 opacity-40 overflow-hidden font-mono text-xs text-green-400/60 leading-relaxed pointer-events-none">
+                <div className="animate-code-scroll">
+                  {Array.from({ length: 30 }).map((_, i) => (
+                    <div key={i} className="whitespace-nowrap">
+                      {`0x${Math.random().toString(16).slice(2, 10).toUpperCase()}`}
                     </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Code Matrix Effect - Right Side */}
+              <div className="absolute right-8 top-8 bottom-8 w-48 opacity-40 overflow-hidden font-mono text-xs text-blue-400/60 leading-relaxed pointer-events-none text-right">
+                <div className="animate-code-scroll-reverse">
+                  {Array.from({ length: 30 }).map((_, i) => (
+                    <div key={i} className="whitespace-nowrap">
+                      {`SHA256:${Math.random().toString(36).slice(2, 14).toUpperCase()}`}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Central Content */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center text-white px-6 relative z-10">
+                  {/* Tech Badge */}
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-sm font-semibold text-white/90 mb-8">
+                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                    SYSTEME ACTIF
+                  </div>
+                  
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 drop-shadow-lg">
+                    Infrastructure de
+                    <span className="block bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
+                      Vérification Avancée
+                    </span>
+                  </h2>
+                  <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto drop-shadow mb-8">
+                    Analyse cryptographique multi-couche. Détection de fraude par IA. Protection en temps réel.
+                  </p>
+                  
+                  {/* Stats Row */}
+                  <div className="flex items-center justify-center gap-8 md:gap-16 text-sm">
+                    <div className="text-center">
+                      <div className="text-2xl md:text-3xl font-bold text-cyan-400">99.9%</div>
+                      <div className="text-slate-400 text-xs uppercase tracking-wider">Précision</div>
+                    </div>
+                    <div className="w-px h-12 bg-white/20"></div>
+                    <div className="text-center">
+                      <div className="text-2xl md:text-3xl font-bold text-blue-400">&lt;0.3s</div>
+                      <div className="text-slate-400 text-xs uppercase tracking-wider">Latence</div>
+                    </div>
+                    <div className="w-px h-12 bg-white/20"></div>
+                    <div className="text-center">
+                      <div className="text-2xl md:text-3xl font-bold text-purple-400">256-bit</div>
+                      <div className="text-slate-400 text-xs uppercase tracking-wider">Chiffrement</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Bottom Gradient Fade */}
+              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-slate-900 to-transparent"></div>
+            </div>
           </div>
 
           <div className="flex flex-col lg:flex-row items-start gap-16 lg:gap-24">

@@ -177,3 +177,26 @@
 .animate-reverse-spin {
   animation: reverse-spin 15s linear infinite;
 }
+
+@keyframes code-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+.animate-code-scroll {
+  animation: code-scroll 15s linear infinite;
+}
+
+@keyframes code-scroll-reverse {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
+}
+
+.animate-code-scroll-reverse {
+  animation: code-scroll-reverse 12s linear infinite;
+}
+
+@keyframes grid-move {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(60px, 60px); }
+}
