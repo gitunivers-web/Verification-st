@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+import { useI18n } from "@/lib/i18n";
 import { Loader2, Mail, Lock, User } from "lucide-react";
 
 interface AuthModalProps {
@@ -16,6 +17,7 @@ interface AuthModalProps {
 export function AuthModal({ open, onOpenChange }: AuthModalProps) {
   const { login, register } = useAuth();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
 
@@ -86,20 +88,20 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       <DialogContent className="sm:max-w-md bg-slate-900/95 border-purple-500/30 backdrop-blur-xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-            Mon Compte
+            {t("auth.welcome")}
           </DialogTitle>
         </DialogHeader>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <TabsList className="grid w-full grid-cols-2 bg-slate-800/50">
-            <TabsTrigger value="login" data-testid="tab-login">Connexion</TabsTrigger>
-            <TabsTrigger value="register" data-testid="tab-register">Inscription</TabsTrigger>
+            <TabsTrigger value="login" data-testid="tab-login">{t("auth.loginTab")}</TabsTrigger>
+            <TabsTrigger value="register" data-testid="tab-register">{t("auth.registerTab")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="login" className="mt-6">
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="login-email" className="text-slate-300">Email</Label>
+                <Label htmlFor="login-email" className="text-slate-300">{t("form.email")}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <Input
@@ -116,7 +118,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="login-password" className="text-slate-300">Mot de passe</Label>
+                <Label htmlFor="login-password" className="text-slate-300">{t("auth.password")}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <Input
@@ -138,7 +140,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                 className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500"
                 data-testid="button-login-submit"
               >
-                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Se connecter"}
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t("auth.loginButton")}
               </Button>
             </form>
           </TabsContent>
@@ -147,7 +149,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
             <form onSubmit={handleRegister} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="register-firstname" className="text-slate-300">Prénom</Label>
+                  <Label htmlFor="register-firstname" className="text-slate-300">{t("form.firstName")}</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                     <Input
@@ -162,7 +164,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-lastname" className="text-slate-300">Nom</Label>
+                  <Label htmlFor="register-lastname" className="text-slate-300">{t("form.lastName")}</Label>
                   <Input
                     id="register-lastname"
                     placeholder="Dupont"
@@ -176,7 +178,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="register-email" className="text-slate-300">Email</Label>
+                <Label htmlFor="register-email" className="text-slate-300">{t("form.email")}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <Input
@@ -193,7 +195,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="register-password" className="text-slate-300">Mot de passe</Label>
+                <Label htmlFor="register-password" className="text-slate-300">{t("auth.password")}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <Input
@@ -211,7 +213,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="register-confirm" className="text-slate-300">Confirmer le mot de passe</Label>
+                <Label htmlFor="register-confirm" className="text-slate-300">{t("auth.confirmPassword")}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <Input
@@ -234,7 +236,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                 className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500"
                 data-testid="button-register-submit"
               >
-                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "S'inscrire"}
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t("auth.registerButton")}
               </Button>
 
               <p className="text-xs text-center text-slate-500">

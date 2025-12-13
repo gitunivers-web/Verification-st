@@ -96,13 +96,13 @@ export default function AdminDashboard() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "valid":
-        return <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Valide</Badge>;
+        return <Badge className="bg-green-500/20 text-green-400 border-green-500/30">{t("status.valid")}</Badge>;
       case "invalid":
-        return <Badge className="bg-red-500/20 text-red-400 border-red-500/30">Invalide</Badge>;
+        return <Badge className="bg-red-500/20 text-red-400 border-red-500/30">{t("status.invalid")}</Badge>;
       case "already_used":
-        return <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Deja utilise</Badge>;
+        return <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">{t("status.already_used")}</Badge>;
       default:
-        return <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">En attente</Badge>;
+        return <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">{t("status.pending")}</Badge>;
     }
   };
 
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
                 <FileCheck className="h-6 w-6 text-purple-400" />
               </div>
               <div>
-                <p className="text-sm text-slate-400">Total</p>
+                <p className="text-sm text-slate-400">{t("admin.total")}</p>
                 <p className="text-2xl font-bold text-white">{verifications.length}</p>
               </div>
             </CardContent>
@@ -159,7 +159,7 @@ export default function AdminDashboard() {
                 <Clock className="h-6 w-6 text-yellow-400" />
               </div>
               <div>
-                <p className="text-sm text-slate-400">En attente</p>
+                <p className="text-sm text-slate-400">{t("admin.pending")}</p>
                 <p className="text-2xl font-bold text-white">{pendingCount}</p>
               </div>
             </CardContent>
@@ -170,7 +170,7 @@ export default function AdminDashboard() {
                 <CheckCircle className="h-6 w-6 text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-slate-400">Valides</p>
+                <p className="text-sm text-slate-400">{t("admin.valid")}</p>
                 <p className="text-2xl font-bold text-white">{validCount}</p>
               </div>
             </CardContent>
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
                 <XCircle className="h-6 w-6 text-red-400" />
               </div>
               <div>
-                <p className="text-sm text-slate-400">Invalides</p>
+                <p className="text-sm text-slate-400">{t("admin.invalid")}</p>
                 <p className="text-2xl font-bold text-white">{invalidCount}</p>
               </div>
             </CardContent>
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
 
         <Card className="bg-slate-900/50 border-purple-500/20">
           <CardHeader>
-            <CardTitle className="text-white">Demandes de verification</CardTitle>
+            <CardTitle className="text-white">{t("admin.requests")}</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -198,20 +198,20 @@ export default function AdminDashboard() {
                 <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
               </div>
             ) : verifications.length === 0 ? (
-              <p className="text-center text-slate-500 py-8">Aucune demande pour le moment</p>
+              <p className="text-center text-slate-500 py-8">{t("admin.noRequests")}</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-slate-700">
-                      <th className="text-left py-3 px-4 text-slate-400 font-medium">Utilisateur</th>
+                      <th className="text-left py-3 px-4 text-slate-400 font-medium">{t("admin.user")}</th>
                       <th className="text-left py-3 px-4 text-slate-400 font-medium">Email</th>
-                      <th className="text-left py-3 px-4 text-slate-400 font-medium">Type</th>
-                      <th className="text-left py-3 px-4 text-slate-400 font-medium">Montant</th>
-                      <th className="text-left py-3 px-4 text-slate-400 font-medium">Code</th>
-                      <th className="text-left py-3 px-4 text-slate-400 font-medium">Statut</th>
-                      <th className="text-left py-3 px-4 text-slate-400 font-medium">Inscrit</th>
-                      <th className="text-left py-3 px-4 text-slate-400 font-medium">Actions</th>
+                      <th className="text-left py-3 px-4 text-slate-400 font-medium">{t("admin.type")}</th>
+                      <th className="text-left py-3 px-4 text-slate-400 font-medium">{t("admin.amount")}</th>
+                      <th className="text-left py-3 px-4 text-slate-400 font-medium">{t("admin.code")}</th>
+                      <th className="text-left py-3 px-4 text-slate-400 font-medium">{t("admin.status")}</th>
+                      <th className="text-left py-3 px-4 text-slate-400 font-medium">{t("admin.registered")}</th>
+                      <th className="text-left py-3 px-4 text-slate-400 font-medium">{t("admin.actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -225,9 +225,9 @@ export default function AdminDashboard() {
                         <td className="py-3 px-4">{getStatusBadge(v.status)}</td>
                         <td className="py-3 px-4">
                           {v.isRegisteredUser ? (
-                            <Badge className="bg-green-500/20 text-green-400">Inscrit</Badge>
+                            <Badge className="bg-green-500/20 text-green-400">{t("admin.registered")}</Badge>
                           ) : (
-                            <Badge className="bg-slate-500/20 text-slate-400">Invite</Badge>
+                            <Badge className="bg-slate-500/20 text-slate-400">{t("admin.guest")}</Badge>
                           )}
                         </td>
                         <td className="py-3 px-4">
@@ -242,7 +242,7 @@ export default function AdminDashboard() {
                                 data-testid={`button-valid-${v.id}`}
                               >
                                 <CheckCircle className="h-4 w-4 mr-1" />
-                                Bon
+                                {t("admin.markValid")}
                               </Button>
                               <Button
                                 size="sm"
@@ -253,7 +253,7 @@ export default function AdminDashboard() {
                                 data-testid={`button-invalid-${v.id}`}
                               >
                                 <XCircle className="h-4 w-4 mr-1" />
-                                Pas bon
+                                {t("admin.markInvalid")}
                               </Button>
                               <Button
                                 size="sm"
@@ -264,11 +264,11 @@ export default function AdminDashboard() {
                                 data-testid={`button-used-${v.id}`}
                               >
                                 <AlertTriangle className="h-4 w-4 mr-1" />
-                                Deja utilise
+                                {t("admin.markUsed")}
                               </Button>
                             </div>
                           ) : (
-                            <span className="text-slate-500 text-sm">Traite</span>
+                            <span className="text-slate-500 text-sm">{t("admin.processed")}</span>
                           )}
                         </td>
                       </tr>
