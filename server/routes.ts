@@ -29,6 +29,10 @@ function broadcastUpdate(type: string, data: unknown) {
   });
 }
 
+function broadcastOnlineCount() {
+  broadcastUpdate("online_count", { count: connectedClients.size });
+}
+
 function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -66,15 +70,20 @@ export async function registerRoutes(
   wss.on("connection", (ws) => {
     connectedClients.add(ws);
     console.log("[WS] Client connected, total:", connectedClients.size);
+    
+    ws.send(JSON.stringify({ type: "online_count", data: { count: connectedClients.size } }));
+    broadcastOnlineCount();
 
     ws.on("close", () => {
       connectedClients.delete(ws);
       console.log("[WS] Client disconnected, total:", connectedClients.size);
+      broadcastOnlineCount();
     });
 
     ws.on("error", (error) => {
       console.error("[WS] Error:", error);
       connectedClients.delete(ws);
+      broadcastOnlineCount();
     });
   });
 

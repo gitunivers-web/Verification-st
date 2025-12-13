@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+import { useI18n } from "@/lib/i18n";
+import { LanguageSelector } from "@/components/language-selector";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { API_URL } from "@/lib/config";
 import type { Verification } from "@shared/schema";
@@ -19,13 +21,16 @@ import {
   LogOut,
   ArrowLeft,
   Loader2,
+  Wifi,
 } from "lucide-react";
 
 export default function AdminDashboard() {
   const { user, token, logout, isAdmin } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const [onlineCount, setOnlineCount] = useState(0);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -41,6 +46,9 @@ export default function AdminDashboard() {
       const data = JSON.parse(event.data);
       if (data.type === "new_verification" || data.type === "verification_updated") {
         queryClient.invalidateQueries({ queryKey: ["/api/admin/verifications"] });
+      }
+      if (data.type === "online_count") {
+        setOnlineCount(data.data.count);
       }
     };
 
@@ -117,10 +125,16 @@ export default function AdminDashboard() {
             </h1>
           </div>
           <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-500/30" data-testid="indicator-online-users">
+              <Wifi className="h-4 w-4 text-green-400" />
+              <span className="text-sm font-medium text-green-400">{onlineCount}</span>
+              <span className="text-xs text-green-400/70">{t("admin.onlineUsers")}</span>
+            </div>
+            <LanguageSelector />
             <span className="text-sm text-slate-400">{user?.email}</span>
             <Button variant="outline" size="sm" onClick={logout} data-testid="button-admin-logout">
               <LogOut className="h-4 w-4 mr-2" />
-              Deconnexion
+              {t("nav.logout")}
             </Button>
           </div>
         </div>

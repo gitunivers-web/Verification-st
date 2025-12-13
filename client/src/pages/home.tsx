@@ -42,6 +42,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { AuthModal } from "@/components/auth-modal";
+import { LanguageSelector } from "@/components/language-selector";
 import { API_URL } from "@/lib/config";
 import { useToast } from "@/hooks/use-toast";
 import kouponLogo from "@assets/generated_images/koupon_trust_logo_design.png";
@@ -284,7 +285,7 @@ export default function Home() {
             </div>
           </div>
 
-          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
             {["Comment ça marche", "Sécurité", "Émetteurs", "FAQ"].map((item) => (
               <a 
                 key={item} 
@@ -296,6 +297,7 @@ export default function Home() {
                 <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 group-hover/link:w-full"></span>
               </a>
             ))}
+            <LanguageSelector />
             {user ? (
               <div className="flex items-center gap-3">
                 {isAdmin && (
