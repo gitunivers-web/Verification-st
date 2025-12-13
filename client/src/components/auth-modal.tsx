@@ -33,7 +33,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     setIsLoading(true);
     try {
       await login(loginForm.email, loginForm.password);
-      toast({ title: "Connexion r\u00e9ussie", description: "Bienvenue sur NovaVerify" });
+      toast({ title: "Connexion r\u00e9ussie", description: "Bienvenue sur Koupon Trust" });
       onOpenChange(false);
       setLoginForm({ email: "", password: "" });
     } catch (error) {

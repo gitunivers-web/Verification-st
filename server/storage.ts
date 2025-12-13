@@ -38,8 +38,8 @@ export class MemStorage implements IStorage {
     const adminUser: User = {
       id: adminId,
       firstName: "Admin",
-      lastName: "NovaVerify",
-      email: "admin@novaverify.com",
+      lastName: "Koupon Trust",
+      email: "admin@koupontrust.com",
       password: hashPassword("admin123"),
       role: "admin",
       emailVerified: true,
@@ -47,7 +47,7 @@ export class MemStorage implements IStorage {
       createdAt: new Date(),
     };
     this.users.set(adminId, adminUser);
-    console.log("[STORAGE] Admin user seeded: admin@novaverify.com / admin123");
+    console.log("[STORAGE] Admin user seeded: admin@koupontrust.com / admin123");
   }
 
   async getUser(id: string): Promise<User | undefined> {

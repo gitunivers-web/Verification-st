@@ -44,7 +44,7 @@ import { useAuth } from "@/lib/auth";
 import { AuthModal } from "@/components/auth-modal";
 import { API_URL } from "@/lib/config";
 import { useToast } from "@/hooks/use-toast";
-import novaLogo from "@assets/generated_images/novaverify_professional_logo_design.png";
+import kouponLogo from "@assets/generated_images/koupon_trust_logo_design.png";
 import {
   Form,
   FormControl,
@@ -187,7 +187,7 @@ export default function Home() {
         'Content-Type': 'application/json',
       };
       
-      const token = localStorage.getItem("novaverify_token");
+      const token = localStorage.getItem("auth_token");
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
@@ -271,12 +271,12 @@ export default function Home() {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-600 to-blue-500 rounded-xl blur-md opacity-30 group-hover:opacity-50 transition-all duration-500"></div>
               <div className="relative">
-                <img src={novaLogo} alt="NovaVerify" className="h-12 w-12 object-contain rounded-xl" />
+                <img src={kouponLogo} alt="Koupon Trust" className="h-12 w-12 object-contain rounded-xl" />
               </div>
             </div>
             <div className="flex flex-col">
               <span className="font-display font-bold text-2xl tracking-tight bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 bg-clip-text text-transparent">
-                NovaVerify
+                Koupon Trust
               </span>
               <span className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">
                 Verification Platform
@@ -532,7 +532,7 @@ export default function Home() {
                 </h1>
                 
                 <p className="text-sm sm:text-lg text-slate-600 leading-relaxed max-w-xl mb-6 sm:mb-12 font-light">
-                  NovaVerify utilise un moteur d’analyse intelligent combinant IA, détection de fraude, vérification cryptographique et analyse visuelle haute précision. Une solution de confiance adoptée par des milliers d’utilisateurs.
+                  Koupon Trust utilise un moteur d’analyse intelligent combinant IA, détection de fraude, vérification cryptographique et analyse visuelle haute précision. Une solution de confiance adoptée par des milliers d’utilisateurs.
                 </p>
 
                 {/* Benefits Grid */}
@@ -963,8 +963,8 @@ export default function Home() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-12 mb-8 sm:mb-12">
               <div className="col-span-1 md:col-span-2">
                 <div className="flex items-center gap-3 mb-6">
-                  <img src={novaLogo} alt="NovaVerify" className="h-10 w-10 object-contain" />
-                  <span className="font-bold text-2xl bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 bg-clip-text text-transparent">NovaVerify</span>
+                  <img src={kouponLogo} alt="Koupon Trust" className="h-10 w-10 object-contain" />
+                  <span className="font-bold text-2xl bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 bg-clip-text text-transparent">Koupon Trust</span>
                 </div>
                 <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
                   La référence mondiale pour la vérification sécurisée de titres prépayés. Technologie certifiée ISO 27001.
@@ -981,14 +981,14 @@ export default function Home() {
               <div>
                 <h4 className="font-bold text-slate-900 mb-6">Légal</h4>
                 <ul className="space-y-4 text-sm text-slate-500">
-                  <li><a href="#" className="hover:text-blue-600 transition-colors">Conditions d'utilisation</a></li>
-                  <li><a href="#" className="hover:text-blue-600 transition-colors">Politique de confidentialité</a></li>
-                  <li><a href="#" className="hover:text-blue-600 transition-colors">Cookies</a></li>
+                  <li><a href="/terms" className="hover:text-blue-600 transition-colors" data-testid="link-terms">Conditions d'utilisation</a></li>
+                  <li><a href="/privacy" className="hover:text-blue-600 transition-colors" data-testid="link-privacy">Politique de confidentialité</a></li>
+                  <li><a href="/cookies" className="hover:text-blue-600 transition-colors" data-testid="link-cookies">Cookies</a></li>
                 </ul>
               </div>
             </div>
             <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-xs text-slate-400">© 2026 NovaVerify Inc. Tous droits réservés.</p>
+              <p className="text-xs text-slate-400">© 2026 Koupon Trust Inc. Tous droits réservés.</p>
               <div className="flex gap-4">
                  {/* Social Icons Placeholder */}
                  <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center hover:bg-blue-50 transition-colors cursor-pointer"><Globe className="w-4 h-4 text-slate-500" /></div>

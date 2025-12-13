@@ -8,6 +8,9 @@ import Home from "@/pages/home";
 import AdminDashboard from "@/pages/admin";
 import UserDashboard from "@/pages/dashboard";
 import VerifyEmail from "@/pages/verify-email";
+import Terms from "@/pages/terms";
+import Privacy from "@/pages/privacy";
+import Cookies from "@/pages/cookies";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -17,6 +20,9 @@ function Router() {
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/dashboard" component={UserDashboard} />
       <Route path="/verify-email" component={VerifyEmail} />
+      <Route path="/terms" component={Terms} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/cookies" component={Cookies} />
       <Route component={NotFound} />
     </Switch>
   );
