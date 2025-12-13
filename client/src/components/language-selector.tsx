@@ -31,6 +31,7 @@ export function LanguageSelector() {
           <DropdownMenuItem
             key={lang}
             onClick={() => setLanguage(lang)}
+            className="focus:bg-slate-100 focus:text-slate-900 cursor-pointer"
             data-testid={`menu-item-lang-${lang}`}
           >
             <span className="text-base mr-2">{languageFlags[lang]}</span>
