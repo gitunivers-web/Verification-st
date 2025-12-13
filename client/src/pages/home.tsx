@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "wouter";
 import Autoplay from "embla-carousel-autoplay";
 import { 
   ShieldCheck, 
@@ -33,8 +34,15 @@ import {
   Film,
   HelpCircle,
   Mail,
-  ArrowRight
+  ArrowRight,
+  User,
+  LogOut,
+  LayoutDashboard
 } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { AuthModal } from "@/components/auth-modal";
+import { API_URL } from "@/lib/config";
+import { useToast } from "@/hooks/use-toast";
 import novaLogo from "@assets/generated_images/novaverify_professional_logo_design.png";
 import {
   Form,
@@ -146,6 +154,10 @@ export default function Home() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("all");
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [, setLocation] = useLocation();
+  const { user, logout, isAdmin } = useAuth();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -220,7 +232,7 @@ export default function Home() {
             </div>
           </div>
 
-          <nav className="hidden md:flex items-center gap-10 text-sm font-semibold text-slate-600">
+          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
             {["Comment ça marche", "Sécurité", "Émetteurs", "FAQ"].map((item) => (
               <a 
                 key={item} 
@@ -232,6 +244,52 @@ export default function Home() {
                 <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 group-hover/link:w-full"></span>
               </a>
             ))}
+            {user ? (
+              <div className="flex items-center gap-3">
+                {isAdmin && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setLocation("/admin")}
+                    className="border-purple-500/30 text-purple-600 hover:bg-purple-50"
+                    data-testid="button-admin"
+                  >
+                    <LayoutDashboard className="h-4 w-4 mr-2" />
+                    Admin
+                  </Button>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setLocation("/dashboard")}
+                  className="border-blue-500/30 text-blue-600 hover:bg-blue-50"
+                  data-testid="button-dashboard"
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  Mon espace
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={logout}
+                  className="text-slate-500 hover:text-red-600"
+                  data-testid="button-logout"
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => setAuthModalOpen(true)}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-500 hover:to-purple-500"
+                data-testid="button-account"
+              >
+                <User className="h-4 w-4 mr-2" />
+                Mon compte
+              </Button>
+            )}
           </nav>
 
           <button 
@@ -828,6 +886,7 @@ export default function Home() {
         </footer>
 
       </main>
+      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
     </div>
   );
 }

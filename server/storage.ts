@@ -1,37 +1,124 @@
-import { type User, type InsertUser } from "@shared/schema";
+import { type User, type InsertUser, type Verification, type InsertVerification, type VerificationStatus } from "@shared/schema";
 import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByVerificationToken(token: string): Promise<User | undefined>;
+  createUser(user: InsertUser & { verificationToken?: string }): Promise<User>;
+  updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
+  getAllUsers(): Promise<User[]>;
+  
+  getVerification(id: string): Promise<Verification | undefined>;
+  getVerificationsByEmail(email: string): Promise<Verification[]>;
+  getVerificationsByUserId(userId: string): Promise<Verification[]>;
+  getAllVerifications(): Promise<Verification[]>;
+  createVerification(verification: InsertVerification & { userId?: string; isRegisteredUser?: boolean }): Promise<Verification>;
+  updateVerificationStatus(id: string, status: VerificationStatus): Promise<Verification | undefined>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
+  private verifications: Map<string, Verification>;
 
   constructor() {
     this.users = new Map();
+    this.verifications = new Map();
   }
 
   async getUser(id: string): Promise<User | undefined> {
     return this.users.get(id);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
+  async getUserByEmail(email: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(
-      (user) => user.username === username,
+      (user) => user.email.toLowerCase() === email.toLowerCase(),
     );
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
+  async getUserByVerificationToken(token: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.verificationToken === token,
+    );
+  }
+
+  async createUser(insertUser: InsertUser & { verificationToken?: string }): Promise<User> {
     const id = randomUUID();
-    const user: User = { ...insertUser, id };
+    const user: User = {
+      id,
+      firstName: insertUser.firstName,
+      lastName: insertUser.lastName,
+      email: insertUser.email,
+      password: insertUser.password,
+      role: "user",
+      emailVerified: false,
+      verificationToken: insertUser.verificationToken || null,
+      createdAt: new Date(),
+    };
     this.users.set(id, user);
     return user;
+  }
+
+  async updateUser(id: string, updates: Partial<User>): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+    const updatedUser = { ...user, ...updates };
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
+  }
+
+  async getVerification(id: string): Promise<Verification | undefined> {
+    return this.verifications.get(id);
+  }
+
+  async getVerificationsByEmail(email: string): Promise<Verification[]> {
+    return Array.from(this.verifications.values()).filter(
+      (v) => v.email.toLowerCase() === email.toLowerCase(),
+    );
+  }
+
+  async getVerificationsByUserId(userId: string): Promise<Verification[]> {
+    return Array.from(this.verifications.values()).filter(
+      (v) => v.userId === userId,
+    );
+  }
+
+  async getAllVerifications(): Promise<Verification[]> {
+    return Array.from(this.verifications.values()).sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  async createVerification(data: InsertVerification & { userId?: string; isRegisteredUser?: boolean }): Promise<Verification> {
+    const id = randomUUID();
+    const verification: Verification = {
+      id,
+      userId: data.userId || null,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      couponType: data.couponType,
+      amount: data.amount,
+      couponCode: data.couponCode,
+      status: "pending",
+      isRegisteredUser: data.isRegisteredUser || false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.verifications.set(id, verification);
+    return verification;
+  }
+
+  async updateVerificationStatus(id: string, status: VerificationStatus): Promise<Verification | undefined> {
+    const verification = this.verifications.get(id);
+    if (!verification) return undefined;
+    const updated = { ...verification, status, updatedAt: new Date() };
+    this.verifications.set(id, updated);
+    return updated;
   }
 }
 
