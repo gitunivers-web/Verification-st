@@ -46,6 +46,14 @@ import { LanguageSelector } from "@/components/language-selector";
 import { API_URL } from "@/lib/config";
 import { useToast } from "@/hooks/use-toast";
 import kouponLogo from "@assets/generated_images/koupon_trust_logo_design.png";
+import transcashLogo from "@assets/Transcash_1765606961325.png";
+import pcsLogo from "@assets/publiccc_1765606961325.png";
+import paysafecardLogo from "@assets/paysafecard-100_1765606961325.png";
+import neosurfLogo from "@assets/cx_1765606961325.png";
+import toneofirstLogo from "@assets/Sans_titre_1765606961325.png";
+import ticketpremiumLogo from "@assets/ticket-premium-100-euros_1765606961325.png";
+import flexepinLogo from "@assets/flexepin-50_1765606961325.png";
+import cashlibLogo from "@assets/public_1765606961325.png";
 import {
   Form,
   FormControl,
@@ -80,18 +88,18 @@ import {
 // --- Data & Constants ---
 
 const COUPON_TYPES = [
-  { id: "transcash", name: "Transcash", logoUrl: "https://www.transcash.fr/assets/images/logo-transcash.svg", color: "from-red-50 to-red-100", category: "payment" },
-  { id: "pcs", name: "PCS Mastercard", logoUrl: "https://upload.wikimedia.org/wikipedia/fr/thumb/5/5e/Logo_PCS_Mastercard.svg/320px-Logo_PCS_Mastercard.svg.png", color: "from-slate-50 to-slate-200", category: "payment" },
-  { id: "paysafecard", name: "Paysafecard", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/PaysafeCard_Logo_2024.svg/320px-PaysafeCard_Logo_2024.svg.png", color: "from-blue-50 to-blue-100", category: "payment" },
-  { id: "neosurf", name: "Neosurf", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Neosurf_Logo.svg/320px-Neosurf_Logo.svg.png", color: "from-pink-50 to-rose-100", category: "payment" },
+  { id: "transcash", name: "Transcash", logoUrl: transcashLogo, color: "from-red-50 to-red-100", category: "payment" },
+  { id: "pcs", name: "PCS Mastercard", logoUrl: pcsLogo, color: "from-slate-50 to-slate-200", category: "payment" },
+  { id: "paysafecard", name: "Paysafecard", logoUrl: paysafecardLogo, color: "from-blue-50 to-blue-100", category: "payment" },
+  { id: "neosurf", name: "Neosurf", logoUrl: neosurfLogo, color: "from-pink-50 to-rose-100", category: "payment" },
   { id: "googleplay", name: "Google Play", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Google_Play_2022_logo.svg/320px-Google_Play_2022_logo.svg.png", color: "from-emerald-50 to-emerald-100", category: "gift" },
   { id: "amazon", name: "Amazon", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/320px-Amazon_logo.svg.png", color: "from-orange-50 to-orange-100", category: "gift" },
   { id: "itunes", name: "Apple Gift Card", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/160px-Apple_logo_black.svg.png", color: "from-slate-50 to-slate-100", category: "gift" },
   { id: "steam", name: "Steam", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/200px-Steam_icon_logo.svg.png", color: "from-slate-100 to-slate-300", category: "gaming" },
-  { id: "toneofirst", name: "Toneo First", logoUrl: "https://www.toneofirst.com/templates/yootheme/cache/toneo-logo-9f3c80d6.png", color: "from-orange-50 to-orange-100", category: "payment" },
-  { id: "ticketpremium", name: "Ticket Premium", logoUrl: "https://www.ticket-premium.com/images/logo-ticket-premium.svg", color: "from-blue-50 to-indigo-100", category: "payment" },
-  { id: "flexpin", name: "Flexepin", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Flexepin_logo.svg/320px-Flexepin_logo.svg.png", color: "from-green-50 to-teal-100", category: "payment" },
-  { id: "cashlib", name: "Cashlib", logoUrl: "https://www.cashlib.com/themes/custom/cashlib/images/cashlib-logo.svg", color: "from-amber-50 to-orange-100", category: "payment" },
+  { id: "toneofirst", name: "Toneo First", logoUrl: toneofirstLogo, color: "from-orange-50 to-orange-100", category: "payment" },
+  { id: "ticketpremium", name: "Ticket Premium", logoUrl: ticketpremiumLogo, color: "from-blue-50 to-indigo-100", category: "payment" },
+  { id: "flexpin", name: "Flexepin", logoUrl: flexepinLogo, color: "from-green-50 to-teal-100", category: "payment" },
+  { id: "cashlib", name: "Cashlib", logoUrl: cashlibLogo, color: "from-amber-50 to-orange-100", category: "payment" },
   { id: "netflix", name: "Netflix", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/320px-Netflix_2015_logo.svg.png", color: "from-red-50 to-red-100", category: "entertainment" },
   { id: "spotify", name: "Spotify", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Spotify_logo_with_text.svg/320px-Spotify_logo_with_text.svg.png", color: "from-green-50 to-green-100", category: "entertainment" },
   { id: "razer", name: "Razer Gold", logoUrl: "https://upload.wikimedia.org/wikipedia/en/thumb/4/40/Razer_snake_logo.svg/200px-Razer_snake_logo.svg.png", color: "from-green-50 to-green-100", category: "gaming" },
