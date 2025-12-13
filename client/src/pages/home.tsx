@@ -39,6 +39,7 @@ import {
   LogOut,
   LayoutDashboard
 } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { AuthModal } from "@/components/auth-modal";
 import { API_URL } from "@/lib/config";
@@ -171,13 +172,64 @@ export default function Home() {
     },
   });
 
+  const submitVerificationMutation = useMutation({
+    mutationFn: async (values: z.infer<typeof formSchema>) => {
+      const formData = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        couponType: values.couponType,
+        amount: values.amount,
+        couponCode: values.couponCode,
+      };
+      
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      const token = localStorage.getItem("novaverify_token");
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      const response = await fetch(`${API_URL}/api/verifications`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(formData),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Erreur lors de la soumission');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      setResult("success");
+      toast({
+        title: "Demande envoyée",
+        description: "Votre demande de vérification a été soumise avec succès. Vous recevrez un email avec le résultat.",
+      });
+    },
+    onError: (error: Error) => {
+      setResult("error");
+      toast({
+        title: "Erreur",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsAnalyzing(true);
     setResult(null);
-    setTimeout(() => {
-      setIsAnalyzing(false);
-      setResult("success");
-    }, 3000);
+    submitVerificationMutation.mutate(values, {
+      onSettled: () => {
+        setIsAnalyzing(false);
+      }
+    });
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, onChange: (value: any) => void) => {
@@ -322,6 +374,49 @@ export default function Home() {
                     {item}
                   </a>
                 ))}
+                
+                {/* User account section for mobile */}
+                <div className="border-t border-slate-200/40 mt-2 pt-3">
+                  {user ? (
+                    <div className="flex flex-col space-y-1">
+                      {isAdmin && (
+                        <button
+                          onClick={() => { setLocation("/admin"); setIsMobileMenuOpen(false); }}
+                          className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-purple-600 hover:bg-purple-50 rounded-lg transition-all"
+                          data-testid="link-mobile-admin"
+                        >
+                          <LayoutDashboard className="h-4 w-4" />
+                          Admin
+                        </button>
+                      )}
+                      <button
+                        onClick={() => { setLocation("/dashboard"); setIsMobileMenuOpen(false); }}
+                        className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                        data-testid="link-mobile-dashboard"
+                      >
+                        <User className="h-4 w-4" />
+                        Mon espace
+                      </button>
+                      <button
+                        onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+                        className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                        data-testid="button-mobile-logout"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Déconnexion
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => { setAuthModalOpen(true); setIsMobileMenuOpen(false); }}
+                      className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg w-full justify-center"
+                      data-testid="button-mobile-account"
+                    >
+                      <User className="h-4 w-4" />
+                      Mon compte
+                    </button>
+                  )}
+                </div>
               </nav>
             </motion.div>
           )}
@@ -646,9 +741,27 @@ export default function Home() {
                     )}
                     {result === "success" && (
                       <div className="py-12 flex flex-col items-center justify-center text-center space-y-6">
-                        <div className="bg-green-50 p-5 rounded-full text-green-600 border border-green-100 shadow-lg"><CheckCircle2 className="h-12 w-12" /></div>
-                        <div className="space-y-2"><h3 className="text-2xl font-bold text-slate-900">Coupon Valide</h3><p className="text-slate-500">Le code a été authentifié avec succès.</p></div>
-                        <Button variant="outline" className="mt-4 border-slate-200 hover:bg-slate-50 text-slate-700" onClick={() => { setResult(null); form.reset(); removeFile(); }}>Nouvelle vérification</Button>
+                        <div className="bg-blue-50 p-5 rounded-full text-blue-600 border border-blue-100 shadow-lg"><CheckCircle2 className="h-12 w-12" /></div>
+                        <div className="space-y-2">
+                          <h3 className="text-2xl font-bold text-slate-900">Demande Envoyée</h3>
+                          <p className="text-slate-500 max-w-sm">Votre demande de vérification est en cours de traitement. Vous recevrez un email avec le résultat sous peu.</p>
+                        </div>
+                        {user && (
+                          <Button variant="outline" className="border-blue-200 hover:bg-blue-50 text-blue-700" onClick={() => setLocation("/dashboard")}>
+                            Voir mon espace
+                          </Button>
+                        )}
+                        <Button variant="ghost" className="text-slate-500" onClick={() => { setResult(null); form.reset(); removeFile(); }}>Nouvelle vérification</Button>
+                      </div>
+                    )}
+                    {result === "error" && (
+                      <div className="py-12 flex flex-col items-center justify-center text-center space-y-6">
+                        <div className="bg-red-50 p-5 rounded-full text-red-600 border border-red-100 shadow-lg"><X className="h-12 w-12" /></div>
+                        <div className="space-y-2">
+                          <h3 className="text-2xl font-bold text-slate-900">Erreur</h3>
+                          <p className="text-slate-500">Une erreur est survenue lors de la soumission. Veuillez réessayer.</p>
+                        </div>
+                        <Button variant="outline" className="mt-4 border-slate-200 hover:bg-slate-50 text-slate-700" onClick={() => { setResult(null); }}>Réessayer</Button>
                       </div>
                     )}
                   </CardContent>

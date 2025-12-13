@@ -1,5 +1,9 @@
 import { type User, type InsertUser, type Verification, type InsertVerification, type VerificationStatus } from "@shared/schema";
-import { randomUUID } from "crypto";
+import { randomUUID, createHash } from "crypto";
+
+function hashPassword(password: string): string {
+  return createHash("sha256").update(password).digest("hex");
+}
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -24,6 +28,26 @@ export class MemStorage implements IStorage {
   constructor() {
     this.users = new Map();
     this.verifications = new Map();
+    
+    // Seed admin user
+    this.seedAdmin();
+  }
+  
+  private seedAdmin() {
+    const adminId = randomUUID();
+    const adminUser: User = {
+      id: adminId,
+      firstName: "Admin",
+      lastName: "NovaVerify",
+      email: "admin@novaverify.com",
+      password: hashPassword("admin123"),
+      role: "admin",
+      emailVerified: true,
+      verificationToken: null,
+      createdAt: new Date(),
+    };
+    this.users.set(adminId, adminUser);
+    console.log("[STORAGE] Admin user seeded: admin@novaverify.com / admin123");
   }
 
   async getUser(id: string): Promise<User | undefined> {
