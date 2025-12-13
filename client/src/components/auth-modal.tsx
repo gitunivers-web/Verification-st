@@ -147,7 +147,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
             <form onSubmit={handleRegister} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="register-firstname" className="text-slate-300">Pr\u00e9nom</Label>
+                  <Label htmlFor="register-firstname" className="text-slate-300">Prénom</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                     <Input
