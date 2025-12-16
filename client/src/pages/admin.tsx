@@ -10,6 +10,7 @@ import { useI18n } from "@/lib/i18n";
 import { LanguageSelector } from "@/components/language-selector";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { API_URL } from "@/lib/config";
+import { NovaAIEngine } from "@/components/nova-ai-engine";
 import type { Verification } from "@shared/schema";
 import {
   CheckCircle,
@@ -22,6 +23,9 @@ import {
   ArrowLeft,
   Loader2,
   Wifi,
+  Home,
+  Activity,
+  Shield,
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -93,6 +97,11 @@ export default function AdminDashboard() {
     },
   });
 
+  const handleLogout = () => {
+    logout();
+    setLocation("/");
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "valid":
@@ -117,22 +126,42 @@ export default function AdminDashboard() {
       <header className="sticky top-0 z-50 border-b border-purple-500/20 bg-slate-950/90 backdrop-blur-xl">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back-home">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-              Koupon Trust - Admin
-            </h1>
+            <div className="flex items-center gap-2">
+              <Shield className="h-6 w-6 text-purple-400" />
+              <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                Koupon Trust - Admin
+              </h1>
+            </div>
+            <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 hidden md:flex">
+              <Activity className="h-3 w-3 mr-1" />
+              Panel Admin
+            </Badge>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-500/30" data-testid="indicator-online-users">
+          <div className="flex items-center gap-2 md:gap-4 flex-wrap">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-500/30" data-testid="indicator-online-users">
               <Wifi className="h-4 w-4 text-green-400" />
               <span className="text-sm font-medium text-green-400">{onlineCount}</span>
               <span className="text-xs text-green-400/70">{t("admin.onlineUsers")}</span>
             </div>
             <LanguageSelector />
-            <span className="text-sm text-slate-400">{user?.email}</span>
-            <Button variant="outline" size="sm" onClick={logout} data-testid="button-admin-logout">
+            <span className="hidden lg:inline text-sm text-slate-400">{user?.email}</span>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setLocation("/")}
+              className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
+              data-testid="button-back-home"
+            >
+              <Home className="h-4 w-4 mr-2" />
+              Accueil
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleLogout}
+              className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+              data-testid="button-admin-logout"
+            >
               <LogOut className="h-4 w-4 mr-2" />
               {t("nav.logout")}
             </Button>
@@ -141,56 +170,70 @@ export default function AdminDashboard() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card className="bg-slate-900/50 border-purple-500/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-purple-500/20">
-                <FileCheck className="h-6 w-6 text-purple-400" />
-              </div>
-              <div>
-                <p className="text-sm text-slate-400">{t("admin.total")}</p>
-                <p className="text-2xl font-bold text-white">{verifications.length}</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-slate-900/50 border-yellow-500/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-yellow-500/20">
-                <Clock className="h-6 w-6 text-yellow-400" />
-              </div>
-              <div>
-                <p className="text-sm text-slate-400">{t("admin.pending")}</p>
-                <p className="text-2xl font-bold text-white">{pendingCount}</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-slate-900/50 border-green-500/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-green-500/20">
-                <CheckCircle className="h-6 w-6 text-green-400" />
-              </div>
-              <div>
-                <p className="text-sm text-slate-400">{t("admin.valid")}</p>
-                <p className="text-2xl font-bold text-white">{validCount}</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-slate-900/50 border-red-500/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-red-500/20">
-                <XCircle className="h-6 w-6 text-red-400" />
-              </div>
-              <div>
-                <p className="text-sm text-slate-400">{t("admin.invalid")}</p>
-                <p className="text-2xl font-bold text-white">{invalidCount}</p>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-white mb-2">
+            Tableau de bord administrateur
+          </h2>
+          <p className="text-slate-400">Gerez les verifications et surveillez l'activite en temps reel</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="lg:col-span-2">
+            <NovaAIEngine />
+          </div>
+          
+          <div className="space-y-4">
+            <Card className="bg-slate-900/50 border-purple-500/20">
+              <CardContent className="p-4 flex items-center gap-4">
+                <div className="p-3 rounded-lg bg-purple-500/20">
+                  <FileCheck className="h-6 w-6 text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400">{t("admin.total")}</p>
+                  <p className="text-2xl font-bold text-white">{verifications.length}</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-slate-900/50 border-yellow-500/20">
+              <CardContent className="p-4 flex items-center gap-4">
+                <div className="p-3 rounded-lg bg-yellow-500/20">
+                  <Clock className="h-6 w-6 text-yellow-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400">{t("admin.pending")}</p>
+                  <p className="text-2xl font-bold text-white">{pendingCount}</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-slate-900/50 border-green-500/20">
+              <CardContent className="p-4 flex items-center gap-4">
+                <div className="p-3 rounded-lg bg-green-500/20">
+                  <CheckCircle className="h-6 w-6 text-green-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400">{t("admin.valid")}</p>
+                  <p className="text-2xl font-bold text-white">{validCount}</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-slate-900/50 border-red-500/20">
+              <CardContent className="p-4 flex items-center gap-4">
+                <div className="p-3 rounded-lg bg-red-500/20">
+                  <XCircle className="h-6 w-6 text-red-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400">{t("admin.invalid")}</p>
+                  <p className="text-2xl font-bold text-white">{invalidCount}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         <Card className="bg-slate-900/50 border-purple-500/20">
           <CardHeader>
             <CardTitle className="text-white">{t("admin.requests")}</CardTitle>
+            <p className="text-sm text-slate-400">Gerez les demandes de verification en attente</p>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -198,7 +241,12 @@ export default function AdminDashboard() {
                 <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
               </div>
             ) : verifications.length === 0 ? (
-              <p className="text-center text-slate-500 py-8">{t("admin.noRequests")}</p>
+              <div className="text-center py-12">
+                <div className="p-4 rounded-full bg-slate-800/50 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <FileCheck className="h-10 w-10 text-slate-600" />
+                </div>
+                <p className="text-slate-500">{t("admin.noRequests")}</p>
+              </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">

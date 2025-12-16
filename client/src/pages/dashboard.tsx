@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/lib/auth";
 import { queryClient } from "@/lib/queryClient";
 import { API_URL } from "@/lib/config";
+import { NovaAIEngine } from "@/components/nova-ai-engine";
 import type { Verification } from "@shared/schema";
 import {
   CheckCircle,
@@ -17,6 +18,11 @@ import {
   LogOut,
   FileCheck,
   Loader2,
+  Home,
+  Plus,
+  Activity,
+  TrendingUp,
+  Shield,
 } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -103,8 +109,14 @@ export default function UserDashboard() {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    setLocation("/");
+  };
+
   const pendingCount = verifications.filter((v) => v.status === "pending").length;
   const completedCount = verifications.filter((v) => v.status !== "pending").length;
+  const validCount = verifications.filter((v) => v.status === "valid").length;
 
   if (authLoading || !user) {
     return (
@@ -119,16 +131,33 @@ export default function UserDashboard() {
       <header className="sticky top-0 z-50 border-b border-purple-500/20 bg-slate-950/90 backdrop-blur-xl">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back-home">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
             <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
               Mon Espace
             </h1>
+            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+              <Activity className="h-3 w-3 mr-1" />
+              En ligne
+            </Badge>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-slate-400">{user.firstName} {user.lastName}</span>
-            <Button variant="outline" size="sm" onClick={logout} data-testid="button-user-logout">
+          <div className="flex items-center gap-2 md:gap-4 flex-wrap">
+            <span className="hidden md:inline text-sm text-slate-400">{user.firstName} {user.lastName}</span>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setLocation("/")}
+              className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
+              data-testid="button-back-home"
+            >
+              <Home className="h-4 w-4 mr-2" />
+              Accueil
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleLogout}
+              className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+              data-testid="button-user-logout"
+            >
               <LogOut className="h-4 w-4 mr-2" />
               Deconnexion
             </Button>
@@ -137,51 +166,79 @@ export default function UserDashboard() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card className="bg-slate-900/50 border-purple-500/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-purple-500/20">
-                <FileCheck className="h-6 w-6 text-purple-400" />
-              </div>
-              <div>
-                <p className="text-sm text-slate-400">Total demandes</p>
-                <p className="text-2xl font-bold text-white">{verifications.length}</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-slate-900/50 border-yellow-500/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-yellow-500/20">
-                <Clock className="h-6 w-6 text-yellow-400" />
-              </div>
-              <div>
-                <p className="text-sm text-slate-400">En attente</p>
-                <p className="text-2xl font-bold text-white">{pendingCount}</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-slate-900/50 border-green-500/20">
-            <CardContent className="p-4 flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-green-500/20">
-                <CheckCircle className="h-6 w-6 text-green-400" />
-              </div>
-              <div>
-                <p className="text-sm text-slate-400">Traitees</p>
-                <p className="text-2xl font-bold text-white">{completedCount}</p>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-white mb-2">
+            Bienvenue, {user.firstName}
+          </h2>
+          <p className="text-slate-400">Gerez vos verifications et suivez l'etat de vos demandes</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="lg:col-span-2">
+            <NovaAIEngine />
+          </div>
+          
+          <div className="space-y-4">
+            <Card className="bg-slate-900/50 border-purple-500/20">
+              <CardContent className="p-4 flex items-center gap-4">
+                <div className="p-3 rounded-lg bg-purple-500/20">
+                  <FileCheck className="h-6 w-6 text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400">Total demandes</p>
+                  <p className="text-2xl font-bold text-white">{verifications.length}</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-slate-900/50 border-yellow-500/20">
+              <CardContent className="p-4 flex items-center gap-4">
+                <div className="p-3 rounded-lg bg-yellow-500/20">
+                  <Clock className="h-6 w-6 text-yellow-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400">En attente</p>
+                  <p className="text-2xl font-bold text-white">{pendingCount}</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-slate-900/50 border-green-500/20">
+              <CardContent className="p-4 flex items-center gap-4">
+                <div className="p-3 rounded-lg bg-green-500/20">
+                  <CheckCircle className="h-6 w-6 text-green-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400">Valides</p>
+                  <p className="text-2xl font-bold text-white">{validCount}</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-slate-900/50 border-cyan-500/20">
+              <CardContent className="p-4 flex items-center gap-4">
+                <div className="p-3 rounded-lg bg-cyan-500/20">
+                  <TrendingUp className="h-6 w-6 text-cyan-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400">Traitees</p>
+                  <p className="text-2xl font-bold text-white">{completedCount}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         <Card className="bg-slate-900/50 border-purple-500/20">
           <CardHeader className="flex flex-row items-center justify-between gap-4">
-            <CardTitle className="text-white">Historique des verifications</CardTitle>
+            <div>
+              <CardTitle className="text-white">Historique des verifications</CardTitle>
+              <p className="text-sm text-slate-400 mt-1">Suivez l'etat de vos demandes en temps reel</p>
+            </div>
             <Button
               variant="default"
               className="bg-gradient-to-r from-purple-600 to-cyan-600"
               onClick={() => setLocation("/")}
               data-testid="button-new-verification"
             >
+              <Plus className="h-4 w-4 mr-2" />
               Nouvelle verification
             </Button>
           </CardHeader>
@@ -192,12 +249,16 @@ export default function UserDashboard() {
               </div>
             ) : verifications.length === 0 ? (
               <div className="text-center py-12">
-                <FileCheck className="h-16 w-16 text-slate-700 mx-auto mb-4" />
-                <p className="text-slate-500 mb-4">Vous n'avez pas encore de demandes de verification</p>
+                <div className="p-4 rounded-full bg-slate-800/50 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <FileCheck className="h-10 w-10 text-slate-600" />
+                </div>
+                <h3 className="text-lg font-medium text-white mb-2">Aucune verification</h3>
+                <p className="text-slate-500 mb-6">Vous n'avez pas encore de demandes de verification</p>
                 <Button
                   className="bg-gradient-to-r from-purple-600 to-cyan-600"
                   onClick={() => setLocation("/")}
                 >
+                  <Shield className="h-4 w-4 mr-2" />
                   Faire ma premiere verification
                 </Button>
               </div>
@@ -216,7 +277,7 @@ export default function UserDashboard() {
                             {getStatusIcon(v.status)}
                           </div>
                           <div>
-                            <div className="flex items-center gap-2 mb-1">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
                               <span className="font-medium text-white">{v.couponType}</span>
                               {getStatusBadge(v.status)}
                             </div>

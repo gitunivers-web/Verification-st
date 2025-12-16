@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,9 +16,10 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ open, onOpenChange }: AuthModalProps) {
-  const { login, register } = useAuth();
+  const { login, register, isAdmin } = useAuth();
   const { toast } = useToast();
   const { t } = useI18n();
+  const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
 
@@ -38,6 +40,17 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       toast({ title: "Connexion r\u00e9ussie", description: "Bienvenue sur Koupon Trust" });
       onOpenChange(false);
       setLoginForm({ email: "", password: "" });
+      const savedUser = localStorage.getItem("auth_user");
+      if (savedUser) {
+        const userData = JSON.parse(savedUser);
+        if (userData.role === "admin") {
+          setLocation("/admin");
+        } else {
+          setLocation("/dashboard");
+        }
+      } else {
+        setLocation("/dashboard");
+      }
     } catch (error) {
       toast({
         title: "Erreur",
