@@ -100,3 +100,23 @@ Languages supported: French (FR), Dutch (NL), German (DE), Italian (IT), English
 ### Deployment
 - **Vercel**: Configured via `vercel.json` for static frontend deployment
 - **Replit**: Primary development and hosting platform with custom Vite plugins
+
+## Recent Changes (December 2024)
+
+### Post-Login Redirect
+- After successful login, users are automatically redirected to `/dashboard`
+- Admins are automatically redirected to `/admin`
+- No intermediate steps required
+
+### Nova AI Engine Component
+- New animated component at `client/src/components/nova-ai-engine.tsx`
+- Features dynamic statistics: codes analyzed, frauds detected, neural network status
+- Processing power bar with real-time updates
+- Cryptographic validation stream animation
+- SSL/TLS security indicator
+
+### Enhanced Dashboards
+- Both user and admin dashboards include the Nova AI Engine visualization
+- Clear "Accueil" (Home) and "Deconnexion" (Logout) buttons in headers
+- Improved statistics cards and layout
+- Real-time WebSocket updates for verification status
