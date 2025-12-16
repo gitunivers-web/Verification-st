@@ -85,8 +85,8 @@ Languages supported: French (FR), Dutch (NL), German (DE), Italian (IT), English
 - **connect-pg-simple**: Session storage for PostgreSQL
 
 ### Email Service
-- **Brevo (Sendinblue)**: Planned integration for email verification and admin notifications
-- **Nodemailer**: Email sending capability
+- **Resend**: Primary email service for transactional emails (configured via `RESEND_API_KEY` secret)
+- Functions: sendVerificationEmail, sendAdminNotification, sendStatusUpdateEmail
 
 ### UI/Design Libraries
 - **Radix UI**: Accessible component primitives (dialog, select, tabs, etc.)

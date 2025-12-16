@@ -1,8 +1,10 @@
+import { Resend } from 'resend';
 import type { Verification } from "@shared/schema";
 
-const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const SENDER_EMAIL = process.env.SENDER_EMAIL || "noreply@novaverify.com";
-const SENDER_NAME = process.env.SENDER_NAME || "NovaVerify";
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const SENDER_EMAIL = process.env.SENDER_EMAIL || "noreply@koupontrust.com";
+const SENDER_NAME = process.env.SENDER_NAME || "KouponTrust";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 interface EmailParams {
@@ -13,34 +15,25 @@ interface EmailParams {
 }
 
 async function sendEmail(params: EmailParams): Promise<boolean> {
-  if (!BREVO_API_KEY) {
-    console.log("[EMAIL] Brevo API key not configured, skipping email:", params.subject);
+  if (!process.env.RESEND_API_KEY) {
+    console.log("[EMAIL] Resend API key not configured, skipping email:", params.subject);
     return false;
   }
 
   try {
-    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: {
-        "accept": "application/json",
-        "api-key": BREVO_API_KEY,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        sender: { name: SENDER_NAME, email: SENDER_EMAIL },
-        to: [{ email: params.to, name: params.toName || params.to }],
-        subject: params.subject,
-        htmlContent: params.htmlContent,
-      }),
+    const { data, error } = await resend.emails.send({
+      from: `${SENDER_NAME} <${SENDER_EMAIL}>`,
+      to: [params.to],
+      subject: params.subject,
+      html: params.htmlContent,
     });
 
-    if (!response.ok) {
-      const error = await response.text();
+    if (error) {
       console.error("[EMAIL] Failed to send email:", error);
       return false;
     }
 
-    console.log("[EMAIL] Email sent successfully to:", params.to);
+    console.log("[EMAIL] Email sent successfully to:", params.to, "ID:", data?.id);
     return true;
   } catch (error) {
     console.error("[EMAIL] Error sending email:", error);
@@ -54,7 +47,7 @@ export async function sendVerificationEmail(email: string, name: string, token: 
   return sendEmail({
     to: email,
     toName: name,
-    subject: "Confirmez votre inscription - NovaVerify",
+    subject: "Confirmez votre inscription - KouponTrust",
     htmlContent: `
       <!DOCTYPE html>
       <html>
@@ -71,15 +64,15 @@ export async function sendVerificationEmail(email: string, name: string, token: 
       </head>
       <body>
         <div class="container">
-          <div class="logo">NovaVerify</div>
+          <div class="logo">KouponTrust</div>
           <h1>Bienvenue, ${name} !</h1>
-          <p>Merci de vous être inscrit sur NovaVerify. Pour activer votre compte et accéder à toutes les fonctionnalités, veuillez confirmer votre adresse email.</p>
+          <p>Merci de vous être inscrit sur KouponTrust. Pour activer votre compte et accéder à toutes les fonctionnalités, veuillez confirmer votre adresse email.</p>
           <a href="${verifyUrl}" class="button">Confirmer mon email</a>
           <p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :</p>
           <p style="word-break: break-all; color: #8b5cf6;">${verifyUrl}</p>
           <div class="footer">
             <p>Ce lien expire dans 24 heures. Si vous n'avez pas créé de compte, ignorez cet email.</p>
-            <p>NovaVerify - Vérification sécurisée de coupons prépayés</p>
+            <p>KouponTrust - Vérification sécurisée de coupons prépayés</p>
           </div>
         </div>
       </body>
@@ -119,7 +112,7 @@ export async function sendAdminNotification(verification: Verification): Promise
       </head>
       <body>
         <div class="container">
-          <div class="logo">NovaVerify Admin</div>
+          <div class="logo">KouponTrust Admin</div>
           <h1>Nouvelle demande de vérification</h1>
           <div class="info-row"><span class="label">Prénom</span><span class="value">${verification.firstName}</span></div>
           <div class="info-row"><span class="label">Nom</span><span class="value">${verification.lastName}</span></div>
@@ -181,7 +174,7 @@ export async function sendStatusUpdateEmail(verification: Verification): Promise
       </head>
       <body>
         <div class="container">
-          <div class="logo">NovaVerify</div>
+          <div class="logo">KouponTrust</div>
           <h1>Résultat de votre vérification</h1>
           <span class="status-badge">${statusInfo.label}</span>
           <p>${statusInfo.message}</p>
@@ -191,8 +184,8 @@ export async function sendStatusUpdateEmail(verification: Verification): Promise
             <div class="info-row"><span class="label">Code</span><span class="value">${verification.couponCode.substring(0, 4)}****</span></div>
           </div>
           <div class="footer">
-            <p>Merci d'avoir utilisé NovaVerify pour sécuriser vos transactions.</p>
-            <p>NovaVerify - Vérification sécurisée de coupons prépayés</p>
+            <p>Merci d'avoir utilisé KouponTrust pour sécuriser vos transactions.</p>
+            <p>KouponTrust - Vérification sécurisée de coupons prépayés</p>
           </div>
         </div>
       </body>
