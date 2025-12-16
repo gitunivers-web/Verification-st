@@ -10,7 +10,7 @@ Preferred communication style: Simple, everyday language.
 
 ## Admin Credentials
 - Email: admin@koupontrust.com
-- Password: admin123
+- Password: Configured via ADMIN_PASSWORD secret
 
 ## System Architecture
 

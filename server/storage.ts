@@ -40,14 +40,14 @@ export class MemStorage implements IStorage {
       firstName: "Admin",
       lastName: "Koupon Trust",
       email: "admin@koupontrust.com",
-      password: hashPassword("admin123"),
+      password: hashPassword(process.env.ADMIN_PASSWORD || "changeme"),
       role: "admin",
       emailVerified: true,
       verificationToken: null,
       createdAt: new Date(),
     };
     this.users.set(adminId, adminUser);
-    console.log("[STORAGE] Admin user seeded: admin@koupontrust.com / admin123");
+    console.log("[STORAGE] Admin user seeded: admin@koupontrust.com");
   }
 
   async getUser(id: string): Promise<User | undefined> {
