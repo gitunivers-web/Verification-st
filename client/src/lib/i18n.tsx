@@ -473,16 +473,24 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined);
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("koupon-language");
-      if (saved && ["fr", "nl", "de", "it", "en"].includes(saved)) {
-        return saved as Language;
+      try {
+        const saved = localStorage.getItem("koupon-language");
+        if (saved && ["fr", "nl", "de", "it", "en"].includes(saved)) {
+          return saved as Language;
+        }
+      } catch {
+        // localStorage not available (e.g., in iframe with restricted permissions)
       }
     }
     return "fr";
   });
 
   useEffect(() => {
-    localStorage.setItem("koupon-language", language);
+    try {
+      localStorage.setItem("koupon-language", language);
+    } catch {
+      // localStorage not available
+    }
   }, [language]);
 
   const t = (key: string): string => {
