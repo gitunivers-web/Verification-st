@@ -1,8 +1,6 @@
 import { Resend } from 'resend';
 import type { Verification } from "@shared/schema";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const SENDER_EMAIL = process.env.SENDER_EMAIL || "noreply@koupontrust.com";
 const SENDER_NAME = process.env.SENDER_NAME || "KouponTrust";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
@@ -19,6 +17,8 @@ async function sendEmail(params: EmailParams): Promise<boolean> {
     console.log("[EMAIL] Resend API key not configured, skipping email:", params.subject);
     return false;
   }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
     const { data, error } = await resend.emails.send({
