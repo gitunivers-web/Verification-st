@@ -43,7 +43,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { AuthModal } from "@/components/auth-modal";
 import { LanguageSelector } from "@/components/language-selector";
-import { NovaAIEngine } from "@/components/nova-ai-engine";
+import { NovaAIEngineHome } from "@/components/nova-ai-engine-home";
 import { API_URL } from "@/lib/config";
 import { useToast } from "@/hooks/use-toast";
 import kouponLogo from "@assets/generated_images/koupon_trust_logo_design.png";
@@ -824,7 +824,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex-1">
-                <NovaAIEngine />
+                <NovaAIEngineHome />
               </div>
             </div>
           </div>
