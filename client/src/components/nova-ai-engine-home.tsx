@@ -11,11 +11,11 @@ export function NovaAIEngineHome() {
   const [cryptoStream, setCryptoStream] = useState<string[]>([]);
   const [codeCounterSinceFraud, setCodeCounterSinceFraud] = useState(0);
 
-  // Increment codes analyzed every 2-3 seconds, detect fraud every 15-20 codes
+  // Increment codes analyzed every 100-120 seconds (1 code), detect fraud every 15-20 codes
   useEffect(() => {
     const codesInterval = setInterval(() => {
       setCodesAnalyzed(prev => {
-        const newTotal = prev + Math.floor(Math.random() * 3) + 1;
+        const newTotal = prev + 1;
         setTodayIncrement(prevDay => prevDay + 1);
         
         // Increment the counter since last fraud
@@ -32,7 +32,7 @@ export function NovaAIEngineHome() {
         
         return newTotal;
       });
-    }, 2000 + Math.random() * 3000);
+    }, 100000 + Math.random() * 20000); // 100-120 seconds
 
     return () => clearInterval(codesInterval);
   }, []);
