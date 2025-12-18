@@ -30,7 +30,7 @@ import { useI18n } from "@/lib/i18n";
 import { LanguageSelector } from "@/components/language-selector";
 import { queryClient } from "@/lib/queryClient";
 import { API_URL } from "@/lib/config";
-import { NovaAIEngine } from "@/components/nova-ai-engine";
+import { NovaAIEngineHome } from "@/components/nova-ai-engine-home";
 import type { Verification } from "@shared/schema";
 import {
   CheckCircle,
@@ -493,7 +493,7 @@ export default function AdminDashboard() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <div className="lg:col-span-2">
-                    <NovaAIEngine />
+                    <NovaAIEngineHome />
                   </div>
 
                   <div className="space-y-6">

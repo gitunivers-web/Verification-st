@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/lib/auth";
 import { queryClient } from "@/lib/queryClient";
 import { API_URL } from "@/lib/config";
-import { NovaAIEngine } from "@/components/nova-ai-engine";
+import { NovaAIEngineHome } from "@/components/nova-ai-engine-home";
 import type { Verification } from "@shared/schema";
 import {
   CheckCircle,
@@ -390,7 +390,7 @@ export default function UserDashboard() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <div className="lg:col-span-2">
-                    <NovaAIEngine />
+                    <NovaAIEngineHome />
                   </div>
 
                   <div className="space-y-6">
