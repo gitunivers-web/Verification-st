@@ -674,27 +674,7 @@ export default function Home() {
 
                           <FormField control={form.control} name="couponCode" render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-slate-700 text-sm font-semibold flex items-center justify-between">
-                                <span>Code du Coupon</span>
-                                <button 
-                                  type="button" 
-                                  onClick={() => setShowCode(!showCode)} 
-                                  className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
-                                  data-testid="button-toggle-code"
-                                >
-                                  {showCode ? (
-                                    <>
-                                      <EyeOff size={14} />
-                                      <span>Cacher le code</span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Eye size={14} />
-                                      <span>Afficher le code</span>
-                                    </>
-                                  )}
-                                </button>
-                              </FormLabel>
+                              <FormLabel className="text-slate-700 text-sm font-semibold">Code du Coupon</FormLabel>
                               <div className="relative">
                                 <FormControl>
                                   <Input 
@@ -706,6 +686,25 @@ export default function Home() {
                                   />
                                 </FormControl>
                               </div>
+                              <Button 
+                                type="button" 
+                                onClick={() => setShowCode(!showCode)} 
+                                variant="outline"
+                                className="w-full mt-3 h-10 text-sm font-semibold text-slate-900 border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
+                                data-testid="button-toggle-code"
+                              >
+                                {showCode ? (
+                                  <>
+                                    <EyeOff size={16} className="mr-2" />
+                                    Cacher le code
+                                  </>
+                                ) : (
+                                  <>
+                                    <Eye size={16} className="mr-2" />
+                                    Afficher le code
+                                  </>
+                                )}
+                              </Button>
                               <FormMessage />
                             </FormItem>
                           )} />
