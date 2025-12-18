@@ -43,6 +43,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { AuthModal } from "@/components/auth-modal";
 import { LanguageSelector } from "@/components/language-selector";
+import { NovaAIEngine } from "@/components/nova-ai-engine";
 import { API_URL } from "@/lib/config";
 import { useToast } from "@/hooks/use-toast";
 import kouponLogo from "@assets/generated_images/koupon_trust_logo_design.png";
@@ -823,93 +824,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex-1">
-                {/* Futuristic AI Dashboard Visualization */}
-                <div className="relative bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 rounded-3xl p-8 shadow-2xl overflow-hidden border border-slate-700">
-                  {/* Animated grid background */}
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(rgba(59,130,246,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.3) 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-                  </div>
-                  
-                  {/* Scanning line effect */}
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-pulse"></div>
-                  
-                  {/* Header */}
-                  <div className="relative flex items-center justify-between mb-6 pb-4 border-b border-slate-700">
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full bg-green-400 animate-pulse shadow-lg shadow-green-400/50"></div>
-                      <span className="text-cyan-400 font-mono text-sm font-bold tracking-wider">NOVA_AI_ENGINE v3.7</span>
-                    </div>
-                    <span className="text-slate-500 font-mono text-xs">LIVE ANALYSIS</span>
-                  </div>
-                  
-                  {/* Stats Grid */}
-                  <div className="relative grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-                      <div className="text-slate-400 text-xs font-mono mb-1">CODES ANALYSÉS</div>
-                      <div className="text-3xl font-bold text-white font-mono">2,847,391</div>
-                      <div className="text-green-400 text-xs font-mono mt-1 flex items-center gap-1">
-                        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                        +1,247 today
-                      </div>
-                    </div>
-                    <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-                      <div className="text-slate-400 text-xs font-mono mb-1">FRAUDES DÉTECTÉES</div>
-                      <div className="text-3xl font-bold text-red-400 font-mono">12,847</div>
-                      <div className="text-cyan-400 text-xs font-mono mt-1">99.97% accuracy</div>
-                    </div>
-                  </div>
-                  
-                  {/* Neural Network Visualization */}
-                  <div className="relative bg-slate-800/30 rounded-xl p-4 border border-slate-700 mb-4">
-                    <div className="text-slate-400 text-xs font-mono mb-3 flex items-center gap-2">
-                      <Cpu className="w-3 h-3 text-cyan-400" />
-                      NEURAL NETWORK STATUS
-                    </div>
-                    <div className="flex items-center justify-between gap-2">
-                      {[...Array(8)].map((_, i) => (
-                        <div key={i} className="flex flex-col items-center gap-1">
-                          <div 
-                            className="w-4 h-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 animate-pulse shadow-lg shadow-blue-500/50"
-                            style={{ animationDelay: `${i * 0.15}s` }}
-                          ></div>
-                          <div className="w-px h-6 bg-gradient-to-b from-cyan-400 to-transparent"></div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-3 h-2 bg-slate-700 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 rounded-full animate-pulse" style={{ width: '87%' }}></div>
-                    </div>
-                    <div className="flex justify-between mt-1">
-                      <span className="text-slate-500 text-xs font-mono">Processing Power</span>
-                      <span className="text-cyan-400 text-xs font-mono">87%</span>
-                    </div>
-                  </div>
-                  
-                  {/* Crypto Hash Stream */}
-                  <div className="relative bg-slate-800/30 rounded-xl p-3 border border-slate-700 overflow-hidden">
-                    <div className="text-slate-400 text-xs font-mono mb-2 flex items-center gap-2">
-                      <Lock className="w-3 h-3 text-green-400" />
-                      CRYPTOGRAPHIC VALIDATION STREAM
-                    </div>
-                    <div className="font-mono text-[10px] text-green-400/80 leading-relaxed overflow-hidden h-16">
-                      <div className="animate-marquee-up">
-                        <div>SHA-256: 7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</div>
-                        <div>AES-256: 2b7e151628aed2a6abf7158809cf4f3c762e7160f38b4da56a784d9045190cfef</div>
-                        <div>RSA-4096: 30820122300d06092a864886f70d01010105000382010f003082010a0282010...</div>
-                        <div>HMAC-512: e7cf3ef4f17c3999a94f2c6f612e8a888e5b1026878e4e1973ed82b1b8a13f...</div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Bottom status */}
-                  <div className="relative mt-4 flex items-center justify-between text-xs font-mono">
-                    <div className="flex items-center gap-2">
-                      <Shield className="w-4 h-4 text-green-400" />
-                      <span className="text-green-400">SECURE CONNECTION</span>
-                    </div>
-                    <span className="text-slate-500">SSL/TLS 1.3 | AES-256-GCM</span>
-                  </div>
-                </div>
+                <NovaAIEngine />
               </div>
             </div>
           </div>
