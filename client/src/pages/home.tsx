@@ -707,7 +707,7 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             >
-              <div className="relative group sticky top-24">
+              <div className="relative group lg:sticky lg:top-24">
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-[2rem] blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
                 <Card className="relative glass-card-strong border-0 rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl">
                   <CardHeader className="border-b border-slate-100 pb-4 sm:pb-6 pt-5 sm:pt-8 px-4 sm:px-8 bg-white/50">
@@ -723,7 +723,7 @@ export default function Home() {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="pt-5 sm:pt-8 px-4 sm:px-8 pb-5 sm:pb-8 bg-white/40">
+                  <CardContent className="pt-5 sm:pt-8 px-4 sm:px-8 pb-5 sm:pb-8 bg-white/40 max-h-[70vh] overflow-y-auto">
                     {!isAnalyzing && !result && (
                       <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
