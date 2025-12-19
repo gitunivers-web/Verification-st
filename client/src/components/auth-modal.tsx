@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/lib/i18n";
-import { Loader2, Mail, Lock, User } from "lucide-react";
+import { Loader2, Mail, Lock, User, Shield, ArrowLeft } from "lucide-react";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 interface AuthModalProps {
   open: boolean;
@@ -16,12 +17,15 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ open, onOpenChange }: AuthModalProps) {
-  const { login, register, isAdmin } = useAuth();
+  const { login, register, verify2FA } = useAuth();
   const { toast } = useToast();
   const { t, language } = useI18n();
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
+  const [requires2FA, setRequires2FA] = useState(false);
+  const [pendingAuthToken, setPendingAuthToken] = useState("");
+  const [otpCode, setOtpCode] = useState("");
 
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [registerForm, setRegisterForm] = useState({
@@ -36,7 +40,16 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await login(loginForm.email, loginForm.password);
+      const result = await login(loginForm.email, loginForm.password);
+      
+      // Check if 2FA is required - password verified, now need OTP
+      if (result.requires2FA && result.pendingAuthToken) {
+        setRequires2FA(true);
+        setPendingAuthToken(result.pendingAuthToken);
+        setIsLoading(false);
+        return;
+      }
+      
       toast({ title: t("toast.loginSuccess"), description: t("toast.loginSuccessDesc") });
       onOpenChange(false);
       setLoginForm({ email: "", password: "" });
@@ -60,6 +73,49 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handle2FAVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otpCode.length !== 6) return;
+    
+    setIsLoading(true);
+    try {
+      await verify2FA(pendingAuthToken, otpCode);
+      toast({ title: t("toast.loginSuccess"), description: t("toast.loginSuccessDesc") });
+      onOpenChange(false);
+      setRequires2FA(false);
+      setPendingAuthToken("");
+      setOtpCode("");
+      setLoginForm({ email: "", password: "" });
+      
+      const savedUser = localStorage.getItem("auth_user");
+      if (savedUser) {
+        const userData = JSON.parse(savedUser);
+        if (userData.role === "admin") {
+          setLocation("/admin");
+        } else {
+          setLocation("/dashboard");
+        }
+      } else {
+        setLocation("/dashboard");
+      }
+    } catch (error) {
+      toast({
+        title: t("toast.error"),
+        description: error instanceof Error ? error.message : t("toast.2faError"),
+        variant: "destructive",
+      });
+      setOtpCode("");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleBack2FA = () => {
+    setRequires2FA(false);
+    setPendingAuthToken("");
+    setOtpCode("");
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -96,6 +152,66 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       setIsLoading(false);
     }
   };
+
+  // 2FA Verification Screen
+  if (requires2FA) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-md bg-slate-900/95 border-purple-500/30 backdrop-blur-xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent flex items-center justify-center gap-2">
+              <Shield className="h-6 w-6" />
+              {t("auth.2faTitle")}
+            </DialogTitle>
+            <DialogDescription className="text-center text-slate-400">
+              {t("auth.2faDescription")}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handle2FAVerify} className="space-y-6 mt-4">
+            <div className="flex justify-center">
+              <InputOTP
+                maxLength={6}
+                value={otpCode}
+                onChange={setOtpCode}
+                data-testid="input-2fa-code"
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} className="bg-slate-800/50 border-slate-700" />
+                  <InputOTPSlot index={1} className="bg-slate-800/50 border-slate-700" />
+                  <InputOTPSlot index={2} className="bg-slate-800/50 border-slate-700" />
+                  <InputOTPSlot index={3} className="bg-slate-800/50 border-slate-700" />
+                  <InputOTPSlot index={4} className="bg-slate-800/50 border-slate-700" />
+                  <InputOTPSlot index={5} className="bg-slate-800/50 border-slate-700" />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleBack2FA}
+                className="flex-1"
+                data-testid="button-2fa-back"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                {t("auth.back")}
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading || otpCode.length !== 6}
+                className="flex-1 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500"
+                data-testid="button-2fa-verify"
+              >
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t("auth.verify")}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

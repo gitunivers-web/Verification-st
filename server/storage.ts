@@ -71,6 +71,8 @@ export class MemStorage implements IStorage {
       verificationToken: null,
       resetToken: null,
       resetTokenExpiry: null,
+      twoFactorSecret: null,
+      twoFactorEnabled: false,
       createdAt: new Date(),
     };
     this.users.set(adminId, adminUser);
@@ -112,6 +114,8 @@ export class MemStorage implements IStorage {
       verificationToken: insertUser.verificationToken || null,
       resetToken: null,
       resetTokenExpiry: null,
+      twoFactorSecret: null,
+      twoFactorEnabled: false,
       createdAt: new Date(),
     };
     this.users.set(id, user);

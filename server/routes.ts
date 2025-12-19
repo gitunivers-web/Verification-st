@@ -2,7 +2,9 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage, comparePassword } from "./storage";
-import { registerSchema, loginSchema, verificationFormSchema, forgotPasswordSchema, resetPasswordSchema, type VerificationStatus } from "@shared/schema";
+import { registerSchema, loginSchema, verificationFormSchema, forgotPasswordSchema, resetPasswordSchema, twoFactorVerifySchema, type VerificationStatus } from "@shared/schema";
+import * as OTPAuth from "otpauth";
+import QRCode from "qrcode";
 import { sendVerificationEmail, sendAdminNotification, sendStatusUpdateEmail, sendPasswordResetEmail } from "./email";
 import { randomBytes } from "crypto";
 import jwt from "jsonwebtoken";
@@ -16,12 +18,50 @@ if (!JWT_SECRET && process.env.NODE_ENV === "production") {
 const JWT_SECRET_VALUE = JWT_SECRET || "dev-secret-key-change-in-production";
 const JWT_EXPIRY = "7d";
 
+// Pending auth tokens for 2FA flow - ensures password was verified before OTP
+interface PendingAuthEntry {
+  userId: string;
+  email: string;
+  createdAt: number;
+  expiresAt: number;
+  attemptCount: number;
+  lockedUntil?: number;
+}
+
+const pendingAuthTokens = new Map<string, PendingAuthEntry>();
+const PENDING_AUTH_EXPIRY = 5 * 60 * 1000; // 5 minutes
+const MAX_2FA_ATTEMPTS = 5;
+const LOCKOUT_DURATION = 30 * 1000; // 30 seconds
+
+// Cleanup expired pending auth tokens every minute
+setInterval(() => {
+  const now = Date.now();
+  for (const [token, entry] of pendingAuthTokens.entries()) {
+    if (entry.expiresAt < now) {
+      pendingAuthTokens.delete(token);
+    }
+  }
+}, 60 * 1000);
+
 async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12);
 }
 
 function generateToken(): string {
   return randomBytes(32).toString("hex");
+}
+
+function generatePendingAuthToken(userId: string, email: string): string {
+  const token = randomBytes(32).toString("hex");
+  const now = Date.now();
+  pendingAuthTokens.set(token, {
+    userId,
+    email,
+    createdAt: now,
+    expiresAt: now + PENDING_AUTH_EXPIRY,
+    attemptCount: 0,
+  });
+  return token;
 }
 
 interface AuthenticatedRequest extends Request {
@@ -222,6 +262,15 @@ export async function registerRoutes(
         return res.status(401).json({ error: "Veuillez d'abord vérifier votre email" });
       }
 
+      // Check if 2FA is enabled - issue pending auth token instead of allowing direct 2FA verify
+      if (user.twoFactorEnabled) {
+        const pendingToken = generatePendingAuthToken(user.id, user.email);
+        return res.json({
+          requires2FA: true,
+          pendingAuthToken: pendingToken,
+        });
+      }
+
       const token = createAuthToken(user);
 
       res.json({
@@ -232,6 +281,7 @@ export async function registerRoutes(
           firstName: user.firstName,
           lastName: user.lastName,
           role: user.role,
+          twoFactorEnabled: user.twoFactorEnabled,
         },
       });
     } catch (error) {
@@ -338,10 +388,210 @@ export async function registerRoutes(
         firstName: user.firstName,
         lastName: user.lastName,
         role: user.role,
+        twoFactorEnabled: user.twoFactorEnabled,
       });
     } catch (error) {
       console.error("[AUTH] Get user error:", error);
       res.status(500).json({ error: "Erreur serveur" });
+    }
+  });
+
+  // 2FA Setup - Generate secret and QR code
+  app.post("/api/auth/2fa/setup", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const user = await storage.getUser(req.user!.id);
+      if (!user) {
+        return res.status(404).json({ error: "Utilisateur non trouvé" });
+      }
+
+      if (user.twoFactorEnabled) {
+        return res.status(400).json({ error: "La 2FA est déjà activée" });
+      }
+
+      const secret = new OTPAuth.Secret();
+      const totp = new OTPAuth.TOTP({
+        issuer: "Koupon Trust",
+        label: user.email,
+        algorithm: "SHA1",
+        digits: 6,
+        period: 30,
+        secret: secret,
+      });
+
+      // Store secret temporarily (not enabled yet)
+      await storage.updateUser(user.id, {
+        twoFactorSecret: secret.base32,
+        twoFactorEnabled: false,
+      });
+
+      const qrCodeUrl = await QRCode.toDataURL(totp.toString());
+
+      res.json({
+        secret: secret.base32,
+        qrCode: qrCodeUrl,
+      });
+    } catch (error) {
+      console.error("[2FA] Setup error:", error);
+      res.status(500).json({ error: "Erreur lors de la configuration 2FA" });
+    }
+  });
+
+  // 2FA Enable - Verify first token and enable 2FA
+  app.post("/api/auth/2fa/enable", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const result = twoFactorVerifySchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ error: result.error.errors[0].message });
+      }
+
+      const user = await storage.getUser(req.user!.id);
+      if (!user || !user.twoFactorSecret) {
+        return res.status(400).json({ error: "Veuillez d'abord configurer la 2FA" });
+      }
+
+      if (user.twoFactorEnabled) {
+        return res.status(400).json({ error: "La 2FA est déjà activée" });
+      }
+
+      const totp = new OTPAuth.TOTP({
+        secret: OTPAuth.Secret.fromBase32(user.twoFactorSecret),
+        algorithm: "SHA1",
+        digits: 6,
+        period: 30,
+      });
+
+      const delta = totp.validate({ token: result.data.token, window: 1 });
+
+      if (delta === null) {
+        return res.status(401).json({ error: "Code invalide ou expiré" });
+      }
+
+      await storage.updateUser(user.id, {
+        twoFactorEnabled: true,
+      });
+
+      res.json({ message: "Authentification à deux facteurs activée avec succès" });
+    } catch (error) {
+      console.error("[2FA] Enable error:", error);
+      res.status(500).json({ error: "Erreur lors de l'activation de la 2FA" });
+    }
+  });
+
+  // 2FA Disable
+  app.post("/api/auth/2fa/disable", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const result = twoFactorVerifySchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ error: result.error.errors[0].message });
+      }
+
+      const user = await storage.getUser(req.user!.id);
+      if (!user || !user.twoFactorEnabled) {
+        return res.status(400).json({ error: "La 2FA n'est pas activée" });
+      }
+
+      const totp = new OTPAuth.TOTP({
+        secret: OTPAuth.Secret.fromBase32(user.twoFactorSecret!),
+        algorithm: "SHA1",
+        digits: 6,
+        period: 30,
+      });
+
+      const delta = totp.validate({ token: result.data.token, window: 1 });
+
+      if (delta === null) {
+        return res.status(401).json({ error: "Code invalide ou expiré" });
+      }
+
+      await storage.updateUser(user.id, {
+        twoFactorSecret: null,
+        twoFactorEnabled: false,
+      });
+
+      res.json({ message: "Authentification à deux facteurs désactivée" });
+    } catch (error) {
+      console.error("[2FA] Disable error:", error);
+      res.status(500).json({ error: "Erreur lors de la désactivation de la 2FA" });
+    }
+  });
+
+  // 2FA Verify - For login flow (requires pending auth token from password verification)
+  app.post("/api/auth/2fa/verify", async (req, res) => {
+    try {
+      const result = twoFactorVerifySchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ error: result.error.errors[0].message });
+      }
+      
+      const { pendingAuthToken, token } = result.data;
+
+      // Validate pending auth token exists and hasn't expired
+      const pendingEntry = pendingAuthTokens.get(pendingAuthToken);
+      if (!pendingEntry) {
+        return res.status(401).json({ error: "Session d'authentification expirée. Veuillez vous reconnecter." });
+      }
+
+      const now = Date.now();
+
+      // Check if token is expired
+      if (pendingEntry.expiresAt < now) {
+        pendingAuthTokens.delete(pendingAuthToken);
+        return res.status(401).json({ error: "Session d'authentification expirée. Veuillez vous reconnecter." });
+      }
+
+      // Check if locked out due to too many attempts
+      if (pendingEntry.lockedUntil && pendingEntry.lockedUntil > now) {
+        const remainingSeconds = Math.ceil((pendingEntry.lockedUntil - now) / 1000);
+        return res.status(429).json({ 
+          error: `Trop de tentatives. Réessayez dans ${remainingSeconds} secondes.` 
+        });
+      }
+
+      // Get user from pending entry
+      const user = await storage.getUser(pendingEntry.userId);
+      if (!user || !user.twoFactorEnabled || !user.twoFactorSecret) {
+        pendingAuthTokens.delete(pendingAuthToken);
+        return res.status(400).json({ error: "Vérification 2FA non requise" });
+      }
+
+      const totp = new OTPAuth.TOTP({
+        secret: OTPAuth.Secret.fromBase32(user.twoFactorSecret),
+        algorithm: "SHA1",
+        digits: 6,
+        period: 30,
+      });
+
+      const delta = totp.validate({ token, window: 1 });
+
+      if (delta === null) {
+        // Increment attempt count and potentially lock out
+        pendingEntry.attemptCount++;
+        if (pendingEntry.attemptCount >= MAX_2FA_ATTEMPTS) {
+          pendingEntry.lockedUntil = now + LOCKOUT_DURATION;
+          pendingEntry.attemptCount = 0; // Reset for next lockout period
+        }
+        return res.status(401).json({ error: "Code invalide ou expiré" });
+      }
+
+      // Success - delete pending token (single use) and issue JWT
+      pendingAuthTokens.delete(pendingAuthToken);
+
+      const authToken = createAuthToken(user);
+
+      res.json({
+        token: authToken,
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role,
+          twoFactorEnabled: user.twoFactorEnabled,
+        },
+      });
+    } catch (error) {
+      console.error("[2FA] Verify error:", error);
+      res.status(500).json({ error: "Erreur lors de la vérification 2FA" });
     }
   });
 

@@ -214,3 +214,27 @@ Languages supported: French (FR), Dutch (NL), German (DE), Italian (IT), English
 - **Toast messages**: Login/register success/error messages translated
 - **Error handling**: All auth modal errors use i18n keys
 - **Email verification page**: Complete i18n support with dashboard redirect after success
+
+### Two-Factor Authentication (2FA) - December 19, 2024
+- **Complete 2FA implementation** using TOTP (Time-based One-Time Password)
+- **Setup flow**:
+  - Users/admins can enable 2FA from their dashboard (Security section)
+  - QR code generated using OTPAuth library for authenticator app scanning
+  - Backup codes displayed during setup
+  - Must verify first code to activate
+- **Login flow with secure pending-auth token**:
+  - Password verified first, issues short-lived pendingAuthToken (5-min expiry)
+  - 2FA verify endpoint requires pendingAuthToken to prove password was verified
+  - Prevents authentication bypass with only OTP
+  - Single-use tokens deleted after successful verification
+- **Rate limiting**: Max 5 attempts per token, 30-second lockout after exceeded
+- **Disable flow**: Requires valid 2FA code to turn off
+- **Components**:
+  - `client/src/components/two-factor-setup.tsx` - Setup UI component
+  - Auth modal 2FA verification screen with 6-digit OTP input
+- **Backend endpoints**:
+  - `/api/auth/2fa/setup` - Generate secret and QR code
+  - `/api/auth/2fa/enable` - Verify initial code and enable
+  - `/api/auth/2fa/verify` - Verify code during login (requires pendingAuthToken)
+  - `/api/auth/2fa/disable` - Disable 2FA with valid code
+- **i18n support**: All 2FA-related text translated in 5 languages

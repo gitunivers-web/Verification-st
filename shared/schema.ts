@@ -14,6 +14,8 @@ export const users = pgTable("users", {
   verificationToken: text("verification_token"),
   resetToken: text("reset_token"),
   resetTokenExpiry: timestamp("reset_token_expiry"),
+  twoFactorSecret: text("two_factor_secret"),
+  twoFactorEnabled: boolean("two_factor_enabled").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -39,7 +41,14 @@ export const insertUserSchema = createInsertSchema(users).omit({
   verificationToken: true,
   resetToken: true,
   resetTokenExpiry: true,
+  twoFactorSecret: true,
+  twoFactorEnabled: true,
   createdAt: true,
+});
+
+export const twoFactorVerifySchema = z.object({
+  pendingAuthToken: z.string().min(1, "Token d'authentification requis"),
+  token: z.string().length(6, "Le code doit contenir 6 chiffres").regex(/^\d+$/, "Le code doit contenir uniquement des chiffres"),
 });
 
 export const forgotPasswordSchema = z.object({

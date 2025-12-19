@@ -15,6 +15,7 @@ import { LanguageSelector } from "@/components/language-selector";
 import { queryClient } from "@/lib/queryClient";
 import { API_URL } from "@/lib/config";
 import { NovaAIEngineHome } from "@/components/nova-ai-engine-home";
+import { TwoFactorSetup } from "@/components/two-factor-setup";
 import type { Verification } from "@shared/schema";
 import {
   CheckCircle,
@@ -678,6 +679,8 @@ export default function UserDashboard() {
                     </div>
                   </CardContent>
                 </Card>
+
+                <TwoFactorSetup />
               </div>
             )}
           </main>

@@ -7,16 +7,26 @@ interface User {
   firstName: string;
   lastName: string;
   role: string;
+  twoFactorEnabled?: boolean;
+}
+
+interface LoginResult {
+  requires2FA?: boolean;
+  pendingAuthToken?: string;
+  token?: string;
+  user?: User;
 }
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<LoginResult>;
+  verify2FA: (pendingAuthToken: string, code: string) => Promise<void>;
   register: (data: { firstName: string; lastName: string; email: string; password: string; language?: string }) => Promise<string>;
   logout: () => void;
   isAdmin: boolean;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -36,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<LoginResult> => {
     const response = await apiRequest("POST", "/api/auth/login", { email, password });
     const data = await response.json();
     
@@ -44,10 +54,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error(data.error || "Erreur de connexion");
     }
 
+    // If 2FA is required, return pending auth token without setting auth state
+    if (data.requires2FA) {
+      return { requires2FA: true, pendingAuthToken: data.pendingAuthToken };
+    }
+
     setToken(data.token);
     setUser(data.user);
     localStorage.setItem("auth_token", data.token);
     localStorage.setItem("auth_user", JSON.stringify(data.user));
+    
+    return { token: data.token, user: data.user };
+  };
+
+  const verify2FA = async (pendingAuthToken: string, code: string) => {
+    const response = await apiRequest("POST", "/api/auth/2fa/verify", { pendingAuthToken, token: code });
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || "Code invalide");
+    }
+
+    setToken(data.token);
+    setUser(data.user);
+    localStorage.setItem("auth_token", data.token);
+    localStorage.setItem("auth_user", JSON.stringify(data.user));
+  };
+
+  const refreshUser = async () => {
+    if (!token) return;
+    try {
+      const response = await fetch("/api/auth/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data);
+        localStorage.setItem("auth_user", JSON.stringify(data));
+      }
+    } catch (error) {
+      console.error("Failed to refresh user:", error);
+    }
   };
 
   const register = async (data: { firstName: string; lastName: string; email: string; password: string; language?: string }) => {
@@ -74,9 +121,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       token,
       isLoading,
       login,
+      verify2FA,
       register,
       logout,
       isAdmin: user?.role === "admin",
+      refreshUser,
     }}>
       {children}
     </AuthContext.Provider>
