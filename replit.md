@@ -135,16 +135,18 @@ Languages supported: French (FR), Dutch (NL), German (DE), Italian (IT), English
 - **NEW**: Daily counter resets automatically at midnight
 - Applied to all instances: home page, user dashboard, and admin dashboard
 
-### Persistence Implementation
-- **Storage Key**: `nova_ai_engine_state` in localStorage
-- **Persisted Data**: 
-  - Codes analyzed counter
-  - Frauds detected counter
-  - Daily increment counter
-  - Last reset date for midnight reset logic
-- **State Recovery**: Automatically loads from localStorage on component mount
-- **Automatic Saves**: State updates are saved to localStorage on every change
-- **Daily Reset**: Daily counter resets at midnight while maintaining cumulative counters
+### Centralized Nova AI Engine Implementation (December 2024)
+- **Server-Side Simulation**: NovaSimulationService at `server/nova-simulation.ts` manages shared state
+- **Persisted State**: MemStorage stores `codesAnalyzed`, `fraudsDetected`, `todayIncrement`, `processingPower`, `lastResetDate`
+- **REST Endpoint**: `/api/nova/stats` provides initial state for all clients
+- **WebSocket Broadcast**: `nova_state` events push updates to all connected clients in real-time
+- **Frontend Hook**: `useNovaLiveStats` at `client/src/hooks/use-nova-live-stats.ts` combines React Query + WebSocket
+- **Fraud Ratio Logic**: 
+  - Strictly enforces 1-3 frauds per 10-15 codes analyzed
+  - First fraud emits immediately when threshold reached
+  - Remaining frauds emit every 2+ ticks
+  - Excess codes carry over to next batch
+- **Synchronization**: All devices, pages, and users see identical statistics in real-time
 
 ### Real-Time WebSocket Updates (December 19, 2024)
 - **Authenticated WebSocket**: Clients authenticate with token on connection (message type: "auth")
