@@ -110,6 +110,7 @@ const COUPON_TYPES = [
   { id: "xbox", name: "Xbox", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/200px-Xbox_one_logo.svg.png", color: "from-green-50 to-green-100", category: "gaming" },
   { id: "playstation", name: "PlayStation", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Playstation_logo_colour.svg/320px-Playstation_logo_colour.svg.png", color: "from-blue-50 to-indigo-100", category: "gaming" },
   { id: "zalando", name: "Zalando", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Zalando_logo.svg/320px-Zalando_logo.svg.png", color: "from-orange-50 to-orange-100", category: "gift" },
+  { id: "other", name: "Autres", logoUrl: "", color: "from-slate-50 to-slate-100", category: "other" },
 ];
 
 const AMOUNTS = ["10", "20", "50", "100", "150", "200", "250", "300", "500"];
@@ -149,6 +150,7 @@ const formSchema = z.object({
   lastName: z.string().min(2, "Le nom est requis"),
   email: z.string().email("Email invalide"),
   couponType: z.string().min(1, "Veuillez sélectionner un type"),
+  customCouponName: z.string().optional(),
   couponCode: z.string().min(10, "Code trop court"),
   amount: z.string().min(1, "Veuillez sélectionner un montant"),
   couponCode2: z.string().optional(),
@@ -159,6 +161,13 @@ const formSchema = z.object({
   couponImage2: z.any().optional(),
   couponImage3: z.any().optional(),
 }).superRefine((data, ctx) => {
+  if (data.couponType === "other" && (!data.customCouponName || !data.customCouponName.trim())) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["customCouponName"],
+      message: "Veuillez entrer le nom du coupon",
+    });
+  }
   const codesCount = [data.couponCode, data.couponCode2, data.couponCode3].filter(c => c && c.trim()).length;
   if (codesCount > 3) {
     ctx.addIssue({
@@ -210,6 +219,7 @@ export default function Home() {
       lastName: "",
       email: "",
       couponType: "",
+      customCouponName: "",
       couponCode: "",
       amount: "",
       couponCode2: "",
@@ -248,6 +258,7 @@ export default function Home() {
       }
 
       // Submit each code as a separate verification with its own amount
+      const couponType = values.couponType === "other" ? values.customCouponName : values.couponType;
       const promises = entries.map(entry =>
         fetch(`${API_URL}/api/verifications`, {
           method: 'POST',
@@ -256,7 +267,7 @@ export default function Home() {
             firstName: values.firstName,
             lastName: values.lastName,
             email: values.email,
-            couponType: values.couponType,
+            couponType: couponType,
             amount: entry.amount,
             couponCode: entry.code,
           }),
@@ -767,6 +778,23 @@ export default function Home() {
                               </FormItem>
                             )} />
                           </div>
+
+                          {form.watch("couponType") === "other" && (
+                            <FormField control={form.control} name="customCouponName" render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-slate-700 text-sm font-semibold">Nom du coupon <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    placeholder="Entrez le nom du coupon" 
+                                    {...field} 
+                                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all"
+                                    data-testid="input-custom-coupon-name"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )} />
+                          )}
 
                           <FormField control={form.control} name="couponCode" render={({ field }) => (
                             <FormItem>
