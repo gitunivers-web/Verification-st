@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/lib/i18n";
-import { Loader2, Mail, Lock, User, Shield, ArrowLeft } from "lucide-react";
+import { Loader2, Mail, Lock, User, Shield, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 interface AuthModalProps {
@@ -28,6 +28,9 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
   const [otpCode, setOtpCode] = useState("");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [registerForm, setRegisterForm] = useState({
@@ -348,14 +351,22 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <Input
                     id="login-password"
-                    type="password"
+                    type={showLoginPassword ? "text" : "password"}
                     placeholder={t("placeholder.password")}
                     value={loginForm.password}
                     onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
+                    className="pl-10 pr-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
                     data-testid="input-login-password"
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginPassword(!showLoginPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                    data-testid="button-toggle-login-password"
+                  >
+                    {showLoginPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
                 <div className="text-right">
                   <button
@@ -435,15 +446,23 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <Input
                     id="register-password"
-                    type="password"
+                    type={showRegisterPassword ? "text" : "password"}
                     placeholder={t("placeholder.minCharacters")}
                     value={registerForm.password}
                     onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
-                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
+                    className="pl-10 pr-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
                     data-testid="input-register-password"
                     required
                     minLength={12}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                    data-testid="button-toggle-register-password"
+                  >
+                    {showRegisterPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
 
@@ -453,15 +472,23 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <Input
                     id="register-confirm"
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     placeholder={t("placeholder.confirmPassword")}
                     value={registerForm.confirmPassword}
                     onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
-                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
+                    className="pl-10 pr-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
                     data-testid="input-register-confirm"
                     required
                     minLength={12}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                    data-testid="button-toggle-confirm-password"
+                  >
+                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
 
