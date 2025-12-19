@@ -51,6 +51,14 @@ export const twoFactorVerifySchema = z.object({
   token: z.string().length(6, "Le code doit contenir 6 chiffres").regex(/^\d+$/, "Le code doit contenir uniquement des chiffres"),
 });
 
+export const twoFactorEnableSchema = z.object({
+  token: z.string().length(6, "Le code doit contenir 6 chiffres").regex(/^\d+$/, "Le code doit contenir uniquement des chiffres"),
+});
+
+export const twoFactorDisableSchema = z.object({
+  token: z.string().length(6, "Le code doit contenir 6 chiffres").regex(/^\d+$/, "Le code doit contenir uniquement des chiffres"),
+});
+
 export const forgotPasswordSchema = z.object({
   email: z.string().email("Email invalide"),
 });

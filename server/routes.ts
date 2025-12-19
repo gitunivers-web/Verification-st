@@ -2,7 +2,7 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage, comparePassword } from "./storage";
-import { registerSchema, loginSchema, verificationFormSchema, forgotPasswordSchema, resetPasswordSchema, twoFactorVerifySchema, type VerificationStatus } from "@shared/schema";
+import { registerSchema, loginSchema, verificationFormSchema, forgotPasswordSchema, resetPasswordSchema, twoFactorVerifySchema, twoFactorEnableSchema, twoFactorDisableSchema, type VerificationStatus } from "@shared/schema";
 import * as OTPAuth from "otpauth";
 import QRCode from "qrcode";
 import { sendVerificationEmail, sendAdminNotification, sendStatusUpdateEmail, sendPasswordResetEmail } from "./email";
@@ -453,7 +453,7 @@ export async function registerRoutes(
   // 2FA Enable - Verify first token and enable 2FA
   app.post("/api/auth/2fa/enable", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
-      const result = twoFactorVerifySchema.safeParse(req.body);
+      const result = twoFactorEnableSchema.safeParse(req.body);
       if (!result.success) {
         return res.status(400).json({ error: result.error.errors[0].message });
       }
@@ -494,7 +494,7 @@ export async function registerRoutes(
   // 2FA Disable
   app.post("/api/auth/2fa/disable", authMiddleware, async (req: AuthenticatedRequest, res) => {
     try {
-      const result = twoFactorVerifySchema.safeParse(req.body);
+      const result = twoFactorDisableSchema.safeParse(req.body);
       if (!result.success) {
         return res.status(400).json({ error: result.error.errors[0].message });
       }
