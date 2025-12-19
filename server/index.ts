@@ -14,7 +14,8 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
       connectSrc: ["'self'", "https:"],
     },
@@ -48,10 +49,13 @@ app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/register", authLimiter);
 
 // CORS configuration - strict origin validation
+const replitDomain = process.env.REPLIT_DEV_DOMAIN;
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5000',
+  'http://127.0.0.1:5000',
   'http://localhost:5173',
+  replitDomain ? `https://${replitDomain}` : null,
 ].filter(Boolean) as string[];
 
 app.use(cors({
@@ -61,6 +65,9 @@ app.use(cors({
       return callback(null, true);
     }
     
+    console.log('[CORS] Incoming origin:', origin);
+    console.log('[CORS] Allowed origins:', allowedOrigins);
+    
     // Check if origin is in allowedOrigins
     const isAllowed = allowedOrigins.some(allowed => 
       origin.startsWith(allowed.replace(/\/$/, ''))
@@ -69,6 +76,7 @@ app.use(cors({
     if (isAllowed) {
       callback(null, true);
     } else {
+      console.log('[CORS] Origin not allowed:', origin);
       callback(new Error("CORS not allowed"));
     }
   },
