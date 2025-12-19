@@ -1460,11 +1460,11 @@ const translations: Translations = {
     en: "Verify now",
   },
   "form.couponPhoto": {
-    fr: "Photo du coupon (optionnelle)",
-    nl: "Foto van coupon (optioneel)",
-    de: "Foto des Gutscheins (optional)",
-    it: "Foto del coupon (opzionale)",
-    en: "Photo of coupon (optional)",
+    fr: "Photo du coupon (optionnelle, mais importante pour une verification rapide)",
+    nl: "Foto van coupon (optioneel, maar belangrijk voor snelle verificatie)",
+    de: "Foto des Gutscheins (optional, aber wichtig fur schnelle Verifizierung)",
+    it: "Foto del coupon (opzionale, ma importante per una verifica rapida)",
+    en: "Photo of coupon (optional, but important for quick verification)",
   },
   "form.analyzing": {
     fr: "Analyse en cours...",

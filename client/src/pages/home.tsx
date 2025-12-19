@@ -93,7 +93,7 @@ import {
 
 const COUPON_TYPES = [
   { id: "transcash", name: "Transcash", logoUrl: transcashLogo, color: "from-red-50 to-red-100", category: "payment" },
-  { id: "pcs", name: "PCS Mastercard", logoUrl: pcsLogo, color: "from-slate-50 to-slate-200", category: "payment" },
+  { id: "pcs", name: "PCS", logoUrl: pcsLogo, color: "from-slate-50 to-slate-200", category: "payment" },
   { id: "paysafecard", name: "Paysafecard", logoUrl: paysafecardLogo, color: "from-blue-50 to-blue-100", category: "payment" },
   { id: "neosurf", name: "Neosurf", logoUrl: neosurfLogo, color: "from-pink-50 to-rose-100", category: "payment" },
   { id: "googleplay", name: "Google Play", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Google_Play_2022_logo.svg/320px-Google_Play_2022_logo.svg.png", color: "from-emerald-50 to-emerald-100", category: "gift" },
