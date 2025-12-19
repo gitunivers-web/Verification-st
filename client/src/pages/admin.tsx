@@ -443,6 +443,32 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
+                {pendingCount > 0 && (
+                  <Card className="bg-gradient-to-r from-violet-900/30 to-amber-900/30 border-amber-500/30">
+                    <CardContent className="p-4 md:p-5">
+                      <div className="flex items-center justify-between flex-wrap gap-3">
+                        <div className="flex items-center gap-3 md:gap-4">
+                          <div className="p-2 md:p-3 rounded-xl bg-amber-500/20 animate-pulse">
+                            <AlertCircle className="h-5 w-5 md:h-6 md:w-6 text-amber-400" />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-white text-sm md:text-base">{pendingCount} demande(s) en attente</p>
+                            <p className="text-xs md:text-sm text-slate-400">Ces demandes necessitent votre attention</p>
+                          </div>
+                        </div>
+                        <Button 
+                          className="bg-gradient-to-r from-violet-600 to-cyan-600 text-sm"
+                          onClick={() => setActiveTab("verifications")}
+                          data-testid="button-go-to-pending-top"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          Voir les demandes
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <Card className="bg-slate-900/50 border-slate-800 overflow-hidden relative group">
                     <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -588,32 +614,6 @@ export default function AdminDashboard() {
                     </Card>
                   </div>
                 </div>
-
-                {pendingCount > 0 && (
-                  <Card className="bg-gradient-to-r from-violet-900/30 to-amber-900/30 border-amber-500/30">
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between flex-wrap gap-4">
-                        <div className="flex items-center gap-4">
-                          <div className="p-3 rounded-xl bg-amber-500/20 animate-pulse">
-                            <AlertCircle className="h-6 w-6 text-amber-400" />
-                          </div>
-                          <div>
-                            <p className="font-semibold text-white">{pendingCount} demande(s) en attente</p>
-                            <p className="text-sm text-slate-400">Ces demandes necessitent votre attention</p>
-                          </div>
-                        </div>
-                        <Button 
-                          className="bg-gradient-to-r from-violet-600 to-cyan-600"
-                          onClick={() => setActiveTab("verifications")}
-                          data-testid="button-go-to-pending"
-                        >
-                          <Eye className="h-4 w-4 mr-2" />
-                          Voir les demandes
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
               </div>
             )}
 
