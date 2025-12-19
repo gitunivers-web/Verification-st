@@ -1,13 +1,18 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
-import { storage } from "./storage";
+import { storage, comparePassword } from "./storage";
 import { registerSchema, loginSchema, verificationFormSchema, type VerificationStatus } from "@shared/schema";
 import { sendVerificationEmail, sendAdminNotification, sendStatusUpdateEmail } from "./email";
-import { createHash, randomBytes } from "crypto";
+import { randomBytes } from "crypto";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
-function hashPassword(password: string): string {
-  return createHash("sha256").update(password).digest("hex");
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
+const JWT_EXPIRY = "7d";
+
+async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, 12);
 }
 
 function generateToken(): string {
@@ -58,12 +63,11 @@ function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunc
   }
   const token = authHeader.split(" ")[1];
   try {
-    const decoded = Buffer.from(token, "base64").toString("utf-8");
-    const [id, email, role] = decoded.split("|");
-    req.user = { id, email, role };
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
+    req.user = decoded;
     next();
   } catch {
-    return res.status(401).json({ error: "Token invalide" });
+    return res.status(401).json({ error: "Token invalide ou expiré" });
   }
 }
 
@@ -75,7 +79,11 @@ function adminMiddleware(req: AuthenticatedRequest, res: Response, next: NextFun
 }
 
 function createAuthToken(user: { id: string; email: string; role: string }): string {
-  return Buffer.from(`${user.id}|${user.email}|${user.role}`).toString("base64");
+  return jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    JWT_SECRET,
+    { expiresIn: JWT_EXPIRY, algorithm: "HS256" }
+  );
 }
 
 export async function registerRoutes(
@@ -144,7 +152,7 @@ export async function registerRoutes(
       }
 
       const verificationToken = generateToken();
-      const hashedPassword = hashPassword(password);
+      const hashedPassword = await hashPassword(password);
 
       const user = await storage.createUser({
         firstName,
@@ -176,7 +184,7 @@ export async function registerRoutes(
       const { email, password } = result.data;
       const user = await storage.getUserByEmail(email);
 
-      if (!user || user.password !== hashPassword(password)) {
+      if (!user || !(await comparePassword(password, user.password))) {
         return res.status(401).json({ error: "Email ou mot de passe incorrect" });
       }
 
@@ -259,9 +267,8 @@ export async function registerRoutes(
       if (authHeader?.startsWith("Bearer ")) {
         try {
           const token = authHeader.split(" ")[1];
-          const decoded = Buffer.from(token, "base64").toString("utf-8");
-          const [id] = decoded.split("|");
-          userId = id;
+          const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+          userId = decoded.id;
           isRegisteredUser = true;
         } catch {}
       }

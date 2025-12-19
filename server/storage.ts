@@ -1,8 +1,15 @@
 import { type User, type InsertUser, type Verification, type InsertVerification, type VerificationStatus } from "@shared/schema";
-import { randomUUID, createHash } from "crypto";
+import { randomUUID } from "crypto";
+import bcrypt from "bcryptjs";
 
-function hashPassword(password: string): string {
-  return createHash("sha256").update(password).digest("hex");
+let hashPasswordCache: Promise<string> | null = null;
+
+async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, 12);
+}
+
+export async function comparePassword(password: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(password, hash);
 }
 
 export interface IStorage {
@@ -29,19 +36,20 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.verifications = new Map();
     
-    // Seed admin user
-    this.seedAdmin();
+    // Seed admin user (async initialization)
+    this.seedAdmin().catch(err => console.error("[STORAGE] Failed to seed admin:", err));
   }
   
-  private seedAdmin() {
+  private async seedAdmin() {
     // Admin account
     const adminId = randomUUID();
+    const adminPassword = await hashPassword("Stadork009@");
     const adminUser: User = {
       id: adminId,
       firstName: "Admin",
       lastName: "Koupon Trust",
       email: "admin@koupontrust.com",
-      password: hashPassword("Stadork009@"),
+      password: adminPassword,
       role: "admin",
       emailVerified: true,
       verificationToken: null,
@@ -52,19 +60,20 @@ export class MemStorage implements IStorage {
     
     // Regular user account for testing
     const userId = randomUUID();
+    const userPassword = await hashPassword("user123");
     const regularUser: User = {
       id: userId,
       firstName: "Test",
       lastName: "User",
       email: "user@example.com",
-      password: hashPassword("user123"),
+      password: userPassword,
       role: "user",
       emailVerified: true,
       verificationToken: null,
       createdAt: new Date(),
     };
     this.users.set(userId, regularUser);
-    console.log("[STORAGE] Regular user seeded: user@example.com (password: user123)");
+    console.log("[STORAGE] Regular user seeded: user@example.com");
   }
 
   async getUser(id: string): Promise<User | undefined> {

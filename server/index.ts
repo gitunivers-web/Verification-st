@@ -1,11 +1,53 @@
 import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 
 const app = express();
 
+// Security: Use Helmet to set various HTTP headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https:"],
+    },
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true,
+  },
+}));
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Trop de requêtes, veuillez réessayer plus tard",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // limit each IP to 5 login attempts per windowMs
+  message: "Trop de tentatives de connexion, veuillez réessayer plus tard",
+  skipSuccessfulRequests: true,
+});
+
+// Apply rate limiting
+app.use("/api/", limiter);
+app.use("/api/auth/login", authLimiter);
+app.use("/api/auth/register", authLimiter);
+
+// CORS configuration - strict origin validation
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5000',
@@ -14,10 +56,20 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.some(allowed => origin.startsWith(allowed.replace(/\/$/, '')))) {
+    // Allow requests with no origin (mobile apps, curl requests)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    // Check if origin is in allowedOrigins
+    const isAllowed = allowedOrigins.some(allowed => 
+      origin.startsWith(allowed.replace(/\/$/, ''))
+    );
+    
+    if (isAllowed) {
       callback(null, true);
     } else {
-      callback(null, true);
+      callback(new Error("CORS not allowed"));
     }
   },
   credentials: true,
@@ -83,12 +135,18 @@ app.use((req, res, next) => {
 (async () => {
   await registerRoutes(httpServer, app);
 
+  // Error handler (must be last)
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    // Don't expose internal errors in production
+    const message = process.env.NODE_ENV === "production" 
+      ? "Une erreur est survenue" 
+      : err.message || "Internal Server Error";
 
-    res.status(status).json({ message });
-    throw err;
+    res.status(status).json({ error: message });
+    if (status >= 500) {
+      console.error("[ERROR]", err);
+    }
   });
 
   // importantly only setup vite in development and after
