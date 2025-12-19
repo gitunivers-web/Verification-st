@@ -103,6 +103,14 @@ Languages supported: French (FR), Dutch (NL), German (DE), Italian (IT), English
 
 ## Recent Changes (December 2024)
 
+### Multiple Coupon Codes Support (December 19, 2024)
+- **Verification Form**: Now supports up to 3 coupon codes per submission
+- Users can submit 1, 2, or 3 codes in one request
+- Each code generates a separate verification request to the backend
+- Show/Hide toggle applies to all code fields
+- Improved toast notification shows how many codes were submitted
+- Code fields have data-testid attributes for testing
+
 ### Footer Navigation (December 19, 2024)
 - **Liens Rapides**: Navigation links corrected and properly linked:
   - "Vérifier un coupon" → Scrolls to top (verification form)

@@ -152,7 +152,17 @@ const formSchema = z.object({
   couponType: z.string().min(1, "Veuillez sélectionner un type"),
   amount: z.string().min(1, "Veuillez sélectionner un montant"),
   couponCode: z.string().min(10, "Code trop court"),
+  couponCode2: z.string().optional(),
+  couponCode3: z.string().optional(),
   couponImage: z.any().optional(),
+}).superRefine((data, ctx) => {
+  const codesCount = [data.couponCode, data.couponCode2, data.couponCode3].filter(c => c && c.trim()).length;
+  if (codesCount > 3) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Maximum 3 codes par envoi",
+    });
+  }
 });
 
 // --- Main Component ---
@@ -179,47 +189,64 @@ export default function Home() {
       couponType: "",
       amount: "",
       couponCode: "",
+      couponCode2: "",
+      couponCode3: "",
     },
   });
 
   const submitVerificationMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const formData = {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        couponType: values.couponType,
-        amount: parseInt(values.amount),
-        couponCode: values.couponCode,
-      };
-      
+      // Collect all codes that are filled in
+      const codes = [values.couponCode, values.couponCode2, values.couponCode3]
+        .filter(c => c && c.trim())
+        .map(c => c!.trim());
+
+      if (codes.length === 0) {
+        throw new Error("Veuillez entrer au moins un code coupon");
+      }
+
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       };
-      
+
       const token = localStorage.getItem("auth_token");
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
+
+      // Submit each code as a separate verification
+      const promises = codes.map(couponCode =>
+        fetch(`${API_URL}/api/verifications`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+            couponType: values.couponType,
+            amount: parseInt(values.amount),
+            couponCode: couponCode,
+          }),
+        })
+      );
+
+      const responses = await Promise.all(promises);
       
-      const response = await fetch(`${API_URL}/api/verifications`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(formData),
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Erreur lors de la soumission');
+      for (const response of responses) {
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Erreur lors de la soumission');
+        }
       }
-      
-      return response.json();
+
+      return { success: true, codesCount: codes.length };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       setResult("success");
+      const codesText = data.codesCount === 1 ? "1 code" : `${data.codesCount} codes`;
       toast({
         title: "Demande envoyée",
-        description: "Votre demande de vérification a été soumise avec succès. Vous recevrez un email avec le résultat.",
+        description: `Votre demande de vérification pour ${codesText} a été soumise avec succès. Vous recevrez un email avec les résultats.`,
       });
     },
     onError: (error: Error) => {
@@ -674,7 +701,7 @@ export default function Home() {
 
                           <FormField control={form.control} name="couponCode" render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-slate-700 text-sm font-semibold">Code du Coupon</FormLabel>
+                              <FormLabel className="text-slate-700 text-sm font-semibold">Code 1 du Coupon <span className="text-red-500">*</span></FormLabel>
                               <div className="relative">
                                 <FormControl>
                                   <Input 
@@ -686,28 +713,61 @@ export default function Home() {
                                   />
                                 </FormControl>
                               </div>
-                              <Button 
-                                type="button" 
-                                onClick={() => setShowCode(!showCode)} 
-                                variant="outline"
-                                className="w-full mt-3 h-10 text-sm font-semibold text-slate-900 border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
-                                data-testid="button-toggle-code"
-                              >
-                                {showCode ? (
-                                  <>
-                                    <EyeOff size={16} className="mr-2" />
-                                    Cacher le code
-                                  </>
-                                ) : (
-                                  <>
-                                    <Eye size={16} className="mr-2" />
-                                    Afficher le code
-                                  </>
-                                )}
-                              </Button>
                               <FormMessage />
                             </FormItem>
                           )} />
+
+                          <FormField control={form.control} name="couponCode2" render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-slate-700 text-sm font-semibold">Code 2 du Coupon (optionnel)</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  type={showCode ? "text" : "password"} 
+                                  placeholder="Deuxième code (optionnel)" 
+                                  {...field} 
+                                  className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
+                                  data-testid="input-coupon-code-2"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+
+                          <FormField control={form.control} name="couponCode3" render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-slate-700 text-sm font-semibold">Code 3 du Coupon (optionnel)</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  type={showCode ? "text" : "password"} 
+                                  placeholder="Troisième code (optionnel)" 
+                                  {...field} 
+                                  className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
+                                  data-testid="input-coupon-code-3"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+
+                          <Button 
+                            type="button" 
+                            onClick={() => setShowCode(!showCode)} 
+                            variant="outline"
+                            className="w-full mt-3 h-10 text-sm font-semibold text-slate-900 border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
+                            data-testid="button-toggle-code"
+                          >
+                            {showCode ? (
+                              <>
+                                <EyeOff size={16} className="mr-2" />
+                                Cacher les codes
+                              </>
+                            ) : (
+                              <>
+                                <Eye size={16} className="mr-2" />
+                                Afficher les codes
+                              </>
+                            )}
+                          </Button>
 
                           <FormField control={form.control} name="couponImage" render={({ field: { value, onChange, ...fieldProps } }) => (
                             <FormItem>
