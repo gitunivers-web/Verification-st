@@ -2512,11 +2512,18 @@ const translations: Translations = {
     en: "Verification token missing",
   },
   "verifyEmail.successMessage": {
-    fr: "Email verifie avec succes",
-    nl: "E-mail succesvol geverifieerd",
-    de: "E-Mail erfolgreich verifiziert",
-    it: "Email verificata con successo",
-    en: "Email verified successfully",
+    fr: "Email verifie avec succes. Vous allez etre connecte automatiquement.",
+    nl: "E-mail succesvol geverifieerd. U wordt automatisch ingelogd.",
+    de: "E-Mail erfolgreich verifiziert. Sie werden automatisch angemeldet.",
+    it: "Email verificata con successo. Sarai connesso automaticamente.",
+    en: "Email verified successfully. You will be logged in automatically.",
+  },
+  "verifyEmail.redirecting": {
+    fr: "Redirection dans",
+    nl: "Omleiding in",
+    de: "Weiterleitung in",
+    it: "Reindirizzamento in",
+    en: "Redirecting in",
   },
   "verifyEmail.errorMessage": {
     fr: "Erreur lors de la verification",

@@ -12,6 +12,7 @@ export default function VerifyEmail() {
   const { t } = useI18n();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("");
+  const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
     const params = new URLSearchParams(search);
@@ -28,7 +29,12 @@ export default function VerifyEmail() {
         const data = await res.json();
         if (res.ok) {
           setStatus("success");
-          setMessage(data.message || t("verifyEmail.successMessage"));
+          
+          // Auto-login: save token and user to localStorage
+          if (data.token && data.user) {
+            localStorage.setItem("auth_token", data.token);
+            localStorage.setItem("auth_user", JSON.stringify(data.user));
+          }
         } else {
           setStatus("error");
           setMessage(data.error || t("verifyEmail.errorMessage"));
@@ -39,6 +45,25 @@ export default function VerifyEmail() {
         setMessage(t("verifyEmail.connectionError"));
       });
   }, [search, t]);
+
+  // Countdown and auto-redirect after success
+  useEffect(() => {
+    if (status !== "success") return;
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          // Force page reload to pick up auth state
+          window.location.href = "/dashboard";
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [status]);
 
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
@@ -58,10 +83,13 @@ export default function VerifyEmail() {
                 <CheckCircle className="h-16 w-16 text-green-400" />
               </div>
               <h1 className="text-xl font-bold text-white mb-2">{t("verifyEmail.success")}</h1>
-              <p className="text-slate-400 mb-6">{t("verifyEmail.successMessage")}</p>
+              <p className="text-slate-400 mb-4">{t("verifyEmail.successMessage")}</p>
+              <p className="text-sm text-purple-400 mb-6">
+                {t("verifyEmail.redirecting")} {countdown}s...
+              </p>
               <Button
                 className="bg-gradient-to-r from-purple-600 to-cyan-600"
-                onClick={() => setLocation("/dashboard")}
+                onClick={() => window.location.href = "/dashboard"}
                 data-testid="button-go-dashboard"
               >
                 {t("verifyEmail.goToDashboard")}

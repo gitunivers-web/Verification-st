@@ -307,7 +307,21 @@ export async function registerRoutes(
         verificationToken: null,
       });
 
-      res.json({ message: "Email vérifié avec succès" });
+      // Generate auth token to auto-login the user
+      const authToken = createAuthToken(user);
+
+      res.json({ 
+        message: "Email vérifié avec succès",
+        token: authToken,
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role,
+          twoFactorEnabled: user.twoFactorEnabled,
+        },
+      });
     } catch (error) {
       console.error("[AUTH] Email verification error:", error);
       res.status(500).json({ error: "Erreur lors de la vérification" });
