@@ -189,7 +189,7 @@ export default function Home() {
         lastName: values.lastName,
         email: values.email,
         couponType: values.couponType,
-        amount: values.amount,
+        amount: parseInt(values.amount),
         couponCode: values.couponCode,
       };
       
