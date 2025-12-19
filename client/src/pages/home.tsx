@@ -152,7 +152,7 @@ const formSchema = z.object({
   couponType: z.string().min(1, "Veuillez sélectionner un type"),
   amount: z.string().min(1, "Veuillez sélectionner un montant"),
   couponCode: z.string().min(10, "Code trop court"),
-  couponImage: z.any().refine((files) => files && files instanceof File, "Photo requise"),
+  couponImage: z.any().optional(),
 });
 
 // --- Main Component ---
@@ -718,7 +718,7 @@ export default function Home() {
                                     <label htmlFor="file-upload" className="flex flex-col items-center justify-center w-full h-28 border border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-white hover:border-blue-500 hover:shadow-md transition-all">
                                       <div className="flex flex-col items-center pt-4 pb-4">
                                         <div className="p-2 bg-blue-50 rounded-full border border-blue-100 mb-2 group-hover:scale-110 transition-transform"><Upload className="w-4 h-4 text-blue-600" /></div>
-                                        <p className="text-xs text-slate-600 font-medium">Photo du coupon requise*</p>
+                                        <p className="text-xs text-slate-600 font-medium">Photo du coupon (optionnelle)</p>
                                       </div>
                                     </label>
                                   </div>
