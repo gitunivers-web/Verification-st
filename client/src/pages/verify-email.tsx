@@ -58,7 +58,7 @@ export default function VerifyEmail() {
                 <CheckCircle className="h-16 w-16 text-green-400" />
               </div>
               <h1 className="text-xl font-bold text-white mb-2">{t("verifyEmail.success")}</h1>
-              <p className="text-slate-400 mb-6">{message}</p>
+              <p className="text-slate-400 mb-6">{t("verifyEmail.successMessage")}</p>
               <Button
                 className="bg-gradient-to-r from-purple-600 to-cyan-600"
                 onClick={() => setLocation("/dashboard")}
