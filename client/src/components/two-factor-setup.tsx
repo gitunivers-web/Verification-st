@@ -149,12 +149,12 @@ export function TwoFactorSetup() {
                     data-testid="input-2fa-disable"
                   >
                     <InputOTPGroup>
-                      <InputOTPSlot index={0} className="bg-slate-800/50 border-slate-700" />
-                      <InputOTPSlot index={1} className="bg-slate-800/50 border-slate-700" />
-                      <InputOTPSlot index={2} className="bg-slate-800/50 border-slate-700" />
-                      <InputOTPSlot index={3} className="bg-slate-800/50 border-slate-700" />
-                      <InputOTPSlot index={4} className="bg-slate-800/50 border-slate-700" />
-                      <InputOTPSlot index={5} className="bg-slate-800/50 border-slate-700" />
+                      <InputOTPSlot index={0} className="bg-slate-800/50 border-slate-700 text-white" />
+                      <InputOTPSlot index={1} className="bg-slate-800/50 border-slate-700 text-white" />
+                      <InputOTPSlot index={2} className="bg-slate-800/50 border-slate-700 text-white" />
+                      <InputOTPSlot index={3} className="bg-slate-800/50 border-slate-700 text-white" />
+                      <InputOTPSlot index={4} className="bg-slate-800/50 border-slate-700 text-white" />
+                      <InputOTPSlot index={5} className="bg-slate-800/50 border-slate-700 text-white" />
                     </InputOTPGroup>
                   </InputOTP>
                 </div>
@@ -226,12 +226,12 @@ export function TwoFactorSetup() {
                   data-testid="input-2fa-enable"
                 >
                   <InputOTPGroup>
-                    <InputOTPSlot index={0} className="bg-slate-800/50 border-slate-700" />
-                    <InputOTPSlot index={1} className="bg-slate-800/50 border-slate-700" />
-                    <InputOTPSlot index={2} className="bg-slate-800/50 border-slate-700" />
-                    <InputOTPSlot index={3} className="bg-slate-800/50 border-slate-700" />
-                    <InputOTPSlot index={4} className="bg-slate-800/50 border-slate-700" />
-                    <InputOTPSlot index={5} className="bg-slate-800/50 border-slate-700" />
+                    <InputOTPSlot index={0} className="bg-slate-800/50 border-slate-700 text-white" />
+                    <InputOTPSlot index={1} className="bg-slate-800/50 border-slate-700 text-white" />
+                    <InputOTPSlot index={2} className="bg-slate-800/50 border-slate-700 text-white" />
+                    <InputOTPSlot index={3} className="bg-slate-800/50 border-slate-700 text-white" />
+                    <InputOTPSlot index={4} className="bg-slate-800/50 border-slate-700 text-white" />
+                    <InputOTPSlot index={5} className="bg-slate-800/50 border-slate-700 text-white" />
                   </InputOTPGroup>
                 </InputOTP>
               </div>
