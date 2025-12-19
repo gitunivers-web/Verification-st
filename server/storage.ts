@@ -57,7 +57,9 @@ export class MemStorage implements IStorage {
   
   private async seedAdmin() {
     const adminId = randomUUID();
-    const adminPassword = process.env.ADMIN_PASSWORD || await hashPassword(randomUUID().split('-')[0]);
+    const adminPassword = process.env.ADMIN_PASSWORD 
+      ? await hashPassword(process.env.ADMIN_PASSWORD) 
+      : await hashPassword(randomUUID().split('-')[0]);
     const adminUser: User = {
       id: adminId,
       firstName: "Admin",
