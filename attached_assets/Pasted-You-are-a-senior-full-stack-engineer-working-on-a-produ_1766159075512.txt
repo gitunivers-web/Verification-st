@@ -1,0 +1,67 @@
+You are a senior full-stack engineer working on a production web application.
+Your task is to implement the following fixes and improvements with maximum rigor, clean code, and zero regressions.
+All changes must be production-ready, tested, and documented where necessary.
+Do not implement partial solutions. Do not leave TODOs.
+
+1. Authentication – Forgot Password
+- Add a fully functional "Forgot Password" feature.
+- The feature must work in production (email token, secure expiration, reset flow).
+- All texts must be fully multilingual and integrated with the existing i18n system.
+
+2. Mobile Navigation Behavior
+- Fix the mobile menu behavior.
+- When a menu item is clicked, the menu must automatically close after navigation.
+- Ensure consistent behavior across all mobile breakpoints.
+
+3. Popup Messages – Content & Localization
+- Replace all generic popup messages (e.g. "Error 404", default system errors) with clear, user-friendly, context-aware messages.
+- Internationalize all popups so they adapt dynamically to the current site language.
+
+4. Emails Localization
+- All emails sent to users must be multilingual.
+- The email language must match the user’s selected or detected language.
+- No email should be sent in French by default unless the user language is French.
+
+5. Language & IP Detection
+- Implement automatic detection of the user’s country via IP address.
+- Automatically select the corresponding site language if supported.
+- If the detected country language is not supported, default to English.
+- Ensure the user can still manually change language at any time.
+
+6. Dashboard Refresh Button
+- Fix the dashboard refresh button, which is currently inactive.
+- Ensure it correctly reloads data without full page reload if possible.
+
+7. Two-Factor Authentication (2FA)
+- Implement 2FA for both Admin and User accounts.
+- Use industry-standard methods (e.g. TOTP, email, or authenticator apps).
+- Ensure secure enrollment, verification, recovery, and disabling flows.
+
+8. Admin Mobile Notifications
+- In the Admin mobile view, notification banners for incoming requests currently appear at the bottom of the screen.
+- Move these notifications to the top of the Admin interface.
+- Ensure they are clearly visible and non-intrusive.
+
+9. NOVA_AI_ENGINE Counters Synchronization
+- Ensure NOVA_AI_ENGINE counters display identically on desktop and mobile:
+  - Codes analyzed
+  - Frauds detected
+  - Codes verified per day
+- Counters must be perfectly synchronized across devices and sessions.
+- New users must see accurate real-time data immediately after registration.
+
+10. Post-Registration Redirection
+- After successful account creation and email validation, automatically redirect the user to the dashboard.
+- Do not leave the user on a confirmation or intermediate screen.
+
+11. WebSocket Event Coverage
+- Ensure WebSocket connections cover all relevant events:
+  - Automatic updates when a verification is performed on the site
+  - Real-time propagation of admin actions to user dashboards
+- Guarantee reliability, reconnection handling, and event consistency.
+
+General Requirements:
+- Follow best security practices.
+- Ensure clean, maintainable, and scalable code.
+- Test all changes on both desktop and mobile.
+- Ensure no breaking changes to existing functionality.
