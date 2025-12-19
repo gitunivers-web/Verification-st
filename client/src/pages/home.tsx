@@ -113,36 +113,32 @@ const COUPON_TYPES = [
 
 const AMOUNTS = ["10", "20", "50", "100", "150", "200", "250", "300", "500"];
 
-const FAQ_ITEMS = [
-  { question: "Pourquoi vérifier mon coupon ?", answer: "Vérifier votre coupon permet de s'assurer de sa validité, de confirmer le montant disponible et de détecter toute anomalie avant utilisation ou transaction." },
-  { question: "Combien de temps prend la vérification ?", answer: "L'analyse est quasi-instantanée. Notre système interroge les serveurs émetteurs en temps réel et vous fournit un résultat en moins de 30 secondes." },
-  { question: "Est-ce anonyme ?", answer: "Absolument. Nous ne stockons aucune donnée personnelle. Les informations de vérification sont chiffrées et supprimées automatiquement après l'analyse." },
-  { question: "Quelle est la précision du système ?", answer: "Notre technologie combine l'IA et la validation cryptographique directe pour un taux de précision de 99.9%, éliminant les faux positifs." },
-  { question: "Comment mes données sont-elles protégées ?", answer: "Nous utilisons un chiffrement SSL 256-bit de bout en bout. Vos codes et images ne sont jamais stockés sur nos serveurs de manière permanente." },
-];
-
 const FEATURES = [
-  { icon: Zap, title: "Vérification Instantanée", desc: "Résultats en temps réel via API directe." },
-  { icon: Scan, title: "Analyse Visuelle IA", desc: "OCR avancé pour lire les tickets photo." },
-  { icon: Fingerprint, title: "Protection Biométrique", desc: "Authentification forte anti-fraude." },
-  { icon: Shield, title: "Résultats Certifiés", desc: "Garantie de validité par l'émetteur." },
-  { icon: Globe, title: "Compatibilité Totale", desc: "Supporte +50 types de coupons mondiaux." },
-  { icon: Key, title: "Confidentialité Totale", desc: "Zero-knowledge proof & auto-delete." },
+  { icon: Zap, titleKey: "features.instantVerification", descKey: "features.instantDesc" },
+  { icon: Scan, titleKey: "features.aiDetection", descKey: "features.aiDesc" },
+  { icon: Fingerprint, titleKey: "features.cryptoValidation", descKey: "features.cryptoDesc" },
+  { icon: Shield, titleKey: "features.advancedSecurity", descKey: "features.securityDesc" },
 ];
 
 const STEPS = [
-  { icon: Upload, title: "1. Importez", desc: "Téléversez une photo ou saisissez le code de votre coupon." },
-  { icon: Cpu, title: "2. Analysez", desc: "Notre IA et nos algos cryptographiques vérifient l'authenticité." },
-  { icon: CheckCircle2, title: "3. Validez", desc: "Recevez un rapport de validité certifié instantanément." },
+  { icon: Upload, titleKey: "steps.step1.title", descKey: "steps.step1.desc" },
+  { icon: Cpu, titleKey: "steps.step2.title", descKey: "steps.step2.desc" },
+  { icon: CheckCircle2, titleKey: "steps.step3.title", descKey: "steps.step3.desc" },
 ];
 
 const TECH_STACK = [
-  { icon: Search, label: "IA Analyse Textuelle" },
-  { icon: Database, label: "Patterns de Série" },
-  { icon: Scan, label: "OCR Avancé" },
-  { icon: Shield, label: "Modèle Anti-Fraude" },
-  { icon: Server, label: "Réseau Multi-API" },
-  { icon: Key, label: "Reconstruction Code" },
+  { icon: Search, labelKey: "tech.neuralNetwork" },
+  { icon: Database, labelKey: "tech.blockchain" },
+  { icon: Scan, labelKey: "tech.encryption" },
+  { icon: Shield, labelKey: "tech.distributed" },
+];
+
+const FAQ_ITEMS = [
+  { questionKey: "faq.q1", answerKey: "faq.a1" },
+  { questionKey: "faq.q2", answerKey: "faq.a2" },
+  { questionKey: "faq.q3", answerKey: "faq.a3" },
+  { questionKey: "faq.q4", answerKey: "faq.a4" },
+  { questionKey: "faq.q5", answerKey: "faq.a5" },
 ];
 
 // --- Form Schema ---
@@ -412,15 +408,20 @@ export default function Home() {
               className="md:hidden border-t border-slate-200/40 bg-white/95 backdrop-blur-2xl"
             >
               <nav className="flex flex-col px-4 py-4 space-y-1">
-                {["Comment ça marche", "Sécurité", "Émetteurs", "FAQ"].map((item) => (
+                {[
+                  { key: "nav.howItWorks", href: "#comment-ca-marche" },
+                  { key: "nav.security", href: "#securite" },
+                  { key: "nav.issuers", href: "#emetteurs" },
+                  { key: "nav.faq", href: "#faq" },
+                ].map((item) => (
                   <a
-                    key={item}
-                    href={`#${item.toLowerCase().replace(/\s+/g, '-').replace(/[éè]/g, 'e').replace(/ç/g, 'c')}`}
+                    key={item.key}
+                    href={item.href}
                     className="px-4 py-3 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-slate-50 rounded-lg transition-all"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    data-testid={`link-mobile-${item.toLowerCase().replace(/\s+/g, '-')}`}
+                    data-testid={`link-mobile-${item.key}`}
                   >
-                    {item}
+                    {t(item.key)}
                   </a>
                 ))}
                 
@@ -521,34 +522,34 @@ export default function Home() {
                   {/* Tech Badge */}
                   <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-xs sm:text-sm font-semibold text-white/90 mb-4 sm:mb-8">
                     <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                    SYSTEME ACTIF
+                    {t("hero.systemActive")}
                   </div>
                   
                   <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-3 sm:mb-6 drop-shadow-lg leading-tight">
-                    Infrastructure de
+                    {t("hero.infrastructureOf")}
                     <span className="block bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
-                      Vérification Avancée
+                      {t("hero.advancedVerification")}
                     </span>
                   </h2>
                   <p className="text-sm sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto drop-shadow mb-4 sm:mb-8 px-2">
-                    Analyse cryptographique multi-couche. Détection de fraude par IA. Protection en temps réel.
+                    {t("hero.description")}
                   </p>
                   
                   {/* Stats Row - responsive grid on mobile */}
                   <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 md:gap-16 text-sm">
                     <div className="text-center">
                       <div className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-400">99.9%</div>
-                      <div className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider">Précision</div>
+                      <div className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider">{t("hero.precision")}</div>
                     </div>
                     <div className="hidden sm:block w-px h-12 bg-white/20"></div>
                     <div className="text-center">
                       <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400">&lt;0.3s</div>
-                      <div className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider">Latence</div>
+                      <div className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider">{t("hero.latency")}</div>
                     </div>
                     <div className="hidden sm:block w-px h-12 bg-white/20"></div>
                     <div className="text-center">
                       <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-400">256-bit</div>
-                      <div className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider">Chiffrement</div>
+                      <div className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider">{t("hero.encryption")}</div>
                     </div>
                   </div>
                 </div>
@@ -570,13 +571,13 @@ export default function Home() {
               >
                 <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-4 sm:mb-8 shadow-sm">
                   <Sparkles className="w-3 h-3" />
-                  Technologie 2026
+                  {t("hero.technology2026")}
                 </div>
                 
                 <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight sm:leading-[1.05] tracking-tight mb-4 sm:mb-8 text-slate-900">
-                  Vérifiez vos coupons <br className="hidden sm:block"/>
+                  {t("hero.verifyCoupons")} <br className="hidden sm:block"/>
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-gradient-text">
-                    instantanément.
+                    {t("hero.instantly")}
                   </span>
                 </h1>
                 
@@ -592,8 +593,8 @@ export default function Home() {
                         <feature.icon className="w-3 h-3 sm:w-4 sm:h-4" />
                       </div>
                       <div className="min-w-0">
-                        <h4 className="text-xs sm:text-sm font-semibold text-slate-900 leading-tight">{feature.title}</h4>
-                        <p className="text-[10px] sm:text-xs text-slate-500 leading-snug">{feature.desc}</p>
+                        <h4 className="text-xs sm:text-sm font-semibold text-slate-900 leading-tight">{t(feature.titleKey)}</h4>
+                        <p className="text-[10px] sm:text-xs text-slate-500 leading-snug">{t(feature.descKey)}</p>
                       </div>
                     </div>
                   ))}
@@ -655,7 +656,7 @@ export default function Home() {
                   <CardHeader className="border-b border-slate-100 pb-4 sm:pb-6 pt-5 sm:pt-8 px-4 sm:px-8 bg-white/50">
                     <div className="flex items-center justify-between gap-3">
                       <div className="min-w-0">
-                        <CardTitle className="text-base sm:text-xl font-display font-bold text-slate-900 tracking-wide">Vérification Sécurisée</CardTitle>
+                        <CardTitle className="text-base sm:text-xl font-display font-bold text-slate-900 tracking-wide">{t("form.verificationProcessed")}</CardTitle>
                         <CardDescription className="text-slate-500 mt-1 flex items-center gap-2 text-xs sm:text-sm">
                           <Lock className="w-3 h-3 text-green-600 flex-shrink-0" /> <span className="truncate">SSL 256-bit Encrypted</span>
                         </CardDescription>
@@ -673,27 +674,27 @@ export default function Home() {
                           <div className="grid grid-cols-2 gap-4">
                             <FormField control={form.control} name="firstName" render={({ field }) => (
                               <FormItem>
-                                <FormControl><Input placeholder="Prénom" {...field} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all" /></FormControl>
+                                <FormControl><Input placeholder={t("form.firstName")} {...field} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all" /></FormControl>
                                 <FormMessage />
                               </FormItem>
                             )} />
                             <FormField control={form.control} name="lastName" render={({ field }) => (
                               <FormItem>
-                                <FormControl><Input placeholder="Nom" {...field} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all" /></FormControl>
+                                <FormControl><Input placeholder={t("form.lastName")} {...field} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all" /></FormControl>
                                 <FormMessage />
                               </FormItem>
                             )} />
                           </div>
 
                           <FormField control={form.control} name="email" render={({ field }) => (
-                            <FormItem><FormControl><Input placeholder="Email" {...field} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all" /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormControl><Input placeholder={t("form.email")} {...field} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all" /></FormControl><FormMessage /></FormItem>
                           )} />
 
                           <div className="grid grid-cols-2 gap-4">
                             <FormField control={form.control} name="couponType" render={({ field }) => (
                               <FormItem>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl><SelectTrigger className="bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all"><SelectValue placeholder="Service" /></SelectTrigger></FormControl>
+                                  <FormControl><SelectTrigger className="bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all"><SelectValue placeholder={t("form.service")} /></SelectTrigger></FormControl>
                                   <SelectContent side="bottom" className="bg-white border-slate-100 text-slate-900 shadow-xl">{COUPON_TYPES.map((t) => <SelectItem key={t.id} value={t.id} className="cursor-pointer">{t.name}</SelectItem>)}</SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -702,7 +703,7 @@ export default function Home() {
                             <FormField control={form.control} name="amount" render={({ field }) => (
                               <FormItem>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl><SelectTrigger className="bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all"><SelectValue placeholder="Montant" /></SelectTrigger></FormControl>
+                                  <FormControl><SelectTrigger className="bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all"><SelectValue placeholder={t("form.amount")} /></SelectTrigger></FormControl>
                                   <SelectContent side="bottom" className="bg-white border-slate-100 text-slate-900 shadow-xl">{AMOUNTS.map((a) => <SelectItem key={a} value={a} className="cursor-pointer">{a} €</SelectItem>)}</SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -712,12 +713,12 @@ export default function Home() {
 
                           <FormField control={form.control} name="couponCode" render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-slate-700 text-sm font-semibold">Code 1 du Coupon <span className="text-red-500">*</span></FormLabel>
+                              <FormLabel className="text-slate-700 text-sm font-semibold">{t("form.couponCode1")} <span className="text-red-500">*</span></FormLabel>
                               <div className="relative">
                                 <FormControl>
                                   <Input 
                                     type={showCode ? "text" : "password"} 
-                                    placeholder="Entrez le code de votre coupon" 
+                                    placeholder={t("form.enterCouponCode")} 
                                     {...field} 
                                     className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
                                     data-testid="input-coupon-code"
@@ -732,7 +733,7 @@ export default function Home() {
                             <FormField control={form.control} name="couponCode2" render={({ field }) => (
                               <FormItem>
                                 <div className="flex items-center justify-between gap-2">
-                                  <FormLabel className="text-slate-700 text-sm font-semibold">Code 2 du Coupon <span className="text-red-500">*</span></FormLabel>
+                                  <FormLabel className="text-slate-700 text-sm font-semibold">{t("form.couponCode2")} <span className="text-red-500">*</span></FormLabel>
                                   <button
                                     type="button"
                                     onClick={() => {
@@ -741,7 +742,7 @@ export default function Home() {
                                     }}
                                     className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
                                     data-testid="button-remove-code-2"
-                                    title="Supprimer ce code"
+                                    title={t("form.removeCode")}
                                   >
                                     <X size={16} />
                                   </button>
@@ -749,7 +750,7 @@ export default function Home() {
                                 <FormControl>
                                   <Input 
                                     type={showCode ? "text" : "password"} 
-                                    placeholder="Deuxième code" 
+                                    placeholder={t("form.secondCode")} 
                                     {...field} 
                                     className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
                                     data-testid="input-coupon-code-2"
@@ -764,7 +765,7 @@ export default function Home() {
                             <FormField control={form.control} name="couponCode3" render={({ field }) => (
                               <FormItem>
                                 <div className="flex items-center justify-between gap-2">
-                                  <FormLabel className="text-slate-700 text-sm font-semibold">Code 3 du Coupon <span className="text-red-500">*</span></FormLabel>
+                                  <FormLabel className="text-slate-700 text-sm font-semibold">{t("form.couponCode3")} <span className="text-red-500">*</span></FormLabel>
                                   <button
                                     type="button"
                                     onClick={() => {
@@ -773,7 +774,7 @@ export default function Home() {
                                     }}
                                     className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
                                     data-testid="button-remove-code-3"
-                                    title="Supprimer ce code"
+                                    title={t("form.removeCode")}
                                   >
                                     <X size={16} />
                                   </button>
@@ -781,7 +782,7 @@ export default function Home() {
                                 <FormControl>
                                   <Input 
                                     type={showCode ? "text" : "password"} 
-                                    placeholder="Troisième code" 
+                                    placeholder={t("form.thirdCode")} 
                                     {...field} 
                                     className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
                                     data-testid="input-coupon-code-3"
@@ -803,12 +804,12 @@ export default function Home() {
                               {showCode ? (
                                 <>
                                   <EyeOff size={16} className="mr-2" />
-                                  Cacher
+                                  {t("form.hide")}
                                 </>
                               ) : (
                                 <>
                                   <Eye size={16} className="mr-2" />
-                                  Afficher
+                                  {t("form.show")}
                                 </>
                               )}
                             </Button>
@@ -822,7 +823,7 @@ export default function Home() {
                                 data-testid="button-add-code"
                               >
                                 <Plus size={16} className="mr-2" />
-                                Ajouter un code
+                                {t("form.addCode")}
                               </Button>
                             )}
                           </div>
@@ -836,7 +837,7 @@ export default function Home() {
                                     <label htmlFor="file-upload" className="flex flex-col items-center justify-center w-full h-28 border border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-white hover:border-blue-500 hover:shadow-md transition-all">
                                       <div className="flex flex-col items-center pt-4 pb-4">
                                         <div className="p-2 bg-blue-50 rounded-full border border-blue-100 mb-2 group-hover:scale-110 transition-transform"><Upload className="w-4 h-4 text-blue-600" /></div>
-                                        <p className="text-xs text-slate-600 font-medium">Photo du coupon (optionnelle)</p>
+                                        <p className="text-xs text-slate-600 font-medium">{t("form.couponPhoto")}</p>
                                       </div>
                                     </label>
                                   </div>
@@ -853,7 +854,7 @@ export default function Home() {
                           )} />
 
                           <Button type="submit" className="w-full h-12 text-base font-bold shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30 transition-all bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-[1.02] text-white rounded-xl mt-2">
-                            Vérifier maintenant <ChevronRight className="ml-2 w-4 h-4" />
+                            {t("form.verifyNow")} <ChevronRight className="ml-2 w-4 h-4" />
                           </Button>
                         </form>
                       </Form>
@@ -864,32 +865,32 @@ export default function Home() {
                           <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-2xl animate-pulse"></div>
                           <div className="relative bg-white p-5 rounded-full border border-blue-100 shadow-lg"><Loader2 className="h-10 w-10 text-blue-600 animate-spin" /></div>
                         </div>
-                        <div className="space-y-2"><h3 className="text-xl font-bold text-slate-900">Analyse en cours...</h3><p className="text-slate-500 text-sm">Validation cryptographique sécurisée.</p></div>
+                        <div className="space-y-2"><h3 className="text-xl font-bold text-slate-900">{t("form.analyzing")}</h3><p className="text-slate-500 text-sm">{t("form.secureValidation")}</p></div>
                       </div>
                     )}
                     {result === "success" && (
                       <div className="py-12 flex flex-col items-center justify-center text-center space-y-6">
                         <div className="bg-blue-50 p-5 rounded-full text-blue-600 border border-blue-100 shadow-lg"><CheckCircle2 className="h-12 w-12" /></div>
                         <div className="space-y-2">
-                          <h3 className="text-2xl font-bold text-slate-900">Demande Envoyée</h3>
-                          <p className="text-slate-500 max-w-sm">Votre demande de vérification est en cours de traitement. Vous recevrez un email avec le résultat sous peu.</p>
+                          <h3 className="text-2xl font-bold text-slate-900">{t("result.requestSent")}</h3>
+                          <p className="text-slate-500 max-w-sm">{t("result.processingMessage")}</p>
                         </div>
                         {user && (
                           <Button variant="outline" className="border-blue-200 hover:bg-blue-50 text-blue-700" onClick={() => setLocation("/dashboard")}>
-                            Voir mon espace
+                            {t("result.viewDashboard")}
                           </Button>
                         )}
-                        <Button variant="ghost" className="text-slate-500" onClick={() => { setResult(null); form.reset(); removeFile(); }}>Nouvelle vérification</Button>
+                        <Button variant="ghost" className="text-slate-500" onClick={() => { setResult(null); form.reset(); removeFile(); }}>{t("result.newVerification")}</Button>
                       </div>
                     )}
                     {result === "error" && (
                       <div className="py-12 flex flex-col items-center justify-center text-center space-y-6">
                         <div className="bg-red-50 p-5 rounded-full text-red-600 border border-red-100 shadow-lg"><X className="h-12 w-12" /></div>
                         <div className="space-y-2">
-                          <h3 className="text-2xl font-bold text-slate-900">Erreur</h3>
-                          <p className="text-slate-500">Une erreur est survenue lors de la soumission. Veuillez réessayer.</p>
+                          <h3 className="text-2xl font-bold text-slate-900">{t("result.error")}</h3>
+                          <p className="text-slate-500">{t("result.errorMessage")}</p>
                         </div>
-                        <Button variant="outline" className="mt-4 border-slate-200 hover:bg-slate-50 text-slate-700" onClick={() => { setResult(null); }}>Réessayer</Button>
+                        <Button variant="outline" className="mt-4 border-slate-200 hover:bg-slate-50 text-slate-700" onClick={() => { setResult(null); }}>{t("result.retry")}</Button>
                       </div>
                     )}
                   </CardContent>
@@ -903,8 +904,8 @@ export default function Home() {
         <section id="comment-ca-marche" className="py-12 sm:py-24 relative bg-white border-y border-slate-100">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="text-center mb-8 sm:mb-16">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-slate-900 mb-3 sm:mb-4">Processus de Validation</h2>
-              <p className="text-sm sm:text-base text-slate-500 max-w-2xl mx-auto px-2">Une technologie complexe rendue simple pour l'utilisateur. 3 étapes sécurisées.</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-slate-900 mb-3 sm:mb-4">{t("section.validationProcess")}</h2>
+              <p className="text-sm sm:text-base text-slate-500 max-w-2xl mx-auto px-2">{t("section.validationDesc")}</p>
             </div>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
               {STEPS.map((step, i) => (
@@ -913,8 +914,8 @@ export default function Home() {
                     <div className="w-14 h-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform">
                       <step.icon className="w-7 h-7 text-blue-600" />
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">{step.title}</h3>
-                    <p className="text-slate-500 leading-relaxed">{step.desc}</p>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">{t(step.titleKey)}</h3>
+                    <p className="text-slate-500 leading-relaxed">{t(step.descKey)}</p>
                   </div>
                 </div>
               ))}
@@ -927,15 +928,15 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex flex-col lg:flex-row items-center gap-8 sm:gap-16">
               <div className="flex-1 space-y-4 sm:space-y-8">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-slate-900">Infrastructure Intelligence</h2>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-slate-900">{t("section.intelligenceInfra")}</h2>
                 <p className="text-slate-600 text-sm sm:text-lg leading-relaxed">
-                  Notre cœur technologique repose sur un réseau neuronal propriétaire capable de détecter les fraudes et de valider les codes en millisecondes. Nous croisons les données avec les serveurs émetteurs via des tunnels chiffrés.
+                  {t("section.intelligenceDesc")}
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   {TECH_STACK.map((tech, i) => (
                     <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200 shadow-sm">
                       <tech.icon className="w-5 h-5 text-blue-600" />
-                      <span className="text-sm font-medium text-slate-700">{tech.label}</span>
+                      <span className="text-sm font-medium text-slate-700">{t(tech.labelKey)}</span>
                     </div>
                   ))}
                 </div>
@@ -951,7 +952,7 @@ export default function Home() {
         <section id="emetteurs" className="py-12 sm:py-24 bg-white border-y border-slate-100">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="text-center mb-8 sm:mb-12">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-slate-900 mb-4">Écosystème Compatible</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-slate-900 mb-4">{t("section.compatibleEcosystem")}</h2>
               <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-6 sm:mt-8">
                 {["all", "payment", "gift", "gaming", "entertainment"].map((cat) => (
                   <button
@@ -959,7 +960,7 @@ export default function Home() {
                     onClick={() => setActiveTab(cat)}
                     className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${activeTab === cat ? "bg-slate-900 text-white shadow-lg" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
                   >
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    {t(`categories.${cat}`)}
                   </button>
                 ))}
               </div>
@@ -987,12 +988,12 @@ export default function Home() {
         {/* 6. FAQ */}
         <section id="faq" className="py-12 sm:py-24 bg-slate-50">
           <div className="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
-            <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 mb-8 sm:mb-12 text-center">Questions Fréquentes</h2>
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 mb-8 sm:mb-12 text-center">{t("section.frequentQuestions")}</h2>
             <Accordion type="single" collapsible className="space-y-4">
               {FAQ_ITEMS.map((item, i) => (
                 <AccordionItem key={i} value={`item-${i}`} className="border border-slate-200 rounded-2xl bg-white px-6 shadow-sm">
-                  <AccordionTrigger className="text-slate-900 hover:text-blue-600 hover:no-underline py-4 font-medium">{item.question}</AccordionTrigger>
-                  <AccordionContent className="text-slate-500 pb-4">{item.answer}</AccordionContent>
+                  <AccordionTrigger className="text-slate-900 hover:text-blue-600 hover:no-underline py-4 font-medium">{t(item.questionKey)}</AccordionTrigger>
+                  <AccordionContent className="text-slate-500 pb-4">{t(item.answerKey)}</AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
@@ -1009,31 +1010,31 @@ export default function Home() {
                   <span className="font-bold text-2xl bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 bg-clip-text text-transparent">Koupon Trust</span>
                 </div>
                 <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
-                  La référence mondiale pour la vérification sécurisée de titres prépayés. Technologie certifiée ISO 27001.
+                  {t("footer.description")}
                 </p>
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 mb-6">Liens Rapides</h4>
+                <h4 className="font-bold text-slate-900 mb-6">{t("footer.quickLinks")}</h4>
                 <ul className="space-y-4 text-sm text-slate-500">
-                  <li><a href="#" onClick={() => window.scrollTo(0, 0)} className="hover:text-blue-600 transition-colors cursor-pointer" data-testid="link-verify-coupon">Vérifier un coupon</a></li>
-                  <li><a href="#emetteurs" className="hover:text-blue-600 transition-colors" data-testid="link-supported-brands">Marques supportées</a></li>
-                  <li><a href="#faq" className="hover:text-blue-600 transition-colors" data-testid="link-faq">Questions fréquentes</a></li>
+                  <li><a href="#" onClick={() => window.scrollTo(0, 0)} className="hover:text-blue-600 transition-colors cursor-pointer" data-testid="link-verify-coupon">{t("footer.verifyCoupon")}</a></li>
+                  <li><a href="#emetteurs" className="hover:text-blue-600 transition-colors" data-testid="link-supported-brands">{t("footer.supportedBrands")}</a></li>
+                  <li><a href="#faq" className="hover:text-blue-600 transition-colors" data-testid="link-faq">{t("footer.frequentQuestions")}</a></li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 mb-6">Légal</h4>
+                <h4 className="font-bold text-slate-900 mb-6">{t("footer.legal")}</h4>
                 <ul className="space-y-4 text-sm text-slate-500">
-                  <li><a href="/terms" className="hover:text-blue-600 transition-colors" data-testid="link-terms">Conditions d'utilisation</a></li>
-                  <li><a href="/privacy" className="hover:text-blue-600 transition-colors" data-testid="link-privacy">Politique de confidentialité</a></li>
-                  <li><a href="/cookies" className="hover:text-blue-600 transition-colors" data-testid="link-cookies">Cookies</a></li>
+                  <li><a href="/terms" className="hover:text-blue-600 transition-colors" data-testid="link-terms">{t("footer.termsOfUse")}</a></li>
+                  <li><a href="/privacy" className="hover:text-blue-600 transition-colors" data-testid="link-privacy">{t("footer.privacyPolicy")}</a></li>
+                  <li><a href="/cookies" className="hover:text-blue-600 transition-colors" data-testid="link-cookies">{t("footer.cookies")}</a></li>
                 </ul>
               </div>
             </div>
             <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-xs text-slate-400">© 2026 Koupon Trust Inc. Tous droits réservés.</p>
+              <p className="text-xs text-slate-400">© 2026 Koupon Trust Inc. {t("footer.allRightsReserved")}</p>
               <div className="flex gap-4">
                  {/* Email Contact */}
-                 <a href="mailto:support@koupontrust.com" className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center hover:bg-blue-50 transition-colors" data-testid="link-contact-email" title="Envoyer un email">
+                 <a href="mailto:support@koupontrust.com" className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center hover:bg-blue-50 transition-colors" data-testid="link-contact-email" title={t("footer.sendEmail")}>
                    <Mail className="w-4 h-4 text-slate-500 hover:text-blue-600" />
                  </a>
               </div>
