@@ -752,7 +752,7 @@ export default function Home() {
                               <FormItem>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                   <FormControl><SelectTrigger className="bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all"><SelectValue placeholder={t("form.service")} /></SelectTrigger></FormControl>
-                                  <SelectContent side="bottom" className="bg-white border-slate-100 text-slate-900 shadow-xl">{COUPON_TYPES.map((t) => <SelectItem key={t.id} value={t.id} className="cursor-pointer">{t.name}</SelectItem>)}</SelectContent>
+                                  <SelectContent side="bottom" className="bg-white border-slate-100 text-slate-900 shadow-xl max-h-[250px] overflow-y-auto">{COUPON_TYPES.map((t) => <SelectItem key={t.id} value={t.id} className="cursor-pointer">{t.name}</SelectItem>)}</SelectContent>
                                 </Select>
                                 <FormMessage />
                               </FormItem>
