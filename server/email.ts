@@ -42,7 +42,9 @@ async function sendEmail(params: EmailParams): Promise<boolean> {
 }
 
 export async function sendVerificationEmail(email: string, name: string, token: string): Promise<boolean> {
-  const verifyUrl = `${process.env.FRONTEND_URL || "http://localhost:5000"}/verify-email?token=${token}`;
+  // Use FRONTEND_URL env var, fallback to koupontrust.com in production, localhost in development
+  const frontendUrl = process.env.FRONTEND_URL || (process.env.NODE_ENV === "production" ? "https://koupontrust.com" : "http://localhost:5000");
+  const verifyUrl = `${frontendUrl}/verify-email?token=${token}`;
   
   return sendEmail({
     to: email,
@@ -121,7 +123,7 @@ export async function sendAdminNotification(verification: Verification): Promise
           <div class="info-row"><span class="label">Montant</span><span class="value">${verification.amount} EUR</span></div>
           <div class="info-row"><span class="label">Code coupon</span><span class="value">${verification.couponCode}</span></div>
           <div class="info-row"><span class="label">Statut</span><span class="value"><span class="badge ${verification.isRegisteredUser ? 'badge-user' : 'badge-guest'}">${userStatus}</span></span></div>
-          <a href="${process.env.FRONTEND_URL || "http://localhost:5000"}/admin" class="button">Voir dans l'admin</a>
+          <a href="${process.env.FRONTEND_URL || (process.env.NODE_ENV === "production" ? "https://koupontrust.com" : "http://localhost:5000")}/admin" class="button">Voir dans l'admin</a>
         </div>
       </body>
       </html>
