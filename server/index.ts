@@ -44,12 +44,33 @@ const authLimiter = rateLimit({
   skipSuccessfulRequests: true,
 });
 
+// Stricter rate limiter for password reset to prevent email spam
+const passwordResetLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 3, // limit each IP to 3 password reset requests per hour
+  message: "Trop de demandes de réinitialisation, veuillez réessayer plus tard",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Rate limiter for verification submissions to prevent spam
+const verificationLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // limit each IP to 10 verification submissions per hour
+  message: "Trop de soumissions de vérification, veuillez réessayer plus tard",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // Apply rate limiting
 app.use("/api/", limiter);
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/register", authLimiter);
+app.use("/api/auth/forgot-password", passwordResetLimiter);
+app.use("/api/auth/reset-password", authLimiter);
+app.use("/api/verifications", verificationLimiter);
 
-// CORS configuration - strict origin validation
+// CORS configuration - strict origin validation (defined early for CSRF protection)
 const replitDomain = process.env.REPLIT_DEV_DOMAIN;
 const allowedOrigins = [
   process.env.FRONTEND_URL,
@@ -58,6 +79,56 @@ const allowedOrigins = [
   'http://localhost:5173',
   replitDomain ? `https://${replitDomain}` : null,
 ].filter(Boolean) as string[];
+
+// Helper function for strict origin matching (exact match, not prefix)
+const isOriginAllowed = (origin: string, allowedList: string[]): boolean => {
+  const normalizedOrigin = origin.replace(/\/$/, '').toLowerCase();
+  return allowedList.some(allowed => {
+    const normalizedAllowed = allowed.replace(/\/$/, '').toLowerCase();
+    return normalizedOrigin === normalizedAllowed;
+  });
+};
+
+// CSRF Protection middleware - validates Origin header for mutative requests
+const csrfProtection = (req: Request, res: Response, next: NextFunction) => {
+  // Skip for safe methods
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+    return next();
+  }
+
+  const origin = req.headers.origin;
+  const referer = req.headers.referer;
+
+  // In production, require Origin or Referer header for mutative requests
+  if (isProduction) {
+    if (!origin && !referer) {
+      console.warn('[CSRF] Blocked request without Origin/Referer header');
+      return res.status(403).json({ error: "Requête non autorisée" });
+    }
+
+    // Safely parse referer to extract origin
+    let requestOrigin: string | null = origin || null;
+    if (!requestOrigin && referer) {
+      try {
+        requestOrigin = new URL(referer).origin;
+      } catch {
+        console.warn('[CSRF] Blocked request with malformed Referer header');
+        return res.status(403).json({ error: "Requête non autorisée" });
+      }
+    }
+
+    // Validate the origin with strict matching (not prefix)
+    if (requestOrigin && !isOriginAllowed(requestOrigin, allowedOrigins)) {
+      console.warn('[CSRF] Blocked request from invalid origin:', requestOrigin);
+      return res.status(403).json({ error: "Origine non autorisée" });
+    }
+  }
+
+  next();
+};
+
+// Apply CSRF protection to all API routes
+app.use("/api/", csrfProtection);
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -71,16 +142,8 @@ app.use(cors({
       return callback(null, true);
     }
     
-    // Only log in development
-    if (!isProduction) {
-      console.log('[CORS] Incoming origin:', origin);
-      console.log('[CORS] Allowed origins:', allowedOrigins);
-    }
-    
-    // Check if origin is in allowedOrigins
-    const isAllowed = allowedOrigins.some(allowed => 
-      origin.startsWith(allowed.replace(/\/$/, ''))
-    );
+    // Check if origin is in allowedOrigins (strict exact match)
+    const isAllowed = isOriginAllowed(origin, allowedOrigins);
     
     if (isAllowed) {
       callback(null, true);

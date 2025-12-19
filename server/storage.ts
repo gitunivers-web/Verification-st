@@ -16,6 +16,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   getUserByVerificationToken(token: string): Promise<User | undefined>;
+  getUserByResetToken(token: string): Promise<User | undefined>;
   createUser(user: InsertUser & { verificationToken?: string }): Promise<User>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
   getAllUsers(): Promise<User[]>;
@@ -52,6 +53,8 @@ export class MemStorage implements IStorage {
       role: "admin",
       emailVerified: true,
       verificationToken: null,
+      resetToken: null,
+      resetTokenExpiry: null,
       createdAt: new Date(),
     };
     this.users.set(adminId, adminUser);
@@ -74,6 +77,12 @@ export class MemStorage implements IStorage {
     );
   }
 
+  async getUserByResetToken(token: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.resetToken === token && user.resetTokenExpiry && new Date(user.resetTokenExpiry) > new Date(),
+    );
+  }
+
   async createUser(insertUser: InsertUser & { verificationToken?: string }): Promise<User> {
     const id = randomUUID();
     const user: User = {
@@ -85,6 +94,8 @@ export class MemStorage implements IStorage {
       role: "user",
       emailVerified: false,
       verificationToken: insertUser.verificationToken || null,
+      resetToken: null,
+      resetTokenExpiry: null,
       createdAt: new Date(),
     };
     this.users.set(id, user);

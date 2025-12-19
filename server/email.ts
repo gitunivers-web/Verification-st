@@ -131,6 +131,53 @@ export async function sendAdminNotification(verification: Verification): Promise
   });
 }
 
+export async function sendPasswordResetEmail(email: string, name: string, token: string): Promise<boolean> {
+  const frontendUrl = process.env.FRONTEND_URL || (process.env.NODE_ENV === "production" ? "https://koupontrust.com" : "http://localhost:5000");
+  const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
+  
+  return sendEmail({
+    to: email,
+    toName: name,
+    subject: "Réinitialisation de votre mot de passe - KouponTrust",
+    htmlContent: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0f; color: #ffffff; margin: 0; padding: 40px; }
+          .container { max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.1)); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 16px; padding: 40px; }
+          .logo { font-size: 28px; font-weight: bold; background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 30px; }
+          h1 { color: #ffffff; font-size: 24px; margin-bottom: 20px; }
+          p { color: #a0a0a0; line-height: 1.6; margin-bottom: 20px; }
+          .button { display: inline-block; background: linear-gradient(135deg, #8b5cf6, #06b6d4); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; margin: 20px 0; }
+          .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #666; font-size: 12px; }
+          .warning { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 15px; margin: 20px 0; }
+          .warning p { color: #ef4444; margin: 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="logo">KouponTrust</div>
+          <h1>Réinitialisation de mot de passe</h1>
+          <p>Bonjour ${name},</p>
+          <p>Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe.</p>
+          <a href="${resetUrl}" class="button">Réinitialiser mon mot de passe</a>
+          <p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :</p>
+          <p style="word-break: break-all; color: #8b5cf6;">${resetUrl}</p>
+          <div class="warning">
+            <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email. Votre mot de passe restera inchangé.</p>
+          </div>
+          <div class="footer">
+            <p>Ce lien expire dans 1 heure pour des raisons de sécurité.</p>
+            <p>KouponTrust - Vérification sécurisée de coupons prépayés</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+  });
+}
+
 export async function sendStatusUpdateEmail(verification: Verification): Promise<boolean> {
   const statusLabels: Record<string, { label: string; color: string; message: string }> = {
     valid: {

@@ -12,6 +12,8 @@ export const users = pgTable("users", {
   role: text("role").notNull().default("user"),
   emailVerified: boolean("email_verified").notNull().default(false),
   verificationToken: text("verification_token"),
+  resetToken: text("reset_token"),
+  resetTokenExpiry: timestamp("reset_token_expiry"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -35,19 +37,40 @@ export const insertUserSchema = createInsertSchema(users).omit({
   role: true,
   emailVerified: true,
   verificationToken: true,
+  resetToken: true,
+  resetTokenExpiry: true,
   createdAt: true,
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Email invalide"),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, "Token requis"),
+  password: z.string()
+    .min(12, "Le mot de passe doit contenir au moins 12 caractères")
+    .regex(/[A-Z]/, "Le mot de passe doit contenir au moins une majuscule")
+    .regex(/[a-z]/, "Le mot de passe doit contenir au moins une minuscule")
+    .regex(/[0-9]/, "Le mot de passe doit contenir au moins un chiffre"),
 });
 
 export const loginSchema = z.object({
   email: z.string().email("Email invalide"),
-  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères"),
+  password: z.string().min(1, "Le mot de passe est requis"),
 });
+
+export const passwordSchema = z.string()
+  .min(12, "Le mot de passe doit contenir au moins 12 caractères")
+  .regex(/[A-Z]/, "Le mot de passe doit contenir au moins une majuscule")
+  .regex(/[a-z]/, "Le mot de passe doit contenir au moins une minuscule")
+  .regex(/[0-9]/, "Le mot de passe doit contenir au moins un chiffre");
 
 export const registerSchema = insertUserSchema.extend({
   firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères"),
   lastName: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
   email: z.string().email("Email invalide"),
-  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères"),
+  password: passwordSchema,
 });
 
 export const insertVerificationSchema = createInsertSchema(verifications).omit({

@@ -2,8 +2,8 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage, comparePassword } from "./storage";
-import { registerSchema, loginSchema, verificationFormSchema, type VerificationStatus } from "@shared/schema";
-import { sendVerificationEmail, sendAdminNotification, sendStatusUpdateEmail } from "./email";
+import { registerSchema, loginSchema, verificationFormSchema, forgotPasswordSchema, resetPasswordSchema, type VerificationStatus } from "@shared/schema";
+import { sendVerificationEmail, sendAdminNotification, sendStatusUpdateEmail, sendPasswordResetEmail } from "./email";
 import { randomBytes } from "crypto";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -240,6 +240,67 @@ export async function registerRoutes(
     } catch (error) {
       console.error("[AUTH] Email verification error:", error);
       res.status(500).json({ error: "Erreur lors de la vérification" });
+    }
+  });
+
+  app.post("/api/auth/forgot-password", async (req, res) => {
+    try {
+      const result = forgotPasswordSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ error: result.error.errors[0].message });
+      }
+
+      const { email } = result.data;
+      const user = await storage.getUserByEmail(email);
+
+      // Always return success to prevent email enumeration
+      if (!user) {
+        return res.json({ message: "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation." });
+      }
+
+      const resetToken = generateToken();
+      const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
+
+      await storage.updateUser(user.id, {
+        resetToken,
+        resetTokenExpiry,
+      });
+
+      await sendPasswordResetEmail(user.email, user.firstName, resetToken);
+
+      res.json({ message: "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation." });
+    } catch (error) {
+      console.error("[AUTH] Forgot password error:", error);
+      res.status(500).json({ error: "Erreur lors de la demande de réinitialisation" });
+    }
+  });
+
+  app.post("/api/auth/reset-password", async (req, res) => {
+    try {
+      const result = resetPasswordSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ error: result.error.errors[0].message });
+      }
+
+      const { token, password } = result.data;
+      const user = await storage.getUserByResetToken(token);
+
+      if (!user) {
+        return res.status(400).json({ error: "Token invalide ou expiré" });
+      }
+
+      const hashedPassword = await hashPassword(password);
+
+      await storage.updateUser(user.id, {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExpiry: null,
+      });
+
+      res.json({ message: "Mot de passe réinitialisé avec succès" });
+    } catch (error) {
+      console.error("[AUTH] Reset password error:", error);
+      res.status(500).json({ error: "Erreur lors de la réinitialisation du mot de passe" });
     }
   });
 
