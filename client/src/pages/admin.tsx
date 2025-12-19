@@ -411,15 +411,6 @@ export default function AdminDashboard() {
                   <span className="text-xs text-emerald-400/70">en ligne</span>
                 </div>
                 <LanguageSelector />
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="relative"
-                  onClick={() => refetch()}
-                  data-testid="button-refresh"
-                >
-                  <RefreshCw className={`h-5 w-5 text-slate-400 ${isLoading ? 'animate-spin' : ''}`} />
-                </Button>
                 <Button variant="ghost" size="icon" className="relative" data-testid="button-notifications">
                   <Bell className="h-5 w-5 text-slate-400" />
                   {pendingCount > 0 && (
@@ -629,15 +620,6 @@ export default function AdminDashboard() {
                     <h2 className="text-2xl font-bold text-white">Gestion des verifications</h2>
                     <p className="text-slate-400 mt-1">{filteredVerifications.length} demande(s)</p>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    className="border-slate-700"
-                    onClick={() => refetch()}
-                    data-testid="button-refresh-verifications"
-                  >
-                    <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-                    Actualiser
-                  </Button>
                 </div>
 
                 <Card className="bg-slate-900/50 border-slate-800">
