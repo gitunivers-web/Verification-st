@@ -1,60 +1,18 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Lock, Settings, Shield } from "lucide-react";
-import { useNovaAIState } from "@/hooks/use-nova-ai-state";
+import { useNovaLiveStats } from "@/hooks/use-nova-live-stats";
 
 export function NovaAIEngineHome() {
-  const { codesAnalyzed, setCodesAnalyzed, fraudsDetected, setFraudsDetected, todayIncrement, setTodayIncrement, isLoaded } = useNovaAIState();
+  const { codesAnalyzed, fraudsDetected, todayIncrement, processingPower: serverProcessingPower } = useNovaLiveStats();
   const [processingPower, setProcessingPower] = useState(87);
   const [neuralNodes, setNeuralNodes] = useState([85, 72, 90, 65, 88]);
   const [cryptoStream, setCryptoStream] = useState<string[]>([]);
-  const [codeCounterSinceFraud, setCodeCounterSinceFraud] = useState(0);
 
-  // Increment codes analyzed every 100-120 seconds (1 code), detect fraud every 15-20 codes
+  // Sync processing power from server
   useEffect(() => {
-    if (!isLoaded) return;
-    
-    const codesInterval = setInterval(() => {
-      setCodesAnalyzed(prev => prev + 1);
-      setTodayIncrement(prevDay => prevDay + 1);
-        
-      // Increment the counter since last fraud
-      setCodeCounterSinceFraud(prevCounter => {
-        const newCounter = prevCounter + 1;
-        
-        // Detect fraud every 15-20 codes
-        if (newCounter >= 15 + Math.floor(Math.random() * 6)) {
-          setFraudsDetected(prev => prev + 1);
-          return 0; // Reset counter
-        }
-        return newCounter;
-      });
-    }, 100000 + Math.random() * 20000); // 100-120 seconds
-
-    return () => clearInterval(codesInterval);
-  }, [isLoaded]);
-
-  // Reset daily counter at midnight
-  useEffect(() => {
-    const resetDailyCounter = () => {
-      const now = new Date();
-      const tomorrow = new Date(now);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(0, 0, 0, 0);
-      
-      const timeUntilMidnight = tomorrow.getTime() - now.getTime();
-      
-      const timeout = setTimeout(() => {
-        setTodayIncrement(0);
-        resetDailyCounter(); // Set up next reset
-      }, timeUntilMidnight);
-      
-      return timeout;
-    };
-    
-    const timeout = resetDailyCounter();
-    return () => clearTimeout(timeout);
-  }, []);
+    setProcessingPower(serverProcessingPower);
+  }, [serverProcessingPower]);
 
   useEffect(() => {
     const powerInterval = setInterval(() => {
@@ -125,7 +83,7 @@ export function NovaAIEngineHome() {
       <CardContent className="relative z-10 space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4" data-testid="stat-codes-analyzed">
-            <p className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-2">Codes Analyses</p>
+            <p className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-2">Codes Analyzed</p>
             <p className="text-3xl md:text-4xl font-bold text-white font-mono">
               {formatNumber(codesAnalyzed)}
             </p>
@@ -136,7 +94,7 @@ export function NovaAIEngineHome() {
           </div>
 
           <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4" data-testid="stat-frauds-detected">
-            <p className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-2">Fraudes Detectees</p>
+            <p className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-2">Frauds Detected</p>
             <p className="text-3xl md:text-4xl font-bold text-red-400 font-mono">
               {formatNumber(fraudsDetected)}
             </p>
