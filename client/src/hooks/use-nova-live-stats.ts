@@ -58,8 +58,8 @@ export function useNovaLiveStats() {
   }, [connectWebSocket]);
 
   return {
-    codesAnalyzed: stats?.codesAnalyzed ?? 2847391,
-    fraudsDetected: stats?.fraudsDetected ?? 12847,
+    codesAnalyzed: stats?.codesAnalyzed ?? 47832,
+    fraudsDetected: stats?.fraudsDetected ?? 847,
     todayIncrement: stats?.todayIncrement ?? 0,
     processingPower: stats?.processingPower ?? 87,
     isLoading,

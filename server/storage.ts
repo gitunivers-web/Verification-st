@@ -42,10 +42,10 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.verifications = new Map();
     
-    // Initialize Nova AI Engine state with baseline values
+    // Initialize Nova AI Engine state with realistic baseline values
     this.novaStats = {
-      codesAnalyzed: 2847391,
-      fraudsDetected: 12847,
+      codesAnalyzed: 47832,
+      fraudsDetected: 847,
       todayIncrement: 0,
       lastResetDate: new Date().toDateString(),
       processingPower: 87,

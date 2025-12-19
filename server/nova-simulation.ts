@@ -24,11 +24,13 @@ export class NovaSimulationService {
   }
 
   private getRandomIncrement(): number {
-    return Math.floor(Math.random() * 3) + 1;
+    // Always increment by 1 for realism
+    return 1;
   }
 
   private getRandomInterval(): number {
-    return Math.floor(Math.random() * 2001) + 2000;
+    // 45-75 seconds between each code analysis (realistic pace)
+    return Math.floor(Math.random() * 30001) + 45000;
   }
 
   private getRandomProcessingPower(): number {
