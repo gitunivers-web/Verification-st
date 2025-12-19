@@ -181,3 +181,36 @@ Languages supported: French (FR), Dutch (NL), German (DE), Italian (IT), English
   - Verification Submissions: 10 per hour
   - General API: 100 requests per 15 minutes
 - **Email Notifications**: Password reset emails via Resend with secure token links
+
+### Multilingual Email System (December 19, 2024)
+- **Complete i18n for emails**: All transactional emails support 5 languages (FR, NL, DE, IT, EN)
+- **Templates internationalized**:
+  - Email verification (registration)
+  - Password reset
+  - Verification status updates
+- **Language detection**:
+  - Uses user's selected language during registration
+  - Falls back to Accept-Language header
+  - Default to French if unknown
+- **Backend changes**: email.ts fully refactored with translation objects
+
+### Automatic Language Detection (December 19, 2024)
+- **Browser detection**: Detects navigator.language on first visit
+- **Supported mappings**:
+  - fr-* → French
+  - nl-* → Dutch
+  - de-* → German
+  - it-* → Italian
+  - en-* → English
+- **Country fallbacks**: Belgium (nl), Switzerland/Austria (de), Luxembourg (fr)
+- **Persistence**: Language choice saved in localStorage
+
+### Mobile Navigation Improvements (December 19, 2024)
+- **Auto-close menu**: Mobile sidebar closes after tapping navigation items
+- **Implementation**: SidebarNavItem and AdminSidebarNavItem components use useSidebar hook
+- **Applies to**: Both user dashboard and admin dashboard
+
+### Internationalized Authentication (December 19, 2024)
+- **Toast messages**: Login/register success/error messages translated
+- **Error handling**: All auth modal errors use i18n keys
+- **Email verification page**: Complete i18n support with dashboard redirect after success
