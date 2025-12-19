@@ -41,6 +41,7 @@ import {
   Plus
 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 import { AuthModal } from "@/components/auth-modal";
@@ -255,6 +256,8 @@ export default function Home() {
         title: t("toast.success"),
         description: t("toast.verificationSubmitted"),
       });
+      // Invalidate verifications cache so dashboard shows new data immediately
+      queryClient.invalidateQueries({ queryKey: ["/api/verifications"] });
     },
     onError: (error: Error) => {
       setResult("error");
