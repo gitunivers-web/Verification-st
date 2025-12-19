@@ -130,7 +130,7 @@ function AdminSidebarNavItem({
 }
 
 export default function AdminDashboard() {
-  const { user, token, logout, isAdmin } = useAuth();
+  const { user, token, logout, isAdmin, isLoading: authLoading } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { t } = useI18n();
@@ -143,12 +143,14 @@ export default function AdminDashboard() {
   const [realtimeEvents, setRealtimeEvents] = useState<{type: string, time: Date}[]>([]);
 
   useEffect(() => {
-    if (!isAdmin) {
+    if (!authLoading && !isAdmin) {
       setLocation("/");
     }
-  }, [isAdmin, setLocation]);
+  }, [isAdmin, authLoading, setLocation]);
 
   useEffect(() => {
+    if (!token || !isAdmin) return;
+    
     const wsUrl = API_URL.replace("http", "ws") + "/ws";
     const socket = new WebSocket(wsUrl);
 
@@ -156,6 +158,8 @@ export default function AdminDashboard() {
       console.log("[WS] Admin connected");
       // Send auth token to identify the client
       socket.send(JSON.stringify({ type: "auth", token }));
+      // Refetch data after WebSocket auth to catch any missed notifications
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/verifications"] });
     };
 
     socket.onmessage = (event) => {

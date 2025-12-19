@@ -122,6 +122,8 @@ export default function UserDashboard() {
     socket.onopen = () => {
       console.log("[WS] User connected");
       socket.send(JSON.stringify({ type: "auth", token }));
+      // Refetch data after WebSocket auth to catch any missed notifications
+      queryClient.invalidateQueries({ queryKey: ["/api/verifications"] });
     };
 
     socket.onmessage = (event) => {
