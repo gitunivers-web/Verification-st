@@ -9,12 +9,13 @@ import { createServer } from "http";
 const app = express();
 
 // Security: Use Helmet to set various HTTP headers
+const isProduction = process.env.NODE_ENV === "production";
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      scriptSrc: isProduction ? ["'self'"] : ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: isProduction ? ["'self'", "https://fonts.googleapis.com"] : ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
       connectSrc: ["'self'", "https:"],
@@ -65,8 +66,11 @@ app.use(cors({
       return callback(null, true);
     }
     
-    console.log('[CORS] Incoming origin:', origin);
-    console.log('[CORS] Allowed origins:', allowedOrigins);
+    // Only log in development
+    if (!isProduction) {
+      console.log('[CORS] Incoming origin:', origin);
+      console.log('[CORS] Allowed origins:', allowedOrigins);
+    }
     
     // Check if origin is in allowedOrigins
     const isAllowed = allowedOrigins.some(allowed => 
@@ -76,7 +80,7 @@ app.use(cors({
     if (isAllowed) {
       callback(null, true);
     } else {
-      console.log('[CORS] Origin not allowed:', origin);
+      if (!isProduction) console.log('[CORS] Origin not allowed:', origin);
       callback(new Error("CORS not allowed"));
     }
   },

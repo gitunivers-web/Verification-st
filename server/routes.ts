@@ -8,7 +8,11 @@ import { randomBytes } from "crypto";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET && process.env.NODE_ENV === "production") {
+  throw new Error("JWT_SECRET environment variable is required in production");
+}
+const JWT_SECRET_VALUE = JWT_SECRET || "dev-secret-key-change-in-production";
 const JWT_EXPIRY = "7d";
 
 async function hashPassword(password: string): Promise<string> {
@@ -63,7 +67,7 @@ function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunc
   }
   const token = authHeader.split(" ")[1];
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
+    const decoded = jwt.verify(token, JWT_SECRET_VALUE) as { id: string; email: string; role: string };
     req.user = decoded;
     next();
   } catch {
@@ -81,7 +85,7 @@ function adminMiddleware(req: AuthenticatedRequest, res: Response, next: NextFun
 function createAuthToken(user: { id: string; email: string; role: string }): string {
   return jwt.sign(
     { id: user.id, email: user.email, role: user.role },
-    JWT_SECRET,
+    JWT_SECRET_VALUE,
     { expiresIn: JWT_EXPIRY, algorithm: "HS256" }
   );
 }
@@ -145,6 +149,11 @@ export async function registerRoutes(
       }
 
       const { firstName, lastName, email, password } = result.data;
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: "Format email invalide" });
+      }
 
       const existingUser = await storage.getUserByEmail(email);
       if (existingUser) {
@@ -267,7 +276,7 @@ export async function registerRoutes(
       if (authHeader?.startsWith("Bearer ")) {
         try {
           const token = authHeader.split(" ")[1];
-          const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+          const decoded = jwt.verify(token, JWT_SECRET_VALUE) as { id: string };
           userId = decoded.id;
           isRegisteredUser = true;
         } catch {}

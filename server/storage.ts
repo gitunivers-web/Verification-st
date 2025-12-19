@@ -41,14 +41,13 @@ export class MemStorage implements IStorage {
   }
   
   private async seedAdmin() {
-    // Admin account
     const adminId = randomUUID();
-    const adminPassword = await hashPassword("Stadork009@");
+    const adminPassword = process.env.ADMIN_PASSWORD || await hashPassword(randomUUID().split('-')[0]);
     const adminUser: User = {
       id: adminId,
       firstName: "Admin",
       lastName: "Koupon Trust",
-      email: "admin@koupontrust.com",
+      email: process.env.ADMIN_EMAIL || "admin@koupontrust.com",
       password: adminPassword,
       role: "admin",
       emailVerified: true,
@@ -56,24 +55,7 @@ export class MemStorage implements IStorage {
       createdAt: new Date(),
     };
     this.users.set(adminId, adminUser);
-    console.log("[STORAGE] Admin user seeded: admin@koupontrust.com");
-    
-    // Regular user account for testing
-    const userId = randomUUID();
-    const userPassword = await hashPassword("user123");
-    const regularUser: User = {
-      id: userId,
-      firstName: "Test",
-      lastName: "User",
-      email: "user@example.com",
-      password: userPassword,
-      role: "user",
-      emailVerified: true,
-      verificationToken: null,
-      createdAt: new Date(),
-    };
-    this.users.set(userId, regularUser);
-    console.log("[STORAGE] Regular user seeded: user@example.com");
+    console.log("[STORAGE] Admin user seeded");
   }
 
   async getUser(id: string): Promise<User | undefined> {
