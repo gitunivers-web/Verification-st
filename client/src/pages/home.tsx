@@ -765,7 +765,7 @@ export default function Home() {
                           {codeFieldsCount >= 2 && (
                             <div className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
                               <div className="flex items-center justify-between">
-                                <FormLabel className="text-slate-700 text-sm font-semibold">{t("form.couponCode2")} <span className="text-red-500">*</span></FormLabel>
+                                <span className="text-slate-700 text-sm font-semibold">{t("form.couponCode2")} <span className="text-red-500">*</span></span>
                                 <button
                                   type="button"
                                   onClick={() => {
@@ -815,7 +815,7 @@ export default function Home() {
                           {codeFieldsCount >= 3 && (
                             <div className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
                               <div className="flex items-center justify-between">
-                                <FormLabel className="text-slate-700 text-sm font-semibold">{t("form.couponCode3")} <span className="text-red-500">*</span></FormLabel>
+                                <span className="text-slate-700 text-sm font-semibold">{t("form.couponCode3")} <span className="text-red-500">*</span></span>
                                 <button
                                   type="button"
                                   onClick={() => {
