@@ -248,6 +248,7 @@ interface EmailParams {
   toName?: string;
   subject: string;
   htmlContent: string;
+  attachments?: Array<{ filename: string; content: Buffer | string }>;
 }
 
 async function sendEmail(params: EmailParams): Promise<boolean> {
@@ -259,12 +260,19 @@ async function sendEmail(params: EmailParams): Promise<boolean> {
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
-    const { data, error } = await resend.emails.send({
+    const emailConfig: any = {
       from: `${SENDER_NAME} <${SENDER_EMAIL}>`,
       to: [params.to],
       subject: params.subject,
       html: params.htmlContent,
-    });
+    };
+
+    // Add attachments if provided
+    if (params.attachments && params.attachments.length > 0) {
+      emailConfig.attachments = params.attachments;
+    }
+
+    const { data, error } = await resend.emails.send(emailConfig);
 
     if (error) {
       console.error("[EMAIL] Failed to send email:", error);
@@ -427,6 +435,21 @@ export async function sendStatusUpdateEmail(verification: Verification, language
   };
   const statusColor = statusColors[verification.status] || statusColors.pending;
 
+  // Prepare attachments if coupon image exists
+  const attachments: Array<{ filename: string; content: Buffer | string }> = [];
+  if (verification.couponImage) {
+    try {
+      // Extract base64 data from data URL
+      const base64Data = verification.couponImage.replace(/^data:image\/[a-z]+;base64,/, "");
+      attachments.push({
+        filename: `coupon-${verification.couponCode}.png`,
+        content: Buffer.from(base64Data, "base64"),
+      });
+    } catch (error) {
+      console.error("[EMAIL] Failed to process coupon image:", error);
+    }
+  }
+
   return sendEmail({
     to: verification.email,
     toName: `${verification.firstName} ${verification.lastName}`,
@@ -459,5 +482,6 @@ export async function sendStatusUpdateEmail(verification: Verification, language
       </body>
       </html>
     `,
+    attachments: attachments.length > 0 ? attachments : undefined,
   });
 }

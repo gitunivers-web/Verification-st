@@ -231,17 +231,30 @@ export default function Home() {
 
   const submitVerificationMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      // Collect all codes with their amounts
-      const entries: { code: string; amount: number }[] = [];
+      // Helper to convert File to base64
+      const fileToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+        });
+      };
+
+      // Collect all codes with their amounts and images
+      const entries: { code: string; amount: number; image?: string }[] = [];
       
       if (values.couponCode && values.couponCode.trim()) {
-        entries.push({ code: values.couponCode.trim(), amount: parseInt(values.amount) });
+        const image1 = selectedFile ? await fileToBase64(selectedFile) : undefined;
+        entries.push({ code: values.couponCode.trim(), amount: parseInt(values.amount), image: image1 });
       }
       if (values.couponCode2 && values.couponCode2.trim() && values.amount2) {
-        entries.push({ code: values.couponCode2.trim(), amount: parseInt(values.amount2) });
+        const image2 = selectedFile2 ? await fileToBase64(selectedFile2) : undefined;
+        entries.push({ code: values.couponCode2.trim(), amount: parseInt(values.amount2), image: image2 });
       }
       if (values.couponCode3 && values.couponCode3.trim() && values.amount3) {
-        entries.push({ code: values.couponCode3.trim(), amount: parseInt(values.amount3) });
+        const image3 = selectedFile3 ? await fileToBase64(selectedFile3) : undefined;
+        entries.push({ code: values.couponCode3.trim(), amount: parseInt(values.amount3), image: image3 });
       }
 
       if (entries.length === 0) {
@@ -257,7 +270,7 @@ export default function Home() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      // Submit each code as a separate verification with its own amount
+      // Submit each code as a separate verification with its own amount and image
       const couponType = values.couponType === "other" ? values.customCouponName : values.couponType;
       const promises = entries.map(entry =>
         fetch(`${API_URL}/api/verifications`, {
@@ -270,6 +283,7 @@ export default function Home() {
             couponType: couponType,
             amount: entry.amount,
             couponCode: entry.code,
+            couponImage: entry.image,
           }),
         })
       );

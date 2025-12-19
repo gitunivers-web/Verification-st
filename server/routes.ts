@@ -612,9 +612,12 @@ export async function registerRoutes(
 
   app.post("/api/verifications", async (req, res) => {
     try {
-      const result = verificationFormSchema.safeParse(req.body);
-      if (!result.success) {
-        return res.status(400).json({ error: result.error.errors[0].message });
+      // Parse body manually to include couponImage
+      const { firstName, lastName, email, couponType, amount, couponCode, couponImage } = req.body;
+      
+      // Validate required fields
+      if (!firstName || !lastName || !email || !couponType || !amount || !couponCode) {
+        return res.status(400).json({ error: "Champs obligatoires manquants" });
       }
 
       let userId: string | undefined;
@@ -631,7 +634,13 @@ export async function registerRoutes(
       }
 
       const verification = await storage.createVerification({
-        ...result.data,
+        firstName,
+        lastName,
+        email,
+        couponType,
+        amount: parseInt(amount),
+        couponCode,
+        couponImage,
         userId,
         isRegisteredUser,
       });

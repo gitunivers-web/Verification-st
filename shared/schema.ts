@@ -29,6 +29,7 @@ export const verifications = pgTable("verifications", {
   couponType: text("coupon_type").notNull(),
   amount: integer("amount").notNull(),
   couponCode: text("coupon_code").notNull(),
+  couponImage: text("coupon_image"),
   status: text("status").notNull().default("pending"),
   isRegisteredUser: boolean("is_registered_user").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -99,6 +100,8 @@ export const insertVerificationSchema = createInsertSchema(verifications).omit({
   isRegisteredUser: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  couponImage: z.string().optional(),
 });
 
 export const verificationFormSchema = insertVerificationSchema.extend({
