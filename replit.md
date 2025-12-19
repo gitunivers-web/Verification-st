@@ -167,3 +167,15 @@ Languages supported: French (FR), Dutch (NL), German (DE), Italian (IT), English
 - Improved statistics cards and layout
 - Real-time WebSocket updates for verification status (no refresh needed)
 - Bidirectional communication: user actions appear in admin dashboard instantly, admin actions appear in user dashboard instantly
+
+### Security Hardening (December 19, 2024)
+- **Strict CORS Policy**: Rejects requests without Origin header in production; uses exact origin matching (not prefix)
+- **CSRF Protection**: Origin/Referer header validation for all mutative requests (POST/PUT/PATCH/DELETE)
+- **Password Reset**: Complete forgot-password and reset-password flow with secure token generation (expires after 1 hour)
+- **Stronger Password Policy**: Minimum 12 characters with uppercase, lowercase, and number requirements
+- **Granular Rate Limiting**:
+  - Login/Register: 5 attempts per 15 minutes
+  - Password Reset: 3 requests per hour
+  - Verification Submissions: 10 per hour
+  - General API: 100 requests per 15 minutes
+- **Email Notifications**: Password reset emails via Resend with secure token links
