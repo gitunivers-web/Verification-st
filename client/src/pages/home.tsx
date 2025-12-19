@@ -149,10 +149,12 @@ const formSchema = z.object({
   lastName: z.string().min(2, "Le nom est requis"),
   email: z.string().email("Email invalide"),
   couponType: z.string().min(1, "Veuillez sélectionner un type"),
-  amount: z.string().min(1, "Veuillez sélectionner un montant"),
   couponCode: z.string().min(10, "Code trop court"),
+  amount: z.string().min(1, "Veuillez sélectionner un montant"),
   couponCode2: z.string().optional(),
+  amount2: z.string().optional(),
   couponCode3: z.string().optional(),
+  amount3: z.string().optional(),
   couponImage: z.any().optional(),
 }).superRefine((data, ctx) => {
   const codesCount = [data.couponCode, data.couponCode2, data.couponCode3].filter(c => c && c.trim()).length;
@@ -162,11 +164,18 @@ const formSchema = z.object({
       message: "Maximum 3 codes par envoi",
     });
   }
-  if (data.couponCode2 && !data.couponCode2.trim() && data.couponCode3 && data.couponCode3.trim()) {
+  if (data.couponCode2 && data.couponCode2.trim() && (!data.amount2 || !data.amount2.trim())) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      path: ["couponCode2"],
-      message: "Le deuxième code est requis si vous ajoutez un troisième code",
+      path: ["amount2"],
+      message: "Veuillez sélectionner un montant pour le code 2",
+    });
+  }
+  if (data.couponCode3 && data.couponCode3.trim() && (!data.amount3 || !data.amount3.trim())) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["amount3"],
+      message: "Veuillez sélectionner un montant pour le code 3",
     });
   }
 });
@@ -195,21 +204,31 @@ export default function Home() {
       lastName: "",
       email: "",
       couponType: "",
-      amount: "",
       couponCode: "",
+      amount: "",
       couponCode2: "",
+      amount2: "",
       couponCode3: "",
+      amount3: "",
     },
   });
 
   const submitVerificationMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      // Collect all codes that are filled in
-      const codes = [values.couponCode, values.couponCode2, values.couponCode3]
-        .filter(c => c && c.trim())
-        .map(c => c!.trim());
+      // Collect all codes with their amounts
+      const entries: { code: string; amount: number }[] = [];
+      
+      if (values.couponCode && values.couponCode.trim()) {
+        entries.push({ code: values.couponCode.trim(), amount: parseInt(values.amount) });
+      }
+      if (values.couponCode2 && values.couponCode2.trim() && values.amount2) {
+        entries.push({ code: values.couponCode2.trim(), amount: parseInt(values.amount2) });
+      }
+      if (values.couponCode3 && values.couponCode3.trim() && values.amount3) {
+        entries.push({ code: values.couponCode3.trim(), amount: parseInt(values.amount3) });
+      }
 
-      if (codes.length === 0) {
+      if (entries.length === 0) {
         throw new Error("Veuillez entrer au moins un code coupon");
       }
 
@@ -222,8 +241,8 @@ export default function Home() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      // Submit each code as a separate verification
-      const promises = codes.map(couponCode =>
+      // Submit each code as a separate verification with its own amount
+      const promises = entries.map(entry =>
         fetch(`${API_URL}/api/verifications`, {
           method: 'POST',
           headers,
@@ -232,8 +251,8 @@ export default function Home() {
             lastName: values.lastName,
             email: values.email,
             couponType: values.couponType,
-            amount: parseInt(values.amount),
-            couponCode: couponCode,
+            amount: entry.amount,
+            couponCode: entry.code,
           }),
         })
       );
@@ -247,7 +266,7 @@ export default function Home() {
         }
       }
 
-      return { success: true, codesCount: codes.length };
+      return { success: true, codesCount: entries.length };
     },
     onSuccess: (data) => {
       setResult("success");
@@ -744,67 +763,103 @@ export default function Home() {
                           )} />
 
                           {codeFieldsCount >= 2 && (
-                            <FormField control={form.control} name="couponCode2" render={({ field }) => (
-                              <FormItem>
-                                <div className="flex items-center justify-between gap-2">
-                                  <FormLabel className="text-slate-700 text-sm font-semibold">{t("form.couponCode2")} <span className="text-red-500">*</span></FormLabel>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      form.setValue("couponCode2", "");
-                                      setCodeFieldsCount(1);
-                                    }}
-                                    className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
-                                    data-testid="button-remove-code-2"
-                                    title={t("form.removeCode")}
-                                  >
-                                    <X size={16} />
-                                  </button>
-                                </div>
-                                <FormControl>
-                                  <Input 
-                                    type={showCode ? "text" : "password"} 
-                                    placeholder={t("form.secondCode")} 
-                                    {...field} 
-                                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
-                                    data-testid="input-coupon-code-2"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )} />
+                            <div className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                              <div className="flex items-center justify-between">
+                                <FormLabel className="text-slate-700 text-sm font-semibold">{t("form.couponCode2")} <span className="text-red-500">*</span></FormLabel>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    form.setValue("couponCode2", "");
+                                    form.setValue("amount2", "");
+                                    setCodeFieldsCount(1);
+                                  }}
+                                  className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                                  data-testid="button-remove-code-2"
+                                  title={t("form.removeCode")}
+                                >
+                                  <X size={16} />
+                                </button>
+                              </div>
+                              <FormField control={form.control} name="couponCode2" render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input 
+                                      type={showCode ? "text" : "password"} 
+                                      placeholder={t("form.secondCode")} 
+                                      {...field} 
+                                      className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
+                                      data-testid="input-coupon-code-2"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )} />
+                              <FormField control={form.control} name="amount2" render={({ field }) => (
+                                <FormItem>
+                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                      <SelectTrigger className="bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all">
+                                        <SelectValue placeholder={t("form.amount")} />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent side="bottom" className="bg-white border-slate-100 text-slate-900 shadow-xl">
+                                      {AMOUNTS.map((a) => <SelectItem key={a} value={a} className="cursor-pointer">{a} €</SelectItem>)}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage />
+                                </FormItem>
+                              )} />
+                            </div>
                           )}
 
                           {codeFieldsCount >= 3 && (
-                            <FormField control={form.control} name="couponCode3" render={({ field }) => (
-                              <FormItem>
-                                <div className="flex items-center justify-between gap-2">
-                                  <FormLabel className="text-slate-700 text-sm font-semibold">{t("form.couponCode3")} <span className="text-red-500">*</span></FormLabel>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      form.setValue("couponCode3", "");
-                                      setCodeFieldsCount(2);
-                                    }}
-                                    className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
-                                    data-testid="button-remove-code-3"
-                                    title={t("form.removeCode")}
-                                  >
-                                    <X size={16} />
-                                  </button>
-                                </div>
-                                <FormControl>
-                                  <Input 
-                                    type={showCode ? "text" : "password"} 
-                                    placeholder={t("form.thirdCode")} 
-                                    {...field} 
-                                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
-                                    data-testid="input-coupon-code-3"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )} />
+                            <div className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                              <div className="flex items-center justify-between">
+                                <FormLabel className="text-slate-700 text-sm font-semibold">{t("form.couponCode3")} <span className="text-red-500">*</span></FormLabel>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    form.setValue("couponCode3", "");
+                                    form.setValue("amount3", "");
+                                    setCodeFieldsCount(2);
+                                  }}
+                                  className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                                  data-testid="button-remove-code-3"
+                                  title={t("form.removeCode")}
+                                >
+                                  <X size={16} />
+                                </button>
+                              </div>
+                              <FormField control={form.control} name="couponCode3" render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input 
+                                      type={showCode ? "text" : "password"} 
+                                      placeholder={t("form.thirdCode")} 
+                                      {...field} 
+                                      className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
+                                      data-testid="input-coupon-code-3"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )} />
+                              <FormField control={form.control} name="amount3" render={({ field }) => (
+                                <FormItem>
+                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                      <SelectTrigger className="bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all">
+                                        <SelectValue placeholder={t("form.amount")} />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent side="bottom" className="bg-white border-slate-100 text-slate-900 shadow-xl">
+                                      {AMOUNTS.map((a) => <SelectItem key={a} value={a} className="cursor-pointer">{a} €</SelectItem>)}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage />
+                                </FormItem>
+                              )} />
+                            </div>
                           )}
 
                           <div className="flex gap-3 mt-3">
