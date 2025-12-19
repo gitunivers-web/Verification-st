@@ -351,7 +351,7 @@ export default function Home() {
             <LanguageSelector />
             {user ? (
               <div className="flex items-center gap-3">
-                {isAdmin && (
+                {isAdmin ? (
                   <Button
                     variant="outline"
                     size="sm"
@@ -362,17 +362,18 @@ export default function Home() {
                     <LayoutDashboard className="h-4 w-4 mr-2" />
                     Admin
                   </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setLocation("/dashboard")}
+                    className="border-blue-500/30 text-blue-600 hover:bg-blue-50"
+                    data-testid="button-dashboard"
+                  >
+                    <User className="h-4 w-4 mr-2" />
+                    {t("home.mySpace")}
+                  </Button>
                 )}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setLocation("/dashboard")}
-                  className="border-blue-500/30 text-blue-600 hover:bg-blue-50"
-                  data-testid="button-dashboard"
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  {t("home.mySpace")}
-                </Button>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -441,7 +442,7 @@ export default function Home() {
                 <div className="border-t border-slate-200/40 mt-2 pt-3">
                   {user ? (
                     <div className="flex flex-col space-y-1">
-                      {isAdmin && (
+                      {isAdmin ? (
                         <button
                           onClick={() => { setLocation("/admin"); setIsMobileMenuOpen(false); }}
                           className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-purple-600 hover:bg-purple-50 rounded-lg transition-all"
@@ -450,15 +451,16 @@ export default function Home() {
                           <LayoutDashboard className="h-4 w-4" />
                           Admin
                         </button>
+                      ) : (
+                        <button
+                          onClick={() => { setLocation("/dashboard"); setIsMobileMenuOpen(false); }}
+                          className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                          data-testid="link-mobile-dashboard"
+                        >
+                          <User className="h-4 w-4" />
+                          {t("home.mySpace")}
+                        </button>
                       )}
-                      <button
-                        onClick={() => { setLocation("/dashboard"); setIsMobileMenuOpen(false); }}
-                        className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                        data-testid="link-mobile-dashboard"
-                      >
-                        <User className="h-4 w-4" />
-                        {t("home.mySpace")}
-                      </button>
                       <button
                         onClick={() => { logout(); setIsMobileMenuOpen(false); }}
                         className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-all"
