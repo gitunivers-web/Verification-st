@@ -2446,6 +2446,13 @@ const translations: Translations = {
     it: "Registrazione riuscita",
     en: "Registration successful",
   },
+  "toast.registerSuccessDesc": {
+    fr: "Veuillez verifier votre email pour activer votre compte.",
+    nl: "Controleer uw e-mail om uw account te activeren.",
+    de: "Bitte uberprufen Sie Ihre E-Mail, um Ihr Konto zu aktivieren.",
+    it: "Controlla la tua email per attivare il tuo account.",
+    en: "Please check your email to activate your account.",
+  },
   "toast.registerError": {
     fr: "Erreur d'inscription",
     nl: "Registratiefout",

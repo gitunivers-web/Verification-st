@@ -179,7 +179,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
         password: registerForm.password,
         language,
       });
-      toast({ title: t("toast.registerSuccess"), description: message });
+      toast({ title: t("toast.registerSuccess"), description: t("toast.registerSuccessDesc") });
       setActiveTab("login");
       setRegisterForm({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "" });
     } catch (error) {
