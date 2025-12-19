@@ -26,6 +26,8 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
   const [requires2FA, setRequires2FA] = useState(false);
   const [pendingAuthToken, setPendingAuthToken] = useState("");
   const [otpCode, setOtpCode] = useState("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
 
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [registerForm, setRegisterForm] = useState({
@@ -118,6 +120,41 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     setOtpCode("");
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotPasswordEmail) return;
+    
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: forgotPasswordEmail, language }),
+      });
+      const data = await response.json();
+      
+      toast({
+        title: t("toast.success"),
+        description: t("toast.passwordResetSent"),
+      });
+      setShowForgotPassword(false);
+      setForgotPasswordEmail("");
+    } catch (error) {
+      toast({
+        title: t("toast.error"),
+        description: t("toast.genericError"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleBackForgotPassword = () => {
+    setShowForgotPassword(false);
+    setForgotPasswordEmail("");
+  };
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -152,6 +189,64 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       setIsLoading(false);
     }
   };
+
+  // Forgot Password Screen
+  if (showForgotPassword) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-md bg-slate-900/95 border-purple-500/30 backdrop-blur-xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              {t("auth.forgotPasswordTitle")}
+            </DialogTitle>
+            <DialogDescription className="text-center text-slate-400">
+              {t("auth.forgotPasswordDescription")}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleForgotPassword} className="space-y-6 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="forgot-email" className="text-slate-300">{t("form.email")}</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <Input
+                  id="forgot-email"
+                  type="email"
+                  placeholder="votre@email.com"
+                  value={forgotPasswordEmail}
+                  onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                  className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
+                  data-testid="input-forgot-email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <Button
+                type="submit"
+                disabled={isLoading || !forgotPasswordEmail}
+                className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500"
+                data-testid="button-forgot-submit"
+              >
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t("auth.sendResetLink")}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={handleBackForgotPassword}
+                className="text-slate-400 hover:text-slate-300"
+                data-testid="button-forgot-back"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                {t("auth.backToLogin")}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   // 2FA Verification Screen
   if (requires2FA) {
@@ -261,6 +356,16 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                     data-testid="input-login-password"
                     required
                   />
+                </div>
+                <div className="text-right">
+                  <button
+                    type="button"
+                    onClick={() => setShowForgotPassword(true)}
+                    className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
+                    data-testid="link-forgot-password"
+                  >
+                    {t("auth.forgotPassword")}
+                  </button>
                 </div>
               </div>
 

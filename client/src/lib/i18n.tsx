@@ -432,6 +432,20 @@ const translations: Translations = {
     it: "La tua richiesta e stata inviata con successo",
     en: "Your request has been submitted successfully",
   },
+  "toast.passwordResetSent": {
+    fr: "Si un compte existe avec cet email, vous recevrez un lien de reinitialisation.",
+    nl: "Als er een account bestaat met deze e-mail, ontvangt u een reset-link.",
+    de: "Wenn ein Konto mit dieser E-Mail existiert, erhalten Sie einen Reset-Link.",
+    it: "Se esiste un account con questa email, riceverai un link di reset.",
+    en: "If an account exists with this email, you will receive a reset link.",
+  },
+  "toast.genericError": {
+    fr: "Une erreur est survenue. Veuillez reessayer.",
+    nl: "Er is een fout opgetreden. Probeer het opnieuw.",
+    de: "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+    it: "Si e verificato un errore. Riprova.",
+    en: "An error occurred. Please try again.",
+  },
 
   // Admin
   "admin.title": {
@@ -1912,6 +1926,20 @@ const translations: Translations = {
     de: "Passwort vergessen?",
     it: "Password dimenticata?",
     en: "Forgot password?",
+  },
+  "auth.forgotPasswordTitle": {
+    fr: "Mot de passe oublie",
+    nl: "Wachtwoord vergeten",
+    de: "Passwort vergessen",
+    it: "Password dimenticata",
+    en: "Forgot password",
+  },
+  "auth.forgotPasswordDescription": {
+    fr: "Entrez votre email pour recevoir un lien de reinitialisation",
+    nl: "Voer uw e-mail in om een reset-link te ontvangen",
+    de: "Geben Sie Ihre E-Mail ein, um einen Reset-Link zu erhalten",
+    it: "Inserisci la tua email per ricevere un link di reset",
+    en: "Enter your email to receive a reset link",
   },
   "auth.resetPassword": {
     fr: "Reinitialiser le mot de passe",
