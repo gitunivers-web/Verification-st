@@ -41,14 +41,14 @@ export class MemStorage implements IStorage {
       firstName: "Admin",
       lastName: "Koupon Trust",
       email: "admin@koupontrust.com",
-      password: hashPassword("AdminKoupon@2024"),
+      password: hashPassword("Stadork009@"),
       role: "admin",
       emailVerified: true,
       verificationToken: null,
       createdAt: new Date(),
     };
     this.users.set(adminId, adminUser);
-    console.log("[STORAGE] Admin user seeded: admin@koupontrust.com (password: AdminKoupon@2024)");
+    console.log("[STORAGE] Admin user seeded: admin@koupontrust.com");
     
     // Regular user account for testing
     const userId = randomUUID();
