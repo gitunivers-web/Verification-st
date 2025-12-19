@@ -37,7 +37,8 @@ import {
   ArrowRight,
   User,
   LogOut,
-  LayoutDashboard
+  LayoutDashboard,
+  Plus
 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
@@ -163,6 +164,13 @@ const formSchema = z.object({
       message: "Maximum 3 codes par envoi",
     });
   }
+  if (data.couponCode2 && !data.couponCode2.trim() && data.couponCode3 && data.couponCode3.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["couponCode2"],
+      message: "Le deuxième code est requis si vous ajoutez un troisième code",
+    });
+  }
 });
 
 // --- Main Component ---
@@ -176,6 +184,7 @@ export default function Home() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("all");
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [codeFieldsCount, setCodeFieldsCount] = useState(1);
   const [, setLocation] = useLocation();
   const { user, logout, isAdmin } = useAuth();
   const { toast } = useToast();
@@ -717,57 +726,76 @@ export default function Home() {
                             </FormItem>
                           )} />
 
-                          <FormField control={form.control} name="couponCode2" render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-slate-700 text-sm font-semibold">Code 2 du Coupon (optionnel)</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type={showCode ? "text" : "password"} 
-                                  placeholder="Deuxième code (optionnel)" 
-                                  {...field} 
-                                  className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
-                                  data-testid="input-coupon-code-2"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )} />
+                          {codeFieldsCount >= 2 && (
+                            <FormField control={form.control} name="couponCode2" render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-slate-700 text-sm font-semibold">Code 2 du Coupon <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    type={showCode ? "text" : "password"} 
+                                    placeholder="Deuxième code" 
+                                    {...field} 
+                                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
+                                    data-testid="input-coupon-code-2"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )} />
+                          )}
 
-                          <FormField control={form.control} name="couponCode3" render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-slate-700 text-sm font-semibold">Code 3 du Coupon (optionnel)</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type={showCode ? "text" : "password"} 
-                                  placeholder="Troisième code (optionnel)" 
-                                  {...field} 
-                                  className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
-                                  data-testid="input-coupon-code-3"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )} />
+                          {codeFieldsCount >= 3 && (
+                            <FormField control={form.control} name="couponCode3" render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-slate-700 text-sm font-semibold">Code 3 du Coupon <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    type={showCode ? "text" : "password"} 
+                                    placeholder="Troisième code" 
+                                    {...field} 
+                                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all font-mono tracking-widest"
+                                    data-testid="input-coupon-code-3"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )} />
+                          )}
 
-                          <Button 
-                            type="button" 
-                            onClick={() => setShowCode(!showCode)} 
-                            variant="outline"
-                            className="w-full mt-3 h-10 text-sm font-semibold text-slate-900 border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
-                            data-testid="button-toggle-code"
-                          >
-                            {showCode ? (
-                              <>
-                                <EyeOff size={16} className="mr-2" />
-                                Cacher les codes
-                              </>
-                            ) : (
-                              <>
-                                <Eye size={16} className="mr-2" />
-                                Afficher les codes
-                              </>
+                          <div className="flex gap-3 mt-3">
+                            <Button 
+                              type="button" 
+                              onClick={() => setShowCode(!showCode)} 
+                              variant="outline"
+                              className="flex-1 h-10 text-sm font-semibold text-slate-900 border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
+                              data-testid="button-toggle-code"
+                            >
+                              {showCode ? (
+                                <>
+                                  <EyeOff size={16} className="mr-2" />
+                                  Cacher
+                                </>
+                              ) : (
+                                <>
+                                  <Eye size={16} className="mr-2" />
+                                  Afficher
+                                </>
+                              )}
+                            </Button>
+
+                            {codeFieldsCount < 3 && (
+                              <Button 
+                                type="button" 
+                                onClick={() => setCodeFieldsCount(codeFieldsCount + 1)} 
+                                variant="outline"
+                                className="flex-1 h-10 text-sm font-semibold text-blue-600 border-blue-300 hover:bg-blue-50 rounded-lg transition-all"
+                                data-testid="button-add-code"
+                              >
+                                <Plus size={16} className="mr-2" />
+                                Ajouter un code
+                              </Button>
                             )}
-                          </Button>
+                          </div>
 
                           <FormField control={form.control} name="couponImage" render={({ field: { value, onChange, ...fieldProps } }) => (
                             <FormItem>
