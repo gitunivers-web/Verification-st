@@ -230,6 +230,7 @@ export async function registerRoutes(
         email,
         password: hashedPassword,
         verificationToken,
+        language,
       });
 
       await sendVerificationEmail(email, firstName, verificationToken, language);
@@ -688,7 +689,14 @@ export async function registerRoutes(
         return res.status(404).json({ error: "Vérification non trouvée" });
       }
 
-      const language = (req.body.language || req.headers["accept-language"]?.split(",")[0]?.substring(0, 2) || "fr") as "fr" | "nl" | "de" | "it" | "en";
+      // Get user's preferred language if they are registered
+      let language: "fr" | "nl" | "de" | "it" | "en" = "fr";
+      if (verification.userId) {
+        const user = await storage.getUser(verification.userId);
+        if (user && user.language) {
+          language = user.language as "fr" | "nl" | "de" | "it" | "en";
+        }
+      }
       await sendStatusUpdateEmail(verification, language);
 
       // Broadcast to all admins and the user who submitted

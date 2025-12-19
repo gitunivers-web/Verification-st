@@ -17,7 +17,7 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   getUserByVerificationToken(token: string): Promise<User | undefined>;
   getUserByResetToken(token: string): Promise<User | undefined>;
-  createUser(user: InsertUser & { verificationToken?: string }): Promise<User>;
+  createUser(user: InsertUser & { verificationToken?: string; language?: string }): Promise<User>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
   getAllUsers(): Promise<User[]>;
   
@@ -67,6 +67,7 @@ export class MemStorage implements IStorage {
       email: process.env.ADMIN_EMAIL || "admin@koupontrust.com",
       password: adminPassword,
       role: "admin",
+      language: "fr",
       emailVerified: true,
       verificationToken: null,
       resetToken: null,
@@ -101,7 +102,7 @@ export class MemStorage implements IStorage {
     );
   }
 
-  async createUser(insertUser: InsertUser & { verificationToken?: string }): Promise<User> {
+  async createUser(insertUser: InsertUser & { verificationToken?: string; language?: string }): Promise<User> {
     const id = randomUUID();
     const user: User = {
       id,
@@ -110,6 +111,7 @@ export class MemStorage implements IStorage {
       email: insertUser.email,
       password: insertUser.password,
       role: "user",
+      language: insertUser.language || "fr",
       emailVerified: false,
       verificationToken: insertUser.verificationToken || null,
       resetToken: null,

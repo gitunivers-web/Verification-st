@@ -10,6 +10,7 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   role: text("role").notNull().default("user"),
+  language: text("language").notNull().default("fr"),
   emailVerified: boolean("email_verified").notNull().default(false),
   verificationToken: text("verification_token"),
   resetToken: text("reset_token"),
@@ -37,6 +38,7 @@ export const verifications = pgTable("verifications", {
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   role: true,
+  language: true,
   emailVerified: true,
   verificationToken: true,
   resetToken: true,
