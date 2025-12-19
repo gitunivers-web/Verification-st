@@ -329,14 +329,19 @@ export default function Home() {
           </div>
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-            {["Comment ça marche", "Sécurité", "Émetteurs", "FAQ"].map((item) => (
+            {[
+              { key: "nav.howItWorks", href: "#comment-ca-marche" },
+              { key: "nav.security", href: "#securite" },
+              { key: "nav.issuers", href: "#emetteurs" },
+              { key: "nav.faq", href: "#faq" },
+            ].map((item) => (
               <a 
-                key={item} 
-                href={`#${item.toLowerCase().replace(/\s+/g, '-').replace(/[éè]/g, 'e').replace(/ç/g, 'c')}`} 
+                key={item.key} 
+                href={item.href} 
                 className="hover:text-blue-600 transition-all relative py-1 group/link"
-                data-testid={`link-${item.toLowerCase().replace(/\s+/g, '-')}`}
+                data-testid={`link-${item.key}`}
               >
-                {item}
+                {t(item.key)}
                 <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 group-hover/link:w-full"></span>
               </a>
             ))}
@@ -408,6 +413,10 @@ export default function Home() {
               className="md:hidden border-t border-slate-200/40 bg-white/95 backdrop-blur-2xl"
             >
               <nav className="flex flex-col px-4 py-4 space-y-1">
+                {/* Language Selector for Mobile */}
+                <div className="px-4 py-3 border-b border-slate-100 mb-2">
+                  <LanguageSelector />
+                </div>
                 {[
                   { key: "nav.howItWorks", href: "#comment-ca-marche" },
                   { key: "nav.security", href: "#securite" },
