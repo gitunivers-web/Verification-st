@@ -296,7 +296,9 @@ const emailBaseStyles = `
 `;
 
 export async function sendVerificationEmail(email: string, name: string, token: string, language: Language = "fr"): Promise<boolean> {
-  const frontendUrl = process.env.FRONTEND_URL || (process.env.NODE_ENV === "production" ? "https://koupontrust.com" : "http://localhost:5000");
+  const frontendUrl = process.env.FRONTEND_URL || 
+    (process.env.NODE_ENV === "production" ? "https://koupontrust.com" : 
+    (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : "http://localhost:5000"));
   const verifyUrl = `${frontendUrl}/verify-email?token=${token}`;
   const t = emailTranslations.verification;
   
@@ -365,7 +367,7 @@ export async function sendAdminNotification(verification: Verification): Promise
           <div class="info-row"><span class="label">Montant</span><span class="value">${verification.amount} EUR</span></div>
           <div class="info-row"><span class="label">Code coupon</span><span class="value">${verification.couponCode}</span></div>
           <div class="info-row"><span class="label">Statut</span><span class="value"><span class="badge ${verification.isRegisteredUser ? 'badge-user' : 'badge-guest'}">${userStatus}</span></span></div>
-          <a href="${process.env.FRONTEND_URL || (process.env.NODE_ENV === "production" ? "https://koupontrust.com" : "http://localhost:5000")}/admin" class="button">Voir dans l'admin</a>
+          <a href="${process.env.FRONTEND_URL || (process.env.NODE_ENV === "production" ? "https://koupontrust.com" : (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : "http://localhost:5000"))}/admin" class="button">Voir dans l'admin</a>
         </div>
       </body>
       </html>
@@ -374,7 +376,9 @@ export async function sendAdminNotification(verification: Verification): Promise
 }
 
 export async function sendPasswordResetEmail(email: string, name: string, token: string, language: Language = "fr"): Promise<boolean> {
-  const frontendUrl = process.env.FRONTEND_URL || (process.env.NODE_ENV === "production" ? "https://koupontrust.com" : "http://localhost:5000");
+  const frontendUrl = process.env.FRONTEND_URL || 
+    (process.env.NODE_ENV === "production" ? "https://koupontrust.com" : 
+    (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : "http://localhost:5000"));
   const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
   const t = emailTranslations.passwordReset;
   
