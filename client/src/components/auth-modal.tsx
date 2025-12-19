@@ -123,7 +123,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                     placeholder="votre@email.com"
                     value={loginForm.email}
                     onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
-                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500"
+                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
                     data-testid="input-login-email"
                     required
                   />
@@ -140,7 +140,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                     placeholder="Votre mot de passe"
                     value={loginForm.password}
                     onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500"
+                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
                     data-testid="input-login-password"
                     required
                   />
@@ -170,7 +170,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                       placeholder="Jean"
                       value={registerForm.firstName}
                       onChange={(e) => setRegisterForm({ ...registerForm, firstName: e.target.value })}
-                      className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500"
+                      className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
                       data-testid="input-register-firstname"
                       required
                     />
@@ -183,7 +183,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                     placeholder="Dupont"
                     value={registerForm.lastName}
                     onChange={(e) => setRegisterForm({ ...registerForm, lastName: e.target.value })}
-                    className="bg-slate-800/50 border-slate-700 focus:border-purple-500"
+                    className="bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
                     data-testid="input-register-lastname"
                     required
                   />
@@ -200,7 +200,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                     placeholder="votre@email.com"
                     value={registerForm.email}
                     onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
-                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500"
+                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
                     data-testid="input-register-email"
                     required
                   />
@@ -214,10 +214,10 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                   <Input
                     id="register-password"
                     type="password"
-                    placeholder="Min. 6 caract\u00e8res"
+                    placeholder="Min. 6 caractères"
                     value={registerForm.password}
                     onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
-                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500"
+                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
                     data-testid="input-register-password"
                     required
                     minLength={6}
@@ -235,7 +235,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                     placeholder="Confirmez votre mot de passe"
                     value={registerForm.confirmPassword}
                     onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
-                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500"
+                    className="pl-10 bg-slate-800/50 border-slate-700 focus:border-purple-500 text-slate-100 placeholder:text-slate-500"
                     data-testid="input-register-confirm"
                     required
                     minLength={6}

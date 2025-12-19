@@ -614,12 +614,12 @@ export default function AdminDashboard() {
                           placeholder="Rechercher par nom, email ou code..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="pl-10 bg-slate-800/50 border-slate-700"
+                          className="pl-10 bg-slate-800/50 border-slate-700 text-slate-100 placeholder:text-slate-500"
                           data-testid="input-search"
                         />
                       </div>
                       <Select value={statusFilter} onValueChange={setStatusFilter}>
-                        <SelectTrigger className="w-full md:w-[200px] bg-slate-800/50 border-slate-700" data-testid="select-status-filter">
+                        <SelectTrigger className="w-full md:w-[200px] bg-slate-800/50 border-slate-700 text-slate-100" data-testid="select-status-filter">
                           <Filter className="h-4 w-4 mr-2" />
                           <SelectValue placeholder="Filtrer par statut" />
                         </SelectTrigger>
