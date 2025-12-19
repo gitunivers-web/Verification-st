@@ -103,6 +103,14 @@ Languages supported: French (FR), Dutch (NL), German (DE), Italian (IT), English
 
 ## Recent Changes (December 2024)
 
+### Footer Navigation (December 19, 2024)
+- **Liens Rapides**: Navigation links corrected and properly linked:
+  - "Vérifier un coupon" → Scrolls to top (verification form)
+  - "Marques supportées" → Links to #emetteurs section
+  - "Questions fréquentes" → Links to #faq section
+- **Contact Email**: Mail icon now links to support@koupontrust.com
+- All footer links have data-testid attributes for testing
+
 ### Post-Login Redirect
 - After successful login, users are automatically redirected to `/dashboard`
 - Admins are automatically redirected to `/admin`
