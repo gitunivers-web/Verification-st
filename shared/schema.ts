@@ -96,3 +96,12 @@ export type User = typeof users.$inferSelect;
 export type InsertVerification = z.infer<typeof insertVerificationSchema>;
 export type Verification = typeof verifications.$inferSelect;
 export type VerificationStatus = "pending" | "valid" | "invalid" | "already_used";
+
+// Nova AI Engine shared state (centralized simulation)
+export interface NovaStats {
+  codesAnalyzed: number;
+  fraudsDetected: number;
+  todayIncrement: number;
+  lastResetDate: string;
+  processingPower: number;
+}

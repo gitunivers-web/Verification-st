@@ -7,6 +7,7 @@ import { sendVerificationEmail, sendAdminNotification, sendStatusUpdateEmail, se
 import { randomBytes } from "crypto";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { novaSimulation } from "./nova-simulation";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET && process.env.NODE_ENV === "production") {
@@ -53,6 +54,15 @@ function broadcastUpdate(type: string, data: unknown, options?: { excludeClient?
 
 function broadcastOnlineCount() {
   const message = JSON.stringify({ type: "online_count", data: { count: connectedClients.size } });
+  connectedClients.forEach((_, ws) => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(message);
+    }
+  });
+}
+
+function broadcastToAll(type: string, data: unknown) {
+  const message = JSON.stringify({ type, data });
   connectedClients.forEach((_, ws) => {
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(message);
@@ -139,6 +149,16 @@ export async function registerRoutes(
       connectedClients.delete(ws);
       broadcastOnlineCount();
     });
+  });
+
+  // Initialize Nova AI Simulation service with WebSocket broadcast
+  novaSimulation.setBroadcast(broadcastToAll);
+  novaSimulation.start();
+
+  // Nova AI Engine stats endpoint (public - no auth required)
+  app.get("/api/nova/stats", (_req, res) => {
+    const stats = novaSimulation.getStats();
+    res.json(stats);
   });
 
   app.post("/api/auth/register", async (req, res) => {

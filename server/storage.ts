@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Verification, type InsertVerification, type VerificationStatus } from "@shared/schema";
+import { type User, type InsertUser, type Verification, type InsertVerification, type VerificationStatus, type NovaStats } from "@shared/schema";
 import { randomUUID } from "crypto";
 import bcrypt from "bcryptjs";
 
@@ -27,15 +27,29 @@ export interface IStorage {
   getAllVerifications(): Promise<Verification[]>;
   createVerification(verification: InsertVerification & { userId?: string; isRegisteredUser?: boolean }): Promise<Verification>;
   updateVerificationStatus(id: string, status: VerificationStatus): Promise<Verification | undefined>;
+  
+  // Nova AI Engine state
+  getNovaStats(): NovaStats;
+  updateNovaStats(stats: Partial<NovaStats>): NovaStats;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private verifications: Map<string, Verification>;
+  private novaStats: NovaStats;
 
   constructor() {
     this.users = new Map();
     this.verifications = new Map();
+    
+    // Initialize Nova AI Engine state with baseline values
+    this.novaStats = {
+      codesAnalyzed: 2847391,
+      fraudsDetected: 12847,
+      todayIncrement: 0,
+      lastResetDate: new Date().toDateString(),
+      processingPower: 87,
+    };
     
     // Seed admin user (async initialization)
     this.seedAdmin().catch(err => console.error("[STORAGE] Failed to seed admin:", err));
@@ -162,6 +176,22 @@ export class MemStorage implements IStorage {
     const updated = { ...verification, status, updatedAt: new Date() };
     this.verifications.set(id, updated);
     return updated;
+  }
+
+  // Nova AI Engine state management
+  getNovaStats(): NovaStats {
+    // Check if we need to reset daily counter
+    const today = new Date().toDateString();
+    if (this.novaStats.lastResetDate !== today) {
+      this.novaStats.todayIncrement = 0;
+      this.novaStats.lastResetDate = today;
+    }
+    return { ...this.novaStats };
+  }
+
+  updateNovaStats(stats: Partial<NovaStats>): NovaStats {
+    this.novaStats = { ...this.novaStats, ...stats };
+    return { ...this.novaStats };
   }
 }
 
