@@ -108,15 +108,30 @@ Languages supported: French (FR), Dutch (NL), German (DE), Italian (IT), English
 - Admins are automatically redirected to `/admin`
 - No intermediate steps required
 
-### Nova AI Engine Component
+### Nova AI Engine Component - Persistent State (December 19, 2024)
 - New animated component at `client/src/components/nova-ai-engine.tsx`
 - Features dynamic statistics: codes analyzed, frauds detected, neural network status
 - Processing power bar with real-time updates
 - Cryptographic validation stream animation
 - SSL/TLS security indicator
+- **NEW**: Persistent state using localStorage - counters survive page refreshes and deploys
+- **NEW**: Custom hook `useNovaAIState` at `client/src/hooks/use-nova-ai-state.ts` manages state persistence
+- **NEW**: Daily counter resets automatically at midnight
+- Applied to all instances: home page, user dashboard, and admin dashboard
+
+### Persistence Implementation
+- **Storage Key**: `nova_ai_engine_state` in localStorage
+- **Persisted Data**: 
+  - Codes analyzed counter
+  - Frauds detected counter
+  - Daily increment counter
+  - Last reset date for midnight reset logic
+- **State Recovery**: Automatically loads from localStorage on component mount
+- **Automatic Saves**: State updates are saved to localStorage on every change
+- **Daily Reset**: Daily counter resets at midnight while maintaining cumulative counters
 
 ### Enhanced Dashboards
-- Both user and admin dashboards include the Nova AI Engine visualization
+- Both user and admin dashboards include the Nova AI Engine visualization with persistent state
 - Clear "Accueil" (Home) and "Deconnexion" (Logout) buttons in headers
 - Improved statistics cards and layout
 - Real-time WebSocket updates for verification status

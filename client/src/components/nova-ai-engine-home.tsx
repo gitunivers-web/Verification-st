@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Lock, Settings, Shield } from "lucide-react";
+import { useNovaAIState } from "@/hooks/use-nova-ai-state";
 
 export function NovaAIEngineHome() {
-  const [codesAnalyzed, setCodesAnalyzed] = useState(10000);
-  const [fraudsDetected, setFraudsDetected] = useState(800);
-  const [todayIncrement, setTodayIncrement] = useState(0);
+  const { codesAnalyzed, setCodesAnalyzed, fraudsDetected, setFraudsDetected, todayIncrement, setTodayIncrement, isLoaded } = useNovaAIState();
   const [processingPower, setProcessingPower] = useState(87);
   const [neuralNodes, setNeuralNodes] = useState([85, 72, 90, 65, 88]);
   const [cryptoStream, setCryptoStream] = useState<string[]>([]);
@@ -13,29 +12,27 @@ export function NovaAIEngineHome() {
 
   // Increment codes analyzed every 100-120 seconds (1 code), detect fraud every 15-20 codes
   useEffect(() => {
+    if (!isLoaded) return;
+    
     const codesInterval = setInterval(() => {
-      setCodesAnalyzed(prev => {
-        const newTotal = prev + 1;
-        setTodayIncrement(prevDay => prevDay + 1);
+      setCodesAnalyzed(prev => prev + 1);
+      setTodayIncrement(prevDay => prevDay + 1);
         
-        // Increment the counter since last fraud
-        setCodeCounterSinceFraud(prevCounter => {
-          const newCounter = prevCounter + 1;
-          
-          // Detect fraud every 15-20 codes
-          if (newCounter >= 15 + Math.floor(Math.random() * 6)) {
-            setFraudsDetected(prev => prev + 1);
-            return 0; // Reset counter
-          }
-          return newCounter;
-        });
+      // Increment the counter since last fraud
+      setCodeCounterSinceFraud(prevCounter => {
+        const newCounter = prevCounter + 1;
         
-        return newTotal;
+        // Detect fraud every 15-20 codes
+        if (newCounter >= 15 + Math.floor(Math.random() * 6)) {
+          setFraudsDetected(prev => prev + 1);
+          return 0; // Reset counter
+        }
+        return newCounter;
       });
     }, 100000 + Math.random() * 20000); // 100-120 seconds
 
     return () => clearInterval(codesInterval);
-  }, []);
+  }, [isLoaded]);
 
   // Reset daily counter at midnight
   useEffect(() => {

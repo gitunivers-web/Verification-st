@@ -1,25 +1,28 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Lock, Settings, Shield } from "lucide-react";
+import { useNovaAIState } from "@/hooks/use-nova-ai-state";
 
 export function NovaAIEngine() {
-  const [codesAnalyzed, setCodesAnalyzed] = useState(2847391);
-  const [fraudsDetected, setFraudsDetected] = useState(12847);
-  const [todayIncrement, setTodayIncrement] = useState(1247);
+  const { codesAnalyzed, setCodesAnalyzed, fraudsDetected, setFraudsDetected, todayIncrement, setTodayIncrement, isLoaded } = useNovaAIState(2847391, 12847);
   const [processingPower, setProcessingPower] = useState(87);
   const [neuralNodes, setNeuralNodes] = useState([85, 72, 90, 65, 88]);
   const [cryptoStream, setCryptoStream] = useState<string[]>([]);
 
   useEffect(() => {
+    if (!isLoaded) return;
+    
     const codesInterval = setInterval(() => {
       setCodesAnalyzed(prev => prev + Math.floor(Math.random() * 3) + 1);
       setTodayIncrement(prev => prev + 1);
     }, 2000 + Math.random() * 3000);
 
     return () => clearInterval(codesInterval);
-  }, []);
+  }, [isLoaded]);
 
   useEffect(() => {
+    if (!isLoaded) return;
+    
     const fraudInterval = setInterval(() => {
       if (Math.random() > 0.7) {
         setFraudsDetected(prev => prev + 1);
@@ -27,7 +30,7 @@ export function NovaAIEngine() {
     }, 5000 + Math.random() * 10000);
 
     return () => clearInterval(fraudInterval);
-  }, []);
+  }, [isLoaded]);
 
   useEffect(() => {
     const powerInterval = setInterval(() => {
