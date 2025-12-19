@@ -1176,41 +1176,13 @@ const translations: Translations = {
     en: "Koupon Trust uses an intelligent analysis engine combining AI, fraud detection, cryptographic verification and high-precision visual analysis. A trusted solution adopted by thousands of users.",
   },
 
-  // Form labels
-  "form.firstName": {
-    fr: "Prenom",
-    nl: "Voornaam",
-    de: "Vorname",
-    it: "Nome",
-    en: "First name",
-  },
-  "form.lastName": {
-    fr: "Nom",
-    nl: "Achternaam",
-    de: "Nachname",
-    it: "Cognome",
-    en: "Last name",
-  },
-  "form.email": {
-    fr: "Email",
-    nl: "E-mail",
-    de: "E-Mail",
-    it: "Email",
-    en: "Email",
-  },
+  // Additional form labels (unique ones)
   "form.service": {
     fr: "Service",
     nl: "Service",
     de: "Service",
     it: "Servizio",
     en: "Service",
-  },
-  "form.amount": {
-    fr: "Montant",
-    nl: "Bedrag",
-    de: "Betrag",
-    it: "Importo",
-    en: "Amount",
   },
   "form.couponCode1": {
     fr: "Code 1 du Coupon",
@@ -1702,13 +1674,6 @@ const translations: Translations = {
     it: "Politica sulla privacy",
     en: "Privacy policy",
   },
-  "footer.cookies": {
-    fr: "Cookies",
-    nl: "Cookies",
-    de: "Cookies",
-    it: "Cookie",
-    en: "Cookies",
-  },
   "footer.allRightsReserved": {
     fr: "Tous droits reserves.",
     nl: "Alle rechten voorbehouden.",
@@ -1759,6 +1724,71 @@ const translations: Translations = {
     de: "Unterhaltung",
     it: "Intrattenimento",
     en: "Entertainment",
+  },
+
+  // Nova AI Engine translations
+  "nova.liveAnalysis": {
+    fr: "ANALYSE EN DIRECT",
+    nl: "LIVE ANALYSE",
+    de: "LIVE-ANALYSE",
+    it: "ANALISI DAL VIVO",
+    en: "LIVE ANALYSIS",
+  },
+  "nova.codesAnalyzed": {
+    fr: "Codes Analyses",
+    nl: "Codes Geanalyseerd",
+    de: "Codes Analysiert",
+    it: "Codici Analizzati",
+    en: "Codes Analyzed",
+  },
+  "nova.today": {
+    fr: "aujourd'hui",
+    nl: "vandaag",
+    de: "heute",
+    it: "oggi",
+    en: "today",
+  },
+  "nova.fraudsDetected": {
+    fr: "Fraudes Detectees",
+    nl: "Fraude Gedetecteerd",
+    de: "Betrug Erkannt",
+    it: "Frodi Rilevate",
+    en: "Frauds Detected",
+  },
+  "nova.accuracy": {
+    fr: "99.97% precision",
+    nl: "99.97% nauwkeurigheid",
+    de: "99.97% Genauigkeit",
+    it: "99.97% precisione",
+    en: "99.97% accuracy",
+  },
+  "nova.neuralNetworkStatus": {
+    fr: "Etat du Reseau Neuronal",
+    nl: "Neurale Netwerk Status",
+    de: "Neuronales Netzwerk Status",
+    it: "Stato Rete Neurale",
+    en: "Neural Network Status",
+  },
+  "nova.processingPower": {
+    fr: "Puissance de Traitement",
+    nl: "Verwerkingskracht",
+    de: "Rechenleistung",
+    it: "Potenza di Elaborazione",
+    en: "Processing Power",
+  },
+  "nova.cryptoValidation": {
+    fr: "Flux de Validation Cryptographique",
+    nl: "Cryptografische Validatie Stream",
+    de: "Kryptografische Validierung Stream",
+    it: "Flusso di Validazione Crittografica",
+    en: "Cryptographic Validation Stream",
+  },
+  "nova.secureConnection": {
+    fr: "Connexion Securisee",
+    nl: "Beveiligde Verbinding",
+    de: "Sichere Verbindung",
+    it: "Connessione Sicura",
+    en: "Secure Connection",
   },
 
   // Auth - Forgot password

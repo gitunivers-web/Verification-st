@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Lock, Settings, Shield } from "lucide-react";
 import { useNovaAIState } from "@/hooks/use-nova-ai-state";
+import { useI18n } from "@/lib/i18n";
 
 export function NovaAIEngine() {
+  const { t } = useI18n();
   const { codesAnalyzed, setCodesAnalyzed, fraudsDetected, setFraudsDetected, todayIncrement, setTodayIncrement, isLoaded } = useNovaAIState(2847391, 12847);
   const [processingPower, setProcessingPower] = useState(87);
   const [neuralNodes, setNeuralNodes] = useState([85, 72, 90, 65, 88]);
@@ -94,36 +96,36 @@ export function NovaAIEngine() {
               NOVA_AI_ENGINE v3.7
             </span>
           </div>
-          <span className="text-xs text-slate-500 font-mono tracking-wider">LIVE ANALYSIS</span>
+          <span className="text-xs text-slate-500 font-mono tracking-wider">{t("nova.liveAnalysis")}</span>
         </div>
       </CardHeader>
 
       <CardContent className="relative z-10 space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4" data-testid="stat-codes-analyzed">
-            <p className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-2">Codes Analyses</p>
+            <p className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-2">{t("nova.codesAnalyzed")}</p>
             <p className="text-3xl md:text-4xl font-bold text-white font-mono">
               {formatNumber(codesAnalyzed)}
             </p>
             <div className="flex items-center gap-2 mt-2">
               <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-sm text-green-400 font-mono">+{formatNumber(todayIncrement)} today</span>
+              <span className="text-sm text-green-400 font-mono">+{formatNumber(todayIncrement)} {t("nova.today")}</span>
             </div>
           </div>
 
           <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4" data-testid="stat-frauds-detected">
-            <p className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-2">Fraudes Detectees</p>
+            <p className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-2">{t("nova.fraudsDetected")}</p>
             <p className="text-3xl md:text-4xl font-bold text-red-400 font-mono">
               {formatNumber(fraudsDetected)}
             </p>
-            <p className="text-sm text-slate-500 font-mono mt-2">99.97% accuracy</p>
+            <p className="text-sm text-slate-500 font-mono mt-2">{t("nova.accuracy")}</p>
           </div>
         </div>
 
         <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4" data-testid="neural-network-status">
           <div className="flex items-center gap-2 mb-4">
             <Settings className="h-4 w-4 text-purple-400" />
-            <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">Neural Network Status</span>
+            <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">{t("nova.neuralNetworkStatus")}</span>
           </div>
           
           <div className="flex items-end justify-between gap-3 mb-4 h-20">
@@ -140,7 +142,7 @@ export function NovaAIEngine() {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-400 font-mono">
-              <span>Processing Power</span>
+              <span>{t("nova.processingPower")}</span>
               <span>{Math.round(processingPower)}%</span>
             </div>
             <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -155,7 +157,7 @@ export function NovaAIEngine() {
         <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4" data-testid="crypto-validation-stream">
           <div className="flex items-center gap-2 mb-3">
             <Lock className="h-4 w-4 text-cyan-400" />
-            <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">Cryptographic Validation Stream</span>
+            <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">{t("nova.cryptoValidation")}</span>
           </div>
           
           <div className="space-y-1 font-mono text-[10px] md:text-xs text-slate-500 overflow-hidden">
@@ -173,7 +175,7 @@ export function NovaAIEngine() {
         <div className="flex items-center justify-between pt-2 border-t border-slate-700/50">
           <div className="flex items-center gap-2">
             <Shield className="h-4 w-4 text-green-400" />
-            <span className="text-xs text-green-400 font-mono uppercase tracking-wider">Secure Connection</span>
+            <span className="text-xs text-green-400 font-mono uppercase tracking-wider">{t("nova.secureConnection")}</span>
           </div>
           <span className="text-xs text-slate-500 font-mono">SSL/TLS 1.3 | AES-256-GCM</span>
         </div>
