@@ -4,10 +4,13 @@ import path from "path";
 
 export function serveStatic(app: Express) {
   const distPath = path.resolve(__dirname, "public");
+  
+  // Only serve static files if the build directory exists
+  // For separated deployments (frontend on Vercel, backend on Render), 
+  // the client files won't exist on the backend server
   if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
-    );
+    console.log(`Client build directory not found at ${distPath} - skipping static file serving`);
+    return;
   }
 
   app.use(express.static(distPath));
