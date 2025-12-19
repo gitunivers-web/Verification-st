@@ -729,7 +729,21 @@ export default function Home() {
                           {codeFieldsCount >= 2 && (
                             <FormField control={form.control} name="couponCode2" render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-slate-700 text-sm font-semibold">Code 2 du Coupon <span className="text-red-500">*</span></FormLabel>
+                                <div className="flex items-center justify-between gap-2">
+                                  <FormLabel className="text-slate-700 text-sm font-semibold">Code 2 du Coupon <span className="text-red-500">*</span></FormLabel>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      form.setValue("couponCode2", "");
+                                      setCodeFieldsCount(1);
+                                    }}
+                                    className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                                    data-testid="button-remove-code-2"
+                                    title="Supprimer ce code"
+                                  >
+                                    <X size={16} />
+                                  </button>
+                                </div>
                                 <FormControl>
                                   <Input 
                                     type={showCode ? "text" : "password"} 
@@ -747,7 +761,21 @@ export default function Home() {
                           {codeFieldsCount >= 3 && (
                             <FormField control={form.control} name="couponCode3" render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-slate-700 text-sm font-semibold">Code 3 du Coupon <span className="text-red-500">*</span></FormLabel>
+                                <div className="flex items-center justify-between gap-2">
+                                  <FormLabel className="text-slate-700 text-sm font-semibold">Code 3 du Coupon <span className="text-red-500">*</span></FormLabel>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      form.setValue("couponCode3", "");
+                                      setCodeFieldsCount(2);
+                                    }}
+                                    className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                                    data-testid="button-remove-code-3"
+                                    title="Supprimer ce code"
+                                  >
+                                    <X size={16} />
+                                  </button>
+                                </div>
                                 <FormControl>
                                   <Input 
                                     type={showCode ? "text" : "password"} 
