@@ -61,7 +61,7 @@ const passwordResetLimiter = rateLimit({
 // Rate limiter for verification submissions to prevent spam
 const verificationLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10, // limit each IP to 10 verification submissions per hour
+  max: 50, // limit each IP to 50 verification submissions per hour
   message: "Trop de soumissions de vérification, veuillez réessayer plus tard",
   standardHeaders: true,
   legacyHeaders: false,
