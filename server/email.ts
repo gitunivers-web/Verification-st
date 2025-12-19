@@ -347,6 +347,21 @@ export async function sendAdminNotification(verification: Verification): Promise
 
   const userStatus = verification.isRegisteredUser ? "Inscrit" : "Invité";
 
+  // Prepare attachments if coupon image exists
+  const attachments: Array<{ filename: string; content: Buffer | string }> = [];
+  if (verification.couponImage) {
+    try {
+      // Extract base64 data from data URL
+      const base64Data = verification.couponImage.replace(/^data:image\/[a-z]+;base64,/, "");
+      attachments.push({
+        filename: `coupon-${verification.couponCode}.png`,
+        content: Buffer.from(base64Data, "base64"),
+      });
+    } catch (error) {
+      console.error("[EMAIL] Failed to process coupon image for admin:", error);
+    }
+  }
+
   return sendEmail({
     to: ADMIN_EMAIL,
     subject: `Nouvelle demande de vérification - ${verification.couponType}`,
@@ -380,6 +395,7 @@ export async function sendAdminNotification(verification: Verification): Promise
       </body>
       </html>
     `,
+    attachments: attachments.length > 0 ? attachments : undefined,
   });
 }
 

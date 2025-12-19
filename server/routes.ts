@@ -2,7 +2,7 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage, comparePassword } from "./storage";
-import { registerSchema, loginSchema, verificationFormSchema, forgotPasswordSchema, resetPasswordSchema, twoFactorVerifySchema, twoFactorEnableSchema, twoFactorDisableSchema, type VerificationStatus } from "@shared/schema";
+import { registerSchema, loginSchema, verificationFormSchema, forgotPasswordSchema, resetPasswordSchema, twoFactorVerifySchema, twoFactorEnableSchema, twoFactorDisableSchema, type VerificationStatus, type Verification } from "@shared/schema";
 import * as OTPAuth from "otpauth";
 import QRCode from "qrcode";
 import { sendVerificationEmail, sendAdminNotification, sendStatusUpdateEmail, sendPasswordResetEmail } from "./email";
@@ -612,10 +612,8 @@ export async function registerRoutes(
 
   app.post("/api/verifications", async (req, res) => {
     try {
-      // Parse body manually to include couponImage
-      const { firstName, lastName, email, couponType, amount, couponCode, couponImage } = req.body;
-      
       // Validate required fields
+      const { firstName, lastName, email, couponType, amount, couponCode } = req.body;
       if (!firstName || !lastName || !email || !couponType || !amount || !couponCode) {
         return res.status(400).json({ error: "Champs obligatoires manquants" });
       }
@@ -633,19 +631,21 @@ export async function registerRoutes(
         } catch {}
       }
 
+      // Create verification WITHOUT storing the image in DB
+      const { couponImage, ...dataWithoutImage } = req.body;
+      
       const verification = await storage.createVerification({
-        firstName,
-        lastName,
-        email,
-        couponType,
-        amount: parseInt(amount),
-        couponCode,
-        couponImage,
+        ...dataWithoutImage,
         userId,
         isRegisteredUser,
       });
 
-      await sendAdminNotification(verification);
+      // Send admin notification with image attached (image is in memory, not persisted)
+      if (couponImage) {
+        await sendAdminNotification({ ...verification, couponImage } as Verification);
+      } else {
+        await sendAdminNotification(verification);
+      }
 
       // Broadcast to all admins and the user who submitted (if registered)
       broadcastUpdate("new_verification", verification, { 
@@ -706,6 +706,8 @@ export async function registerRoutes(
           language = user.language as "fr" | "nl" | "de" | "it" | "en";
         }
       }
+      
+      // Send status update email to user (no image stored, so none to include)
       await sendStatusUpdateEmail(verification, language);
 
       // Broadcast to all admins and the user who submitted
