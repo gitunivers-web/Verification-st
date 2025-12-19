@@ -130,8 +130,24 @@ Languages supported: French (FR), Dutch (NL), German (DE), Italian (IT), English
 - **Automatic Saves**: State updates are saved to localStorage on every change
 - **Daily Reset**: Daily counter resets at midnight while maintaining cumulative counters
 
+### Real-Time WebSocket Updates (December 19, 2024)
+- **Authenticated WebSocket**: Clients authenticate with token on connection (message type: "auth")
+- **Targeted Broadcasting**: Events sent only to relevant users (admins receive all events, users receive their own)
+- **Event Types**:
+  - `new_verification`: Broadcast to all admins when a new verification is submitted
+  - `verification_created`: Sent to the user who created the verification
+  - `verification_updated`: Broadcast to all admins when status changes
+  - `verification_status_changed`: Sent to the user when their verification status is updated
+  - `online_count`: Broadcast to all clients showing connected user count
+- **Frontend Integration**:
+  - Dashboard and Admin Dashboard send auth token on WebSocket connection
+  - QueryClient cache is automatically invalidated on relevant events
+  - UI updates in real-time without page refresh
+  - Recent activity log updated on every event
+
 ### Enhanced Dashboards
 - Both user and admin dashboards include the Nova AI Engine visualization with persistent state
 - Clear "Accueil" (Home) and "Deconnexion" (Logout) buttons in headers
 - Improved statistics cards and layout
-- Real-time WebSocket updates for verification status
+- Real-time WebSocket updates for verification status (no refresh needed)
+- Bidirectional communication: user actions appear in admin dashboard instantly, admin actions appear in user dashboard instantly

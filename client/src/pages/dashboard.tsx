@@ -83,15 +83,26 @@ export default function UserDashboard() {
     const wsUrl = API_URL.replace("http", "ws") + "/ws";
     const socket = new WebSocket(wsUrl);
 
+    socket.onopen = () => {
+      console.log("[WS] User connected");
+      // Send auth token to identify the client
+      socket.send(JSON.stringify({ type: "auth", token }));
+    };
+
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.type === "verification_updated") {
+      if (data.type === "verification_created") {
+        // New verification created by this user
+        queryClient.invalidateQueries({ queryKey: ["/api/verifications"] });
+        setRecentActivity(prev => [`Nouvelle verification envoyee - ${new Date().toLocaleTimeString()}`, ...prev.slice(0, 4)]);
+      }
+      if (data.type === "verification_status_changed") {
+        // Verification status updated by admin
         queryClient.invalidateQueries({ queryKey: ["/api/verifications"] });
         setRecentActivity(prev => [`Mise a jour de verification - ${new Date().toLocaleTimeString()}`, ...prev.slice(0, 4)]);
       }
     };
 
-    socket.onopen = () => console.log("[WS] User connected");
     socket.onclose = () => console.log("[WS] User disconnected");
 
     setWs(socket);

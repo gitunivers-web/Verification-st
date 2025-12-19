@@ -18,19 +18,37 @@ interface AuthenticatedRequest extends Request {
   user?: { id: string; email: string; role: string };
 }
 
-const connectedClients = new Set<WebSocket>();
+interface AuthenticatedClient {
+  ws: WebSocket;
+  userId?: string;
+  role?: string;
+}
 
-function broadcastUpdate(type: string, data: unknown) {
+const connectedClients = new Map<WebSocket, AuthenticatedClient>();
+
+function broadcastUpdate(type: string, data: unknown, options?: { excludeClient?: WebSocket; targetUserId?: string; targetRole?: string }) {
   const message = JSON.stringify({ type, data });
-  connectedClients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(message);
+  connectedClients.forEach((client, ws) => {
+    if (ws.readyState === WebSocket.OPEN && ws !== options?.excludeClient) {
+      // Filter by target user or role if specified
+      if (options?.targetUserId && client.userId !== options.targetUserId && client.role !== "admin") {
+        return;
+      }
+      if (options?.targetRole && client.role !== options.targetRole) {
+        return;
+      }
+      ws.send(message);
     }
   });
 }
 
 function broadcastOnlineCount() {
-  broadcastUpdate("online_count", { count: connectedClients.size });
+  const message = JSON.stringify({ type: "online_count", data: { count: connectedClients.size } });
+  connectedClients.forEach((_, ws) => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(message);
+    }
+  });
 }
 
 function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -73,10 +91,29 @@ export async function registerRoutes(
   const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
 
   wss.on("connection", (ws) => {
-    connectedClients.add(ws);
+    const clientData: AuthenticatedClient = { ws };
+    connectedClients.set(ws, clientData);
     console.log("[WS] Client connected, total:", connectedClients.size);
     
-    ws.send(JSON.stringify({ type: "online_count", data: { count: connectedClients.size } }));
+    ws.on("message", (data) => {
+      try {
+        const message = JSON.parse(data.toString());
+        if (message.type === "auth" && message.token) {
+          try {
+            const decoded = Buffer.from(message.token, "base64").toString("utf-8");
+            const [id, _, role] = decoded.split("|");
+            clientData.userId = id;
+            clientData.role = role;
+            console.log(`[WS] Client authenticated: ${id} (${role})`);
+          } catch (e) {
+            console.error("[WS] Auth token decode failed:", e);
+          }
+        }
+      } catch (e) {
+        console.error("[WS] Message parse failed:", e);
+      }
+    });
+
     broadcastOnlineCount();
 
     ws.on("close", () => {
@@ -237,7 +274,15 @@ export async function registerRoutes(
 
       await sendAdminNotification(verification);
 
-      broadcastUpdate("new_verification", verification);
+      // Broadcast to all admins and the user who submitted (if registered)
+      broadcastUpdate("new_verification", verification, { 
+        targetRole: "admin" 
+      });
+      if (userId) {
+        broadcastUpdate("verification_created", verification, {
+          targetUserId: userId
+        });
+      }
 
       res.status(201).json(verification);
     } catch (error) {
@@ -282,7 +327,15 @@ export async function registerRoutes(
 
       await sendStatusUpdateEmail(verification);
 
-      broadcastUpdate("verification_updated", verification);
+      // Broadcast to all admins and the user who submitted
+      broadcastUpdate("verification_updated", verification, { 
+        targetRole: "admin" 
+      });
+      if (verification.userId) {
+        broadcastUpdate("verification_status_changed", verification, {
+          targetUserId: verification.userId
+        });
+      }
 
       res.json(verification);
     } catch (error) {

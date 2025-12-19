@@ -115,6 +115,12 @@ export default function AdminDashboard() {
     const wsUrl = API_URL.replace("http", "ws") + "/ws";
     const socket = new WebSocket(wsUrl);
 
+    socket.onopen = () => {
+      console.log("[WS] Admin connected");
+      // Send auth token to identify the client
+      socket.send(JSON.stringify({ type: "auth", token }));
+    };
+
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "new_verification") {
@@ -134,12 +140,11 @@ export default function AdminDashboard() {
       }
     };
 
-    socket.onopen = () => console.log("[WS] Admin connected");
     socket.onclose = () => console.log("[WS] Admin disconnected");
 
     setWs(socket);
     return () => socket.close();
-  }, [toast]);
+  }, [token, toast]);
 
   const { data: verifications = [], isLoading, refetch } = useQuery<Verification[]>({
     queryKey: ["/api/admin/verifications"],
