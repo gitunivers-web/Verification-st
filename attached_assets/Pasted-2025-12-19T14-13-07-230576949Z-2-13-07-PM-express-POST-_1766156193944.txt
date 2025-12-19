@@ -1,0 +1,75 @@
+2025-12-19T14:13:07.230576949Z 2:13:07 PM [express] POST /api/auth/login 401 in 1ms :: {"error":"Email ou mot de passe incorrect"}
+2025-12-19T14:13:25.31669388Z 2:13:25 PM [express] POST /api/auth/login 401 in 1ms :: {"error":"Email ou mot de passe incorrect"}
+2025-12-19T14:13:58.184236245Z 2:13:58 PM [express] POST /api/auth/login 401 in 0ms :: {"error":"Email ou mot de passe incorrect"}
+2025-12-19T14:14:34.97158703Z 2:14:34 PM [express] POST /api/auth/login 401 in 1ms :: {"error":"Email ou mot de passe incorrect"}
+2025-12-19T14:15:49.465022374Z 2:15:49 PM [express] POST /api/auth/login 401 in 0ms :: {"error":"Email ou mot de passe incorrect"}
+2025-12-19T14:18:02.919614903Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2025-12-19T14:18:03.063295781Z ==> Deploying...
+2025-12-19T14:19:17.617058002Z ==> Running 'node dist/index.cjs'
+2025-12-19T14:19:18.326744769Z [STORAGE] Admin user seeded
+2025-12-19T14:19:19.025025459Z Client build directory not found at /opt/render/project/src/dist/public - skipping static file serving
+2025-12-19T14:19:19.215069417Z 2:19:19 PM [express] serving on port 10000
+2025-12-19T14:19:25.19375813Z ==> Your service is live 🎉
+2025-12-19T14:19:25.395793661Z ==> 
+2025-12-19T14:19:25.55817584Z ==> ///////////////////////////////////////////////////////////
+2025-12-19T14:19:25.722408108Z ==> 
+2025-12-19T14:19:25.885491068Z ==> Available at your primary URL https://api.koupontrust.com + 1 more domain
+2025-12-19T14:19:26.048091016Z ==> 
+2025-12-19T14:19:26.207677816Z ==> ///////////////////////////////////////////////////////////
+2025-12-19T14:20:39.870751931Z fe: The 'X-Forwarded-For' header is set but the Express 'trust proxy' setting is false (default). This could indicate a misconfiguration which would prevent express-rate-limit from accurately identifying users. See https://express-rate-limit.github.io/ERR_ERL_UNEXPECTED_X_FORWARDED_FOR/ for more information.
+2025-12-19T14:20:39.870789391Z     at Object.xForwardedForHeader (/opt/render/project/src/dist/index.cjs:73:54310)
+2025-12-19T14:20:39.870796181Z     at r.<computed> [as xForwardedForHeader] (/opt/render/project/src/dist/index.cjs:73:59304)
+2025-12-19T14:20:39.870800741Z     at Object.keyGenerator (/opt/render/project/src/dist/index.cjs:73:60796)
+2025-12-19T14:20:39.870805132Z     at /opt/render/project/src/dist/index.cjs:73:61939
+2025-12-19T14:20:39.870808712Z     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-12-19T14:20:39.870831912Z     at async /opt/render/project/src/dist/index.cjs:73:61653 {
+2025-12-19T14:20:39.870840453Z   code: 'ERR_ERL_UNEXPECTED_X_FORWARDED_FOR',
+2025-12-19T14:20:39.870845682Z   help: 'https://express-rate-limit.github.io/ERR_ERL_UNEXPECTED_X_FORWARDED_FOR/'
+2025-12-19T14:20:39.870851283Z }
+2025-12-19T14:20:39.872154202Z fe: The 'X-Forwarded-For' header is set but the Express 'trust proxy' setting is false (default). This could indicate a misconfiguration which would prevent express-rate-limit from accurately identifying users. See https://express-rate-limit.github.io/ERR_ERL_UNEXPECTED_X_FORWARDED_FOR/ for more information.
+2025-12-19T14:20:39.872170162Z     at Object.xForwardedForHeader (/opt/render/project/src/dist/index.cjs:73:54310)
+2025-12-19T14:20:39.872174803Z     at r.<computed> [as xForwardedForHeader] (/opt/render/project/src/dist/index.cjs:73:59304)
+2025-12-19T14:20:39.872178912Z     at Object.keyGenerator (/opt/render/project/src/dist/index.cjs:73:60796)
+2025-12-19T14:20:39.872182963Z     at /opt/render/project/src/dist/index.cjs:73:61939
+2025-12-19T14:20:39.872186523Z     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-12-19T14:20:39.872190043Z     at async /opt/render/project/src/dist/index.cjs:73:61653 {
+2025-12-19T14:20:39.872193853Z   code: 'ERR_ERL_UNEXPECTED_X_FORWARDED_FOR',
+2025-12-19T14:20:39.872197403Z   help: 'https://express-rate-limit.github.io/ERR_ERL_UNEXPECTED_X_FORWARDED_FOR/'
+2025-12-19T14:20:39.872200923Z }
+2025-12-19T14:20:40.696276028Z 2:20:40 PM [express] POST /api/auth/login 401 in 2ms :: {"error":"Email ou mot de passe incorrect"}
+2025-12-19T14:24:25.630636281Z ==> Detected service running on port 10000
+2025-12-19T14:24:25.981576908Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2025-12-19T14:31:49.667760823Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2025-12-19T14:31:49.811008232Z ==> Deploying...
+2025-12-19T14:32:09.705972578Z [NOVA] Starting simulation loop
+2025-12-19T14:32:09.707034958Z Client build directory not found at /opt/render/project/src/dist/public - skipping static file serving
+2025-12-19T14:32:09.810383848Z 2:32:09 PM [express] serving on port 10000
+2025-12-19T14:32:10.027240047Z [ERROR] Error: CORS not allowed - missing origin
+2025-12-19T14:32:10.027267178Z     at origin (/opt/render/project/src/dist/index.cjs:206:11983)
+2025-12-19T14:32:10.0273199Z     at /opt/render/project/src/dist/index.cjs:63:4924
+2025-12-19T14:32:10.027323611Z     at v (/opt/render/project/src/dist/index.cjs:63:4741)
+2025-12-19T14:32:10.027326971Z     at /opt/render/project/src/dist/index.cjs:63:4768
+2025-12-19T14:32:10.027330621Z     at In.handle_request (/opt/render/project/src/dist/index.cjs:38:3170)
+2025-12-19T14:32:10.027333571Z     at b (/opt/render/project/src/dist/index.cjs:38:8362)
+2025-12-19T14:32:10.027336171Z     at /opt/render/project/src/dist/index.cjs:38:7955
+2025-12-19T14:32:10.027338821Z     at Ar.process_params (/opt/render/project/src/dist/index.cjs:38:8478)
+2025-12-19T14:32:10.027341402Z     at g (/opt/render/project/src/dist/index.cjs:38:7881)
+2025-12-19T14:32:10.027344602Z     at internalNext (/opt/render/project/src/node_modules/helmet/index.cjs:531:6)
+2025-12-19T14:32:11.394326747Z ==> Your service is live 🎉
+2025-12-19T14:32:11.624890504Z ==> 
+2025-12-19T14:32:11.785290094Z ==> ///////////////////////////////////////////////////////////
+2025-12-19T14:32:11.946279114Z ==> 
+2025-12-19T14:32:12.109447253Z ==> Available at your primary URL https://api.koupontrust.com + 1 more domain
+2025-12-19T14:32:12.343262049Z ==> 
+2025-12-19T14:32:12.559670328Z ==> ///////////////////////////////////////////////////////////
+2025-12-19T14:32:15.709282824Z [ERROR] Error: CORS not allowed - missing origin
+2025-12-19T14:32:15.709371578Z     at origin (/opt/render/project/src/dist/index.cjs:206:11983)
+2025-12-19T14:32:15.709375328Z     at /opt/render/project/src/dist/index.cjs:63:4924
+2025-12-19T14:32:15.709377788Z     at v (/opt/render/project/src/dist/index.cjs:63:4741)
+2025-12-19T14:32:15.709380578Z     at /opt/render/project/src/dist/index.cjs:63:4768
+2025-12-19T14:32:15.709383788Z     at In.handle_request (/opt/render/project/src/dist/index.cjs:38:3170)
+2025-12-19T14:32:15.709386139Z     at b (/opt/render/project/src/dist/index.cjs:38:8362)
+2025-12-19T14:32:15.709388569Z     at /opt/render/project/src/dist/index.cjs:38:7955
+2025-12-19T14:32:15.709391019Z     at Ar.process_params (/opt/render/project/src/dist/index.cjs:38:8478)
+2025-12-19T14:32:15.709393269Z     at g (/opt/render/project/src/dist/index.cjs:38:7881)
+2025-12-19T14:32:15.709396109Z     at internalNext (/opt/render/project/src/node_modules/helmet/index.cjs:531:6)

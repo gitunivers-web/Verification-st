@@ -10,6 +10,11 @@ const app = express();
 
 // Security: Use Helmet to set various HTTP headers
 const isProduction = process.env.NODE_ENV === "production";
+
+// Trust proxy for production (Render, Vercel, etc.)
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -132,13 +137,8 @@ app.use("/api/", csrfProtection);
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Strict CORS policy - reject requests without origin
+    // Allow requests without origin (server-to-server, health checks, same-origin)
     if (!origin) {
-      if (isProduction) {
-        // In production, always reject requests without origin
-        return callback(new Error("CORS not allowed - missing origin"));
-      }
-      // In development, allow for testing purposes
       return callback(null, true);
     }
     
