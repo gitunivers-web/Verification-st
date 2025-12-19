@@ -2225,6 +2225,129 @@ const translations: Translations = {
     it: "Per qualsiasi domanda riguardante l'utilizzo dei cookie, contattaci a: privacy@koupontrust.com",
     en: "For any questions regarding our use of cookies, contact us at: privacy@koupontrust.com",
   },
+
+  // Toast messages - Auth
+  "toast.loginSuccess": {
+    fr: "Connexion reussie",
+    nl: "Succesvol ingelogd",
+    de: "Erfolgreich angemeldet",
+    it: "Accesso effettuato",
+    en: "Login successful",
+  },
+  "toast.loginSuccessDesc": {
+    fr: "Bienvenue sur Koupon Trust",
+    nl: "Welkom bij Koupon Trust",
+    de: "Willkommen bei Koupon Trust",
+    it: "Benvenuto su Koupon Trust",
+    en: "Welcome to Koupon Trust",
+  },
+  "toast.loginError": {
+    fr: "Erreur de connexion",
+    nl: "Inlogfout",
+    de: "Anmeldefehler",
+    it: "Errore di accesso",
+    en: "Login error",
+  },
+  "toast.registerSuccess": {
+    fr: "Inscription reussie",
+    nl: "Registratie geslaagd",
+    de: "Registrierung erfolgreich",
+    it: "Registrazione riuscita",
+    en: "Registration successful",
+  },
+  "toast.registerError": {
+    fr: "Erreur d'inscription",
+    nl: "Registratiefout",
+    de: "Registrierungsfehler",
+    it: "Errore di registrazione",
+    en: "Registration error",
+  },
+  "toast.passwordMismatch": {
+    fr: "Les mots de passe ne correspondent pas",
+    nl: "Wachtwoorden komen niet overeen",
+    de: "Passworter stimmen nicht uberein",
+    it: "Le password non corrispondono",
+    en: "Passwords do not match",
+  },
+  "toast.emailConfirmation": {
+    fr: "En vous inscrivant, vous recevrez un email de confirmation.",
+    nl: "Na registratie ontvangt u een bevestigingsmail.",
+    de: "Nach der Registrierung erhalten Sie eine Bestatigungsmail.",
+    it: "Dopo la registrazione riceverai un'email di conferma.",
+    en: "After registration, you will receive a confirmation email.",
+  },
+
+  // Verify email page
+  "verifyEmail.loading": {
+    fr: "Verification en cours...",
+    nl: "Verificatie bezig...",
+    de: "Verifizierung lauft...",
+    it: "Verifica in corso...",
+    en: "Verification in progress...",
+  },
+  "verifyEmail.pleaseWait": {
+    fr: "Veuillez patienter",
+    nl: "Even geduld",
+    de: "Bitte warten",
+    it: "Attendere prego",
+    en: "Please wait",
+  },
+  "verifyEmail.success": {
+    fr: "Email verifie",
+    nl: "E-mail geverifieerd",
+    de: "E-Mail verifiziert",
+    it: "Email verificata",
+    en: "Email verified",
+  },
+  "verifyEmail.error": {
+    fr: "Erreur de verification",
+    nl: "Verificatiefout",
+    de: "Verifizierungsfehler",
+    it: "Errore di verifica",
+    en: "Verification error",
+  },
+  "verifyEmail.tokenMissing": {
+    fr: "Token de verification manquant",
+    nl: "Verificatietoken ontbreekt",
+    de: "Verifizierungstoken fehlt",
+    it: "Token di verifica mancante",
+    en: "Verification token missing",
+  },
+  "verifyEmail.successMessage": {
+    fr: "Email verifie avec succes",
+    nl: "E-mail succesvol geverifieerd",
+    de: "E-Mail erfolgreich verifiziert",
+    it: "Email verificata con successo",
+    en: "Email verified successfully",
+  },
+  "verifyEmail.errorMessage": {
+    fr: "Erreur lors de la verification",
+    nl: "Fout bij verificatie",
+    de: "Fehler bei der Verifizierung",
+    it: "Errore durante la verifica",
+    en: "Error during verification",
+  },
+  "verifyEmail.connectionError": {
+    fr: "Erreur de connexion au serveur",
+    nl: "Serverfout",
+    de: "Serververbindungsfehler",
+    it: "Errore di connessione al server",
+    en: "Server connection error",
+  },
+  "verifyEmail.goToDashboard": {
+    fr: "Acceder au tableau de bord",
+    nl: "Naar dashboard",
+    de: "Zum Dashboard",
+    it: "Vai alla dashboard",
+    en: "Go to Dashboard",
+  },
+  "verifyEmail.backToHome": {
+    fr: "Retour a l'accueil",
+    nl: "Terug naar home",
+    de: "Zuruck zur Startseite",
+    it: "Torna alla home",
+    en: "Back to Home",
+  },
 };
 
 interface I18nContextType {
@@ -2234,6 +2357,38 @@ interface I18nContextType {
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
+
+function detectBrowserLanguage(): Language {
+  if (typeof window === "undefined" || !navigator?.language) {
+    return "fr";
+  }
+  
+  const browserLang = navigator.language.toLowerCase();
+  const supportedLanguages: Language[] = ["fr", "nl", "de", "it", "en"];
+  
+  for (const lang of supportedLanguages) {
+    if (browserLang.startsWith(lang)) {
+      return lang;
+    }
+  }
+  
+  const countryToLang: Record<string, Language> = {
+    "be": "nl",
+    "ch": "de",
+    "at": "de",
+    "lu": "fr",
+  };
+  
+  const parts = browserLang.split("-");
+  if (parts.length > 1) {
+    const country = parts[1];
+    if (countryToLang[country]) {
+      return countryToLang[country];
+    }
+  }
+  
+  return "fr";
+}
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
@@ -2246,6 +2401,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       } catch {
         // localStorage not available (e.g., in iframe with restricted permissions)
       }
+      return detectBrowserLanguage();
     }
     return "fr";
   });

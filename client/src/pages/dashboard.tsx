@@ -57,11 +57,44 @@ import {
   SidebarHeader,
   SidebarFooter,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 type TabType = "overview" | "verifications" | "profile" | "security";
 
 const dateLocales = { fr, nl, de, it, en: enUS };
+
+function SidebarNavItem({ 
+  item, 
+  activeTab, 
+  onSelect 
+}: { 
+  item: { id: TabType; label: string; icon: any }; 
+  activeTab: TabType; 
+  onSelect: (id: TabType) => void;
+}) {
+  const { setOpenMobile, isMobile } = useSidebar();
+  
+  const handleClick = () => {
+    onSelect(item.id);
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        onClick={handleClick}
+        className={activeTab === item.id ? "bg-violet-500/20 text-violet-400" : "text-slate-400"}
+        data-testid={`button-nav-${item.id}`}
+      >
+        <item.icon className="h-4 w-4" />
+        <span>{item.label}</span>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
+}
 
 export default function UserDashboard() {
   const { user, token, logout, isLoading: authLoading } = useAuth();
@@ -223,16 +256,12 @@ export default function UserDashboard() {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {sidebarItems.map((item) => (
-                    <SidebarMenuItem key={item.id}>
-                      <SidebarMenuButton
-                        onClick={() => setActiveTab(item.id)}
-                        className={activeTab === item.id ? "bg-violet-500/20 text-violet-400" : "text-slate-400"}
-                        data-testid={`button-nav-${item.id}`}
-                      >
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.label}</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
+                    <SidebarNavItem 
+                      key={item.id} 
+                      item={item} 
+                      activeTab={activeTab} 
+                      onSelect={setActiveTab} 
+                    />
                   ))}
                 </SidebarMenu>
               </SidebarGroupContent>

@@ -88,9 +88,45 @@ import {
   SidebarHeader,
   SidebarFooter,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 type AdminTab = "dashboard" | "verifications" | "analytics" | "system";
+
+function AdminSidebarNavItem({ 
+  item, 
+  activeTab, 
+  onSelect 
+}: { 
+  item: { id: AdminTab; label: string; icon: any; badge?: number }; 
+  activeTab: AdminTab; 
+  onSelect: (id: AdminTab) => void;
+}) {
+  const { setOpenMobile, isMobile } = useSidebar();
+  
+  const handleClick = () => {
+    onSelect(item.id);
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        onClick={handleClick}
+        className={activeTab === item.id ? "bg-violet-500/20 text-violet-400" : "text-slate-400"}
+        data-testid={`button-nav-${item.id}`}
+      >
+        <item.icon className="h-4 w-4" />
+        <span className="flex-1">{item.label}</span>
+        {item.badge && item.badge > 0 && (
+          <Badge className="bg-violet-600 text-white text-[10px] px-1.5 py-0">{item.badge}</Badge>
+        )}
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
+}
 
 export default function AdminDashboard() {
   const { user, token, logout, isAdmin } = useAuth();
@@ -285,19 +321,12 @@ export default function AdminDashboard() {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {sidebarItems.map((item) => (
-                    <SidebarMenuItem key={item.id}>
-                      <SidebarMenuButton
-                        onClick={() => setActiveTab(item.id)}
-                        className={activeTab === item.id ? "bg-violet-500/20 text-violet-400" : "text-slate-400"}
-                        data-testid={`button-nav-${item.id}`}
-                      >
-                        <item.icon className="h-4 w-4" />
-                        <span className="flex-1">{item.label}</span>
-                        {item.badge && item.badge > 0 && (
-                          <Badge className="bg-violet-600 text-white text-[10px] px-1.5 py-0">{item.badge}</Badge>
-                        )}
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
+                    <AdminSidebarNavItem 
+                      key={item.id} 
+                      item={item} 
+                      activeTab={activeTab} 
+                      onSelect={setActiveTab} 
+                    />
                   ))}
                 </SidebarMenu>
               </SidebarGroupContent>

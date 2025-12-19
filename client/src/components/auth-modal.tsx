@@ -18,7 +18,7 @@ interface AuthModalProps {
 export function AuthModal({ open, onOpenChange }: AuthModalProps) {
   const { login, register, isAdmin } = useAuth();
   const { toast } = useToast();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
@@ -37,7 +37,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     setIsLoading(true);
     try {
       await login(loginForm.email, loginForm.password);
-      toast({ title: "Connexion r\u00e9ussie", description: "Bienvenue sur Koupon Trust" });
+      toast({ title: t("toast.loginSuccess"), description: t("toast.loginSuccessDesc") });
       onOpenChange(false);
       setLoginForm({ email: "", password: "" });
       const savedUser = localStorage.getItem("auth_user");
@@ -53,8 +53,8 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       }
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: error instanceof Error ? error.message : "Erreur de connexion",
+        title: t("toast.error"),
+        description: error instanceof Error ? error.message : t("toast.loginError"),
         variant: "destructive",
       });
     } finally {
@@ -67,8 +67,8 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     
     if (registerForm.password !== registerForm.confirmPassword) {
       toast({
-        title: "Erreur",
-        description: "Les mots de passe ne correspondent pas",
+        title: t("toast.error"),
+        description: t("toast.passwordMismatch"),
         variant: "destructive",
       });
       return;
@@ -81,14 +81,15 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
         lastName: registerForm.lastName,
         email: registerForm.email,
         password: registerForm.password,
+        language,
       });
-      toast({ title: "Inscription r\u00e9ussie", description: message });
+      toast({ title: t("toast.registerSuccess"), description: message });
       setActiveTab("login");
       setRegisterForm({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "" });
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: error instanceof Error ? error.message : "Erreur d'inscription",
+        title: t("toast.error"),
+        description: error instanceof Error ? error.message : t("toast.registerError"),
         variant: "destructive",
       });
     } finally {
@@ -253,7 +254,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
               </Button>
 
               <p className="text-xs text-center text-slate-500">
-                En vous inscrivant, vous recevrez un email de confirmation.
+                {t("toast.emailConfirmation")}
               </p>
             </form>
           </TabsContent>

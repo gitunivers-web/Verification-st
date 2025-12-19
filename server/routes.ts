@@ -169,6 +169,7 @@ export async function registerRoutes(
       }
 
       const { firstName, lastName, email, password } = result.data;
+      const language = (req.body.language || req.headers["accept-language"]?.split(",")[0]?.substring(0, 2) || "fr") as "fr" | "nl" | "de" | "it" | "en";
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
@@ -191,7 +192,7 @@ export async function registerRoutes(
         verificationToken,
       });
 
-      await sendVerificationEmail(email, firstName, verificationToken);
+      await sendVerificationEmail(email, firstName, verificationToken, language);
 
       res.status(201).json({
         message: "Inscription réussie. Veuillez vérifier votre email pour activer votre compte.",
@@ -271,6 +272,7 @@ export async function registerRoutes(
       }
 
       const { email } = result.data;
+      const language = (req.body.language || req.headers["accept-language"]?.split(",")[0]?.substring(0, 2) || "fr") as "fr" | "nl" | "de" | "it" | "en";
       const user = await storage.getUserByEmail(email);
 
       // Always return success to prevent email enumeration
@@ -286,7 +288,7 @@ export async function registerRoutes(
         resetTokenExpiry,
       });
 
-      await sendPasswordResetEmail(user.email, user.firstName, resetToken);
+      await sendPasswordResetEmail(user.email, user.firstName, resetToken, language);
 
       res.json({ message: "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation." });
     } catch (error) {
@@ -422,7 +424,8 @@ export async function registerRoutes(
         return res.status(404).json({ error: "Vérification non trouvée" });
       }
 
-      await sendStatusUpdateEmail(verification);
+      const language = (req.body.language || req.headers["accept-language"]?.split(",")[0]?.substring(0, 2) || "fr") as "fr" | "nl" | "de" | "it" | "en";
+      await sendStatusUpdateEmail(verification, language);
 
       // Broadcast to all admins and the user who submitted
       broadcastUpdate("verification_updated", verification, { 
