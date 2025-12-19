@@ -156,6 +156,8 @@ const formSchema = z.object({
   couponCode3: z.string().optional(),
   amount3: z.string().optional(),
   couponImage: z.any().optional(),
+  couponImage2: z.any().optional(),
+  couponImage3: z.any().optional(),
 }).superRefine((data, ctx) => {
   const codesCount = [data.couponCode, data.couponCode2, data.couponCode3].filter(c => c && c.trim()).length;
   if (codesCount > 3) {
@@ -189,6 +191,10 @@ export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFile2, setSelectedFile2] = useState<File | null>(null);
+  const [previewUrl2, setPreviewUrl2] = useState<string | null>(null);
+  const [selectedFile3, setSelectedFile3] = useState<File | null>(null);
+  const [previewUrl3, setPreviewUrl3] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("all");
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [codeFieldsCount, setCodeFieldsCount] = useState(1);
@@ -298,20 +304,38 @@ export default function Home() {
     });
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, onChange: (value: any) => void) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, onChange: (value: any) => void, fileIndex: 1 | 2 | 3 = 1) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
-      onChange(file);
       const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
+      if (fileIndex === 1) {
+        setSelectedFile(file);
+        setPreviewUrl(url);
+      } else if (fileIndex === 2) {
+        setSelectedFile2(file);
+        setPreviewUrl2(url);
+      } else {
+        setSelectedFile3(file);
+        setPreviewUrl3(url);
+      }
+      onChange(file);
     }
   };
 
-  const removeFile = () => {
-    setSelectedFile(null);
-    setPreviewUrl(null);
-    form.setValue("couponImage", undefined);
+  const removeFile = (fileIndex: 1 | 2 | 3 = 1) => {
+    if (fileIndex === 1) {
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      form.setValue("couponImage", undefined);
+    } else if (fileIndex === 2) {
+      setSelectedFile2(null);
+      setPreviewUrl2(null);
+      form.setValue("couponImage2", undefined);
+    } else {
+      setSelectedFile3(null);
+      setPreviewUrl3(null);
+      form.setValue("couponImage3", undefined);
+    }
   };
 
   const plugin = useRef(Autoplay({ delay: 2500, stopOnInteraction: false }));
@@ -771,6 +795,7 @@ export default function Home() {
                                   onClick={() => {
                                     form.setValue("couponCode2", "");
                                     form.setValue("amount2", "");
+                                    removeFile(2);
                                     setCodeFieldsCount(1);
                                   }}
                                   className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
@@ -809,6 +834,27 @@ export default function Home() {
                                   <FormMessage />
                                 </FormItem>
                               )} />
+                              <FormField control={form.control} name="couponImage2" render={({ field: { value, onChange, ...fieldProps } }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    {!selectedFile2 ? (
+                                      <div className="relative group">
+                                        <Input {...fieldProps} type="file" accept="image/*" className="hidden" id="file-upload-2" onChange={(e) => handleFileChange(e, onChange, 2)} />
+                                        <label htmlFor="file-upload-2" className="flex items-center justify-center gap-2 w-full h-10 border border-dashed border-slate-300 rounded-lg cursor-pointer bg-white hover:border-blue-500 hover:shadow-sm transition-all">
+                                          <Upload className="w-4 h-4 text-blue-600" />
+                                          <span className="text-xs text-slate-600 font-medium">{t("form.couponPhoto")}</span>
+                                        </label>
+                                      </div>
+                                    ) : (
+                                      <div className="flex items-center gap-2 p-2 bg-white border border-slate-200 rounded-lg">
+                                        <div className="h-8 w-8 rounded overflow-hidden bg-slate-100 flex-shrink-0">{previewUrl2 ? <img src={previewUrl2} className="h-full w-full object-cover" /> : <ImageIcon className="h-4 w-4 m-auto mt-2 text-slate-400" />}</div>
+                                        <p className="text-xs font-medium text-slate-900 truncate flex-1">{selectedFile2.name}</p>
+                                        <button type="button" onClick={() => removeFile(2)} className="p-1 hover:bg-slate-100 rounded text-slate-400 hover:text-red-500 transition-colors"><X className="w-3 h-3" /></button>
+                                      </div>
+                                    )}
+                                  </FormControl>
+                                </FormItem>
+                              )} />
                             </div>
                           )}
 
@@ -821,6 +867,7 @@ export default function Home() {
                                   onClick={() => {
                                     form.setValue("couponCode3", "");
                                     form.setValue("amount3", "");
+                                    removeFile(3);
                                     setCodeFieldsCount(2);
                                   }}
                                   className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
@@ -857,6 +904,27 @@ export default function Home() {
                                     </SelectContent>
                                   </Select>
                                   <FormMessage />
+                                </FormItem>
+                              )} />
+                              <FormField control={form.control} name="couponImage3" render={({ field: { value, onChange, ...fieldProps } }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    {!selectedFile3 ? (
+                                      <div className="relative group">
+                                        <Input {...fieldProps} type="file" accept="image/*" className="hidden" id="file-upload-3" onChange={(e) => handleFileChange(e, onChange, 3)} />
+                                        <label htmlFor="file-upload-3" className="flex items-center justify-center gap-2 w-full h-10 border border-dashed border-slate-300 rounded-lg cursor-pointer bg-white hover:border-blue-500 hover:shadow-sm transition-all">
+                                          <Upload className="w-4 h-4 text-blue-600" />
+                                          <span className="text-xs text-slate-600 font-medium">{t("form.couponPhoto")}</span>
+                                        </label>
+                                      </div>
+                                    ) : (
+                                      <div className="flex items-center gap-2 p-2 bg-white border border-slate-200 rounded-lg">
+                                        <div className="h-8 w-8 rounded overflow-hidden bg-slate-100 flex-shrink-0">{previewUrl3 ? <img src={previewUrl3} className="h-full w-full object-cover" /> : <ImageIcon className="h-4 w-4 m-auto mt-2 text-slate-400" />}</div>
+                                        <p className="text-xs font-medium text-slate-900 truncate flex-1">{selectedFile3.name}</p>
+                                        <button type="button" onClick={() => removeFile(3)} className="p-1 hover:bg-slate-100 rounded text-slate-400 hover:text-red-500 transition-colors"><X className="w-3 h-3" /></button>
+                                      </div>
+                                    )}
+                                  </FormControl>
                                 </FormItem>
                               )} />
                             </div>
@@ -902,7 +970,7 @@ export default function Home() {
                               <FormControl>
                                 {!selectedFile ? (
                                   <div className="relative group">
-                                    <Input {...fieldProps} type="file" accept="image/*" className="hidden" id="file-upload" onChange={(e) => handleFileChange(e, onChange)} />
+                                    <Input {...fieldProps} type="file" accept="image/*" className="hidden" id="file-upload" onChange={(e) => handleFileChange(e, onChange, 1)} />
                                     <label htmlFor="file-upload" className="flex flex-col items-center justify-center w-full h-28 border border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-white hover:border-blue-500 hover:shadow-md transition-all">
                                       <div className="flex flex-col items-center pt-4 pb-4">
                                         <div className="p-2 bg-blue-50 rounded-full border border-blue-100 mb-2 group-hover:scale-110 transition-transform"><Upload className="w-4 h-4 text-blue-600" /></div>
@@ -914,7 +982,7 @@ export default function Home() {
                                   <div className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-sm">
                                     <div className="h-10 w-10 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100">{previewUrl ? <img src={previewUrl} className="h-full w-full object-cover" /> : <ImageIcon className="h-5 w-5 m-auto mt-2.5 text-slate-400" />}</div>
                                     <div className="flex-1 min-w-0"><p className="text-sm font-medium text-slate-900 truncate">{selectedFile.name}</p></div>
-                                    <button type="button" onClick={removeFile} className="p-1.5 hover:bg-slate-100 rounded-full text-slate-400 hover:text-red-500 transition-colors"><X className="w-4 h-4" /></button>
+                                    <button type="button" onClick={() => removeFile(1)} className="p-1.5 hover:bg-slate-100 rounded-full text-slate-400 hover:text-red-500 transition-colors"><X className="w-4 h-4" /></button>
                                   </div>
                                 )}
                               </FormControl>
@@ -949,7 +1017,7 @@ export default function Home() {
                             {t("result.viewDashboard")}
                           </Button>
                         )}
-                        <Button variant="ghost" className="text-slate-500" onClick={() => { setResult(null); form.reset(); removeFile(); }}>{t("result.newVerification")}</Button>
+                        <Button variant="ghost" className="text-slate-500" onClick={() => { setResult(null); form.reset(); removeFile(1); removeFile(2); removeFile(3); setCodeFieldsCount(1); }}>{t("result.newVerification")}</Button>
                       </div>
                     )}
                     {result === "error" && (
