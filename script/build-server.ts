@@ -1,4 +1,5 @@
 import { build as esbuild } from "esbuild";
+import { build as viteBuild } from "vite";
 import { rm, readFile } from "fs/promises";
 
 const allowlist = [
@@ -31,6 +32,9 @@ const allowlist = [
 
 async function buildServer() {
   await rm("dist", { recursive: true, force: true });
+
+  console.log("building client...");
+  await viteBuild();
 
   console.log("building server...");
   const pkg = JSON.parse(await readFile("package.json", "utf-8"));
