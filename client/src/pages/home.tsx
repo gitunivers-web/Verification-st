@@ -110,7 +110,7 @@ const COUPON_TYPES = [
   { id: "xbox", name: "Xbox", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/200px-Xbox_one_logo.svg.png", color: "from-green-50 to-green-100", category: "gaming" },
   { id: "playstation", name: "PlayStation", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Playstation_logo_colour.svg/320px-Playstation_logo_colour.svg.png", color: "from-blue-50 to-indigo-100", category: "gaming" },
   { id: "zalando", name: "Zalando", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Zalando_logo.svg/320px-Zalando_logo.svg.png", color: "from-orange-50 to-orange-100", category: "gift" },
-  { id: "other", name: "Autres", logoUrl: "", color: "from-slate-50 to-slate-100", category: "other" },
+  { id: "other", name: "other", logoUrl: "", color: "from-slate-50 to-slate-100", category: "other", isTranslated: true },
 ];
 
 const AMOUNTS = ["10", "20", "50", "100", "150", "200", "250", "300", "500"];
@@ -763,7 +763,7 @@ export default function Home() {
                               <FormItem>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                   <FormControl><SelectTrigger className="bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all"><SelectValue placeholder={t("form.service")} /></SelectTrigger></FormControl>
-                                  <SelectContent side="bottom" className="bg-white border-slate-100 text-slate-900 shadow-xl max-h-[250px] overflow-y-auto">{COUPON_TYPES.map((t) => <SelectItem key={t.id} value={t.id} className="cursor-pointer">{t.name}</SelectItem>)}</SelectContent>
+                                  <SelectContent side="bottom" className="bg-white border-slate-100 text-slate-900 shadow-xl max-h-[250px] overflow-y-auto">{COUPON_TYPES.map((coupon) => <SelectItem key={coupon.id} value={coupon.id} className="cursor-pointer">{(coupon as any).isTranslated ? t(`form.${coupon.name}`) : coupon.name}</SelectItem>)}</SelectContent>
                                 </Select>
                                 <FormMessage />
                               </FormItem>
@@ -782,10 +782,10 @@ export default function Home() {
                           {form.watch("couponType") === "other" && (
                             <FormField control={form.control} name="customCouponName" render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-slate-700 text-sm font-semibold">Nom du coupon <span className="text-red-500">*</span></FormLabel>
+                                <FormLabel className="text-slate-700 text-sm font-semibold">{t("form.customCouponName")} <span className="text-red-500">*</span></FormLabel>
                                 <FormControl>
                                   <Input 
-                                    placeholder="Entrez le nom du coupon" 
+                                    placeholder={t("form.enterCustomCouponName")} 
                                     {...field} 
                                     className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 h-11 rounded-xl transition-all"
                                     data-testid="input-custom-coupon-name"

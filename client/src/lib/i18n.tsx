@@ -168,6 +168,27 @@ const translations: Translations = {
     it: "Codice coupon",
     en: "Coupon Code",
   },
+  "form.other": {
+    fr: "Autres",
+    nl: "Overige",
+    de: "Sonstige",
+    it: "Altro",
+    en: "Other",
+  },
+  "form.customCouponName": {
+    fr: "Nom du coupon",
+    nl: "Coupon naam",
+    de: "Gutschein name",
+    it: "Nome coupon",
+    en: "Coupon name",
+  },
+  "form.enterCustomCouponName": {
+    fr: "Entrez le nom du coupon",
+    nl: "Voer de coupon naam in",
+    de: "Geben Sie den Gutschein Namen ein",
+    it: "Inserisci il nome del coupon",
+    en: "Enter the coupon name",
+  },
   "form.submit": {
     fr: "Soumettre pour verification",
     nl: "Indienen voor verificatie",
