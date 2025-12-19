@@ -877,6 +877,27 @@ const translations: Translations = {
   },
 
   // Home page
+  "home.mySpace": {
+    fr: "Mon espace",
+    nl: "Mijn ruimte",
+    de: "Mein Bereich",
+    it: "Il mio spazio",
+    en: "My space",
+  },
+  "home.myAccount": {
+    fr: "Mon compte",
+    nl: "Mijn account",
+    de: "Mein Konto",
+    it: "Il mio account",
+    en: "My account",
+  },
+  "home.logout": {
+    fr: "Deconnexion",
+    nl: "Uitloggen",
+    de: "Abmelden",
+    it: "Esci",
+    en: "Logout",
+  },
   "home.verifyCoupon": {
     fr: "Verifier un coupon",
     nl: "Coupon verifieren",

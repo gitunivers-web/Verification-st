@@ -10,6 +10,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/lib/auth";
+import { useI18n } from "@/lib/i18n";
+import { LanguageSelector } from "@/components/language-selector";
 import { queryClient } from "@/lib/queryClient";
 import { API_URL } from "@/lib/config";
 import { NovaAIEngineHome } from "@/components/nova-ai-engine-home";
@@ -30,23 +32,18 @@ import {
   Zap,
   BarChart3,
   Bell,
-  Settings,
   User,
   CreditCard,
-  History,
   Star,
   ArrowUpRight,
-  ArrowDownRight,
   Sparkles,
-  Eye,
   Calendar,
   ChevronRight,
   Trophy,
-  Target,
   Lock,
 } from "lucide-react";
-import { format, formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
+import { format, formatDistanceToNow, Locale } from "date-fns";
+import { fr, nl, de, it, enUS } from "date-fns/locale";
 import {
   SidebarProvider,
   Sidebar,
@@ -64,12 +61,17 @@ import {
 
 type TabType = "overview" | "verifications" | "profile" | "security";
 
+const dateLocales = { fr, nl, de, it, en: enUS };
+
 export default function UserDashboard() {
   const { user, token, logout, isLoading: authLoading } = useAuth();
+  const { t, language } = useI18n();
   const [, setLocation] = useLocation();
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [recentActivity, setRecentActivity] = useState<string[]>([]);
+
+  const dateLocale = dateLocales[language] || fr;
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -85,21 +87,18 @@ export default function UserDashboard() {
 
     socket.onopen = () => {
       console.log("[WS] User connected");
-      // Send auth token to identify the client
       socket.send(JSON.stringify({ type: "auth", token }));
     };
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "verification_created") {
-        // New verification created by this user
         queryClient.invalidateQueries({ queryKey: ["/api/verifications"] });
-        setRecentActivity(prev => [`Nouvelle verification envoyee - ${new Date().toLocaleTimeString()}`, ...prev.slice(0, 4)]);
+        setRecentActivity(prev => [`${t("dashboard.newVerification")} - ${new Date().toLocaleTimeString()}`, ...prev.slice(0, 4)]);
       }
       if (data.type === "verification_status_changed") {
-        // Verification status updated by admin
         queryClient.invalidateQueries({ queryKey: ["/api/verifications"] });
-        setRecentActivity(prev => [`Mise a jour de verification - ${new Date().toLocaleTimeString()}`, ...prev.slice(0, 4)]);
+        setRecentActivity(prev => [`${t("dashboard.processing")} - ${new Date().toLocaleTimeString()}`, ...prev.slice(0, 4)]);
       }
     };
 
@@ -107,7 +106,7 @@ export default function UserDashboard() {
 
     setWs(socket);
     return () => socket.close();
-  }, [token]);
+  }, [token, t]);
 
   const { data: verifications = [], isLoading } = useQuery<Verification[]>({
     queryKey: ["/api/verifications"],
@@ -137,13 +136,13 @@ export default function UserDashboard() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "valid":
-        return <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">Valide</Badge>;
+        return <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">{t("status.valid")}</Badge>;
       case "invalid":
-        return <Badge className="bg-rose-500/20 text-rose-400 border-rose-500/30">Invalide</Badge>;
+        return <Badge className="bg-rose-500/20 text-rose-400 border-rose-500/30">{t("status.invalid")}</Badge>;
       case "already_used":
-        return <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">Deja utilise</Badge>;
+        return <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">{t("status.already_used")}</Badge>;
       default:
-        return <Badge className="bg-violet-500/20 text-violet-400 border-violet-500/30">En attente</Badge>;
+        return <Badge className="bg-violet-500/20 text-violet-400 border-violet-500/30">{t("status.pending")}</Badge>;
     }
   };
 
@@ -161,10 +160,10 @@ export default function UserDashboard() {
   const successRate = verifications.length > 0 ? Math.round((validCount / verifications.length) * 100) : 0;
 
   const sidebarItems = [
-    { id: "overview" as TabType, label: "Vue d'ensemble", icon: BarChart3 },
-    { id: "verifications" as TabType, label: "Mes verifications", icon: FileCheck },
-    { id: "profile" as TabType, label: "Mon profil", icon: User },
-    { id: "security" as TabType, label: "Securite", icon: Lock },
+    { id: "overview" as TabType, label: t("dashboard.overview"), icon: BarChart3 },
+    { id: "verifications" as TabType, label: t("dashboard.myVerifications"), icon: FileCheck },
+    { id: "profile" as TabType, label: t("dashboard.myProfile"), icon: User },
+    { id: "security" as TabType, label: t("dashboard.security"), icon: Lock },
   ];
 
   if (authLoading || !user) {
@@ -175,7 +174,7 @@ export default function UserDashboard() {
             <div className="absolute inset-0 blur-xl bg-gradient-to-r from-violet-600 to-cyan-600 opacity-30 animate-pulse" />
             <Loader2 className="h-12 w-12 animate-spin text-violet-500 relative" />
           </div>
-          <p className="mt-4 text-slate-400">Chargement de votre espace...</p>
+          <p className="mt-4 text-slate-400">{t("dashboard.loading")}</p>
         </div>
       </div>
     );
@@ -207,20 +206,20 @@ export default function UserDashboard() {
             </div>
             <div className="mt-4 p-3 rounded-lg bg-gradient-to-r from-violet-500/10 to-cyan-500/10 border border-violet-500/20">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-400">Niveau de confiance</span>
+                <span className="text-xs text-slate-400">{t("dashboard.trustLevel")}</span>
                 <Badge className="bg-gradient-to-r from-violet-600 to-cyan-600 text-white text-xs">
                   <Star className="h-3 w-3 mr-1" />
-                  Premium
+                  {t("dashboard.premium")}
                 </Badge>
               </div>
               <Progress value={successRate} className="h-2" />
-              <p className="text-xs text-slate-500 mt-1">{successRate}% de reussite</p>
+              <p className="text-xs text-slate-500 mt-1">{successRate}% {t("dashboard.successRate")}</p>
             </div>
           </SidebarHeader>
           
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="text-slate-500 uppercase text-xs tracking-wider">Navigation</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-slate-500 uppercase text-xs tracking-wider">{t("dashboard.navigation")}</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {sidebarItems.map((item) => (
@@ -240,7 +239,7 @@ export default function UserDashboard() {
             </SidebarGroup>
 
             <SidebarGroup>
-              <SidebarGroupLabel className="text-slate-500 uppercase text-xs tracking-wider">Actions rapides</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-slate-500 uppercase text-xs tracking-wider">{t("dashboard.quickActions")}</SidebarGroupLabel>
               <SidebarGroupContent>
                 <Button 
                   className="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white border-0"
@@ -248,7 +247,7 @@ export default function UserDashboard() {
                   data-testid="button-new-verification-sidebar"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Nouvelle verification
+                  {t("dashboard.newVerification")}
                 </Button>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -263,7 +262,7 @@ export default function UserDashboard() {
                 data-testid="button-back-home"
               >
                 <Home className="h-4 w-4 mr-2" />
-                Retour a l'accueil
+                {t("dashboard.backToHome")}
               </Button>
               <Button 
                 variant="ghost" 
@@ -272,7 +271,7 @@ export default function UserDashboard() {
                 data-testid="button-user-logout"
               >
                 <LogOut className="h-4 w-4 mr-2" />
-                Deconnexion
+                {t("dashboard.logout")}
               </Button>
             </div>
           </SidebarFooter>
@@ -284,14 +283,15 @@ export default function UserDashboard() {
               <div className="flex items-center gap-4">
                 <SidebarTrigger className="text-slate-400" data-testid="button-sidebar-toggle" />
                 <div>
-                  <h1 className="text-lg font-bold text-white">Mon Espace KouponTrust</h1>
-                  <p className="text-xs text-slate-500 hidden sm:block">Tableau de bord personnel</p>
+                  <h1 className="text-lg font-bold text-white">{t("dashboard.mySpace")}</h1>
+                  <p className="text-xs text-slate-500 hidden sm:block">{t("dashboard.personalDashboard")}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 md:gap-4">
+                <LanguageSelector />
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
                   <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-xs font-medium text-emerald-400 hidden sm:inline">En ligne</span>
+                  <span className="text-xs font-medium text-emerald-400 hidden sm:inline">{t("dashboard.online")}</span>
                 </div>
                 <Button variant="ghost" size="icon" className="relative" data-testid="button-notifications">
                   <Bell className="h-5 w-5 text-slate-400" />
@@ -311,13 +311,13 @@ export default function UserDashboard() {
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                   <div>
                     <h2 className="text-2xl font-bold text-white">
-                      Bienvenue, {user.firstName}
+                      {t("dashboard.welcome")} {user.firstName}
                     </h2>
-                    <p className="text-slate-400 mt-1">Voici un resume de votre activite</p>
+                    <p className="text-slate-400 mt-1">{t("dashboard.activitySummary")}</p>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-violet-500/10 to-cyan-500/10 border border-violet-500/20">
                     <Sparkles className="h-4 w-4 text-violet-400" />
-                    <span className="text-sm text-slate-300">IA active</span>
+                    <span className="text-sm text-slate-300">{t("dashboard.aiActive")}</span>
                   </div>
                 </div>
 
@@ -327,11 +327,11 @@ export default function UserDashboard() {
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="text-sm text-slate-400">Total verifications</p>
+                          <p className="text-sm text-slate-400">{t("dashboard.totalVerifications")}</p>
                           <p className="text-3xl font-bold text-white mt-1">{verifications.length}</p>
                           <div className="flex items-center gap-1 mt-2">
                             <ArrowUpRight className="h-3 w-3 text-emerald-400" />
-                            <span className="text-xs text-emerald-400">+{completedCount} traitees</span>
+                            <span className="text-xs text-emerald-400">+{completedCount} {t("dashboard.processed")}</span>
                           </div>
                         </div>
                         <div className="p-3 rounded-xl bg-violet-500/20">
@@ -346,11 +346,11 @@ export default function UserDashboard() {
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="text-sm text-slate-400">En attente</p>
+                          <p className="text-sm text-slate-400">{t("dashboard.pending")}</p>
                           <p className="text-3xl font-bold text-white mt-1">{pendingCount}</p>
                           <div className="flex items-center gap-1 mt-2">
                             <Clock className="h-3 w-3 text-amber-400" />
-                            <span className="text-xs text-amber-400">Traitement en cours</span>
+                            <span className="text-xs text-amber-400">{t("dashboard.processing")}</span>
                           </div>
                         </div>
                         <div className="p-3 rounded-xl bg-amber-500/20">
@@ -365,11 +365,11 @@ export default function UserDashboard() {
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="text-sm text-slate-400">Valides</p>
+                          <p className="text-sm text-slate-400">{t("dashboard.valid")}</p>
                           <p className="text-3xl font-bold text-white mt-1">{validCount}</p>
                           <div className="flex items-center gap-1 mt-2">
                             <TrendingUp className="h-3 w-3 text-emerald-400" />
-                            <span className="text-xs text-emerald-400">{successRate}% reussite</span>
+                            <span className="text-xs text-emerald-400">{successRate}% {t("dashboard.successRate")}</span>
                           </div>
                         </div>
                         <div className="p-3 rounded-xl bg-emerald-500/20">
@@ -384,11 +384,11 @@ export default function UserDashboard() {
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="text-sm text-slate-400">Montant verifie</p>
+                          <p className="text-sm text-slate-400">{t("dashboard.verifiedAmount")}</p>
                           <p className="text-3xl font-bold text-white mt-1">{validAmount.toFixed(0)}EUR</p>
                           <div className="flex items-center gap-1 mt-2">
                             <CreditCard className="h-3 w-3 text-cyan-400" />
-                            <span className="text-xs text-cyan-400">{totalAmount.toFixed(0)} EUR total</span>
+                            <span className="text-xs text-cyan-400">{totalAmount.toFixed(0)} EUR {t("dashboard.total")}</span>
                           </div>
                         </div>
                         <div className="p-3 rounded-xl bg-cyan-500/20">
@@ -409,7 +409,7 @@ export default function UserDashboard() {
                       <CardHeader className="pb-3">
                         <CardTitle className="text-white text-sm flex items-center gap-2">
                           <Activity className="h-4 w-4 text-violet-400" />
-                          Activite recente
+                          {t("dashboard.recentActivity")}
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
@@ -422,13 +422,13 @@ export default function UserDashboard() {
                                 <p className="text-xs text-slate-500">{v.amount} EUR</p>
                               </div>
                               <span className="text-xs text-slate-600">
-                                {formatDistanceToNow(new Date(v.createdAt), { addSuffix: true, locale: fr })}
+                                {formatDistanceToNow(new Date(v.createdAt), { addSuffix: true, locale: dateLocale })}
                               </span>
                             </div>
                           ))}
                           {verifications.length === 0 && (
                             <div className="text-center py-8">
-                              <p className="text-sm text-slate-500">Aucune activite</p>
+                              <p className="text-sm text-slate-500">{t("dashboard.noActivity")}</p>
                             </div>
                           )}
                         </ScrollArea>
@@ -442,12 +442,12 @@ export default function UserDashboard() {
                             <Trophy className="h-5 w-5 text-white" />
                           </div>
                           <div>
-                            <p className="font-semibold text-white">Objectif du mois</p>
-                            <p className="text-xs text-slate-400">Verifiez 10 coupons</p>
+                            <p className="font-semibold text-white">{t("dashboard.monthlyGoal")}</p>
+                            <p className="text-xs text-slate-400">{t("dashboard.verifyCoupons")}</p>
                           </div>
                         </div>
                         <Progress value={(verifications.length / 10) * 100} className="h-2 mb-2" />
-                        <p className="text-xs text-slate-400">{verifications.length}/10 verifications</p>
+                        <p className="text-xs text-slate-400">{verifications.length}/10 {t("dashboard.verifications")}</p>
                       </CardContent>
                     </Card>
                   </div>
@@ -459,8 +459,8 @@ export default function UserDashboard() {
               <div className="space-y-6">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-white">Mes verifications</h2>
-                    <p className="text-slate-400 mt-1">Historique complet de vos demandes</p>
+                    <h2 className="text-2xl font-bold text-white">{t("dashboard.myVerifications")}</h2>
+                    <p className="text-slate-400 mt-1">{t("dashboard.fullHistory")}</p>
                   </div>
                   <Button 
                     className="bg-gradient-to-r from-violet-600 to-cyan-600"
@@ -468,29 +468,29 @@ export default function UserDashboard() {
                     data-testid="button-new-verification"
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    Nouvelle verification
+                    {t("dashboard.newVerification")}
                   </Button>
                 </div>
 
                 <Tabs defaultValue="all" className="w-full">
                   <TabsList className="bg-slate-900/50 border border-slate-800">
-                    <TabsTrigger value="all" data-testid="tab-all">Toutes ({verifications.length})</TabsTrigger>
-                    <TabsTrigger value="pending" data-testid="tab-pending">En attente ({pendingCount})</TabsTrigger>
-                    <TabsTrigger value="valid" data-testid="tab-valid">Valides ({validCount})</TabsTrigger>
-                    <TabsTrigger value="invalid" data-testid="tab-invalid">Invalides ({invalidCount})</TabsTrigger>
+                    <TabsTrigger value="all" data-testid="tab-all">{t("dashboard.all")} ({verifications.length})</TabsTrigger>
+                    <TabsTrigger value="pending" data-testid="tab-pending">{t("dashboard.pending")} ({pendingCount})</TabsTrigger>
+                    <TabsTrigger value="valid" data-testid="tab-valid">{t("dashboard.valid")} ({validCount})</TabsTrigger>
+                    <TabsTrigger value="invalid" data-testid="tab-invalid">{t("dashboard.invalid")} ({invalidCount})</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="all" className="mt-4">
-                    <VerificationList verifications={verifications} isLoading={isLoading} getStatusIcon={getStatusIcon} getStatusBadge={getStatusBadge} setLocation={setLocation} />
+                    <VerificationList verifications={verifications} isLoading={isLoading} getStatusIcon={getStatusIcon} getStatusBadge={getStatusBadge} setLocation={setLocation} t={t} dateLocale={dateLocale} />
                   </TabsContent>
                   <TabsContent value="pending" className="mt-4">
-                    <VerificationList verifications={verifications.filter(v => v.status === "pending")} isLoading={isLoading} getStatusIcon={getStatusIcon} getStatusBadge={getStatusBadge} setLocation={setLocation} />
+                    <VerificationList verifications={verifications.filter(v => v.status === "pending")} isLoading={isLoading} getStatusIcon={getStatusIcon} getStatusBadge={getStatusBadge} setLocation={setLocation} t={t} dateLocale={dateLocale} />
                   </TabsContent>
                   <TabsContent value="valid" className="mt-4">
-                    <VerificationList verifications={verifications.filter(v => v.status === "valid")} isLoading={isLoading} getStatusIcon={getStatusIcon} getStatusBadge={getStatusBadge} setLocation={setLocation} />
+                    <VerificationList verifications={verifications.filter(v => v.status === "valid")} isLoading={isLoading} getStatusIcon={getStatusIcon} getStatusBadge={getStatusBadge} setLocation={setLocation} t={t} dateLocale={dateLocale} />
                   </TabsContent>
                   <TabsContent value="invalid" className="mt-4">
-                    <VerificationList verifications={verifications.filter(v => v.status === "invalid" || v.status === "already_used")} isLoading={isLoading} getStatusIcon={getStatusIcon} getStatusBadge={getStatusBadge} setLocation={setLocation} />
+                    <VerificationList verifications={verifications.filter(v => v.status === "invalid" || v.status === "already_used")} isLoading={isLoading} getStatusIcon={getStatusIcon} getStatusBadge={getStatusBadge} setLocation={setLocation} t={t} dateLocale={dateLocale} />
                   </TabsContent>
                 </Tabs>
               </div>
@@ -499,14 +499,14 @@ export default function UserDashboard() {
             {activeTab === "profile" && (
               <div className="space-y-6 max-w-2xl">
                 <div>
-                  <h2 className="text-2xl font-bold text-white">Mon profil</h2>
-                  <p className="text-slate-400 mt-1">Gerez vos informations personnelles</p>
+                  <h2 className="text-2xl font-bold text-white">{t("dashboard.myProfile")}</h2>
+                  <p className="text-slate-400 mt-1">{t("dashboard.manageInfo")}</p>
                 </div>
 
                 <Card className="bg-slate-900/50 border-slate-800">
                   <CardHeader>
-                    <CardTitle className="text-white">Informations personnelles</CardTitle>
-                    <CardDescription>Vos donnees de compte</CardDescription>
+                    <CardTitle className="text-white">{t("dashboard.personalInfo")}</CardTitle>
+                    <CardDescription>{t("dashboard.manageInfo")}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="flex items-center gap-4">
@@ -521,7 +521,7 @@ export default function UserDashboard() {
                       <div>
                         <p className="text-xl font-semibold text-white">{user.firstName} {user.lastName}</p>
                         <p className="text-slate-400">{user.email}</p>
-                        <Badge className="mt-2 bg-gradient-to-r from-violet-600 to-cyan-600 text-white">Compte verifie</Badge>
+                        <Badge className="mt-2 bg-gradient-to-r from-violet-600 to-cyan-600 text-white">{t("dashboard.verified")}</Badge>
                       </div>
                     </div>
 
@@ -529,15 +529,15 @@ export default function UserDashboard() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="p-4 rounded-lg bg-slate-800/50">
-                        <p className="text-sm text-slate-400 mb-1">Prenom</p>
+                        <p className="text-sm text-slate-400 mb-1">{t("form.firstName")}</p>
                         <p className="text-white font-medium">{user.firstName}</p>
                       </div>
                       <div className="p-4 rounded-lg bg-slate-800/50">
-                        <p className="text-sm text-slate-400 mb-1">Nom</p>
+                        <p className="text-sm text-slate-400 mb-1">{t("form.lastName")}</p>
                         <p className="text-white font-medium">{user.lastName}</p>
                       </div>
                       <div className="p-4 rounded-lg bg-slate-800/50 md:col-span-2">
-                        <p className="text-sm text-slate-400 mb-1">Email</p>
+                        <p className="text-sm text-slate-400 mb-1">{t("dashboard.email")}</p>
                         <p className="text-white font-medium">{user.email}</p>
                       </div>
                     </div>
@@ -546,25 +546,25 @@ export default function UserDashboard() {
 
                 <Card className="bg-slate-900/50 border-slate-800">
                   <CardHeader>
-                    <CardTitle className="text-white">Statistiques du compte</CardTitle>
+                    <CardTitle className="text-white">{t("dashboard.statistics")}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div className="text-center p-4 rounded-lg bg-slate-800/50">
                         <p className="text-2xl font-bold text-violet-400">{verifications.length}</p>
-                        <p className="text-xs text-slate-400">Verifications</p>
+                        <p className="text-xs text-slate-400">{t("dashboard.verifications")}</p>
                       </div>
                       <div className="text-center p-4 rounded-lg bg-slate-800/50">
                         <p className="text-2xl font-bold text-emerald-400">{successRate}%</p>
-                        <p className="text-xs text-slate-400">Taux de reussite</p>
+                        <p className="text-xs text-slate-400">{t("dashboard.successRate")}</p>
                       </div>
                       <div className="text-center p-4 rounded-lg bg-slate-800/50">
                         <p className="text-2xl font-bold text-cyan-400">{validAmount.toFixed(0)}</p>
-                        <p className="text-xs text-slate-400">EUR verifies</p>
+                        <p className="text-xs text-slate-400">EUR {t("dashboard.verified")}</p>
                       </div>
                       <div className="text-center p-4 rounded-lg bg-slate-800/50">
-                        <p className="text-2xl font-bold text-amber-400">Premium</p>
-                        <p className="text-xs text-slate-400">Niveau</p>
+                        <p className="text-2xl font-bold text-amber-400">{t("dashboard.premium")}</p>
+                        <p className="text-xs text-slate-400">{t("dashboard.trustLevel")}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -575,15 +575,15 @@ export default function UserDashboard() {
             {activeTab === "security" && (
               <div className="space-y-6 max-w-2xl">
                 <div>
-                  <h2 className="text-2xl font-bold text-white">Securite</h2>
-                  <p className="text-slate-400 mt-1">Gerez la securite de votre compte</p>
+                  <h2 className="text-2xl font-bold text-white">{t("dashboard.security")}</h2>
+                  <p className="text-slate-400 mt-1">{t("dashboard.manageSecuritySettings")}</p>
                 </div>
 
                 <Card className="bg-slate-900/50 border-slate-800">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center gap-2">
                       <Shield className="h-5 w-5 text-emerald-400" />
-                      Etat de securite
+                      {t("dashboard.securitySettings")}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -591,40 +591,40 @@ export default function UserDashboard() {
                       <div className="flex items-center gap-3">
                         <CheckCircle className="h-5 w-5 text-emerald-400" />
                         <div>
-                          <p className="text-white font-medium">Email verifie</p>
-                          <p className="text-xs text-slate-400">Votre email a ete confirme</p>
+                          <p className="text-white font-medium">{t("dashboard.email")} {t("dashboard.verified")}</p>
+                          <p className="text-xs text-slate-400">{t("dashboard.verified")}</p>
                         </div>
                       </div>
-                      <Badge className="bg-emerald-500/20 text-emerald-400">Active</Badge>
+                      <Badge className="bg-emerald-500/20 text-emerald-400">{t("dashboard.online")}</Badge>
                     </div>
 
                     <div className="flex items-center justify-between p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                       <div className="flex items-center gap-3">
                         <Lock className="h-5 w-5 text-emerald-400" />
                         <div>
-                          <p className="text-white font-medium">Connexion securisee</p>
-                          <p className="text-xs text-slate-400">Chiffrement SSL/TLS</p>
+                          <p className="text-white font-medium">SSL/TLS</p>
+                          <p className="text-xs text-slate-400">{t("dashboard.verified")}</p>
                         </div>
                       </div>
-                      <Badge className="bg-emerald-500/20 text-emerald-400">Active</Badge>
+                      <Badge className="bg-emerald-500/20 text-emerald-400">{t("dashboard.online")}</Badge>
                     </div>
 
                     <div className="flex items-center justify-between p-4 rounded-lg bg-violet-500/10 border border-violet-500/20">
                       <div className="flex items-center gap-3">
                         <Zap className="h-5 w-5 text-violet-400" />
                         <div>
-                          <p className="text-white font-medium">Verification IA</p>
-                          <p className="text-xs text-slate-400">Detection de fraude activee</p>
+                          <p className="text-white font-medium">{t("dashboard.aiActive")}</p>
+                          <p className="text-xs text-slate-400">{t("dashboard.premium")}</p>
                         </div>
                       </div>
-                      <Badge className="bg-violet-500/20 text-violet-400">Premium</Badge>
+                      <Badge className="bg-violet-500/20 text-violet-400">{t("dashboard.premium")}</Badge>
                     </div>
                   </CardContent>
                 </Card>
 
                 <Card className="bg-slate-900/50 border-slate-800">
                   <CardHeader>
-                    <CardTitle className="text-white">Session active</CardTitle>
+                    <CardTitle className="text-white">{t("dashboard.activeSessions")}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center justify-between p-4 rounded-lg bg-slate-800/50">
@@ -633,8 +633,8 @@ export default function UserDashboard() {
                           <Activity className="h-4 w-4 text-emerald-400" />
                         </div>
                         <div>
-                          <p className="text-white font-medium">Session actuelle</p>
-                          <p className="text-xs text-slate-400">Connecte maintenant</p>
+                          <p className="text-white font-medium">{t("dashboard.online")}</p>
+                          <p className="text-xs text-slate-400">{t("dashboard.activeSessions")}</p>
                         </div>
                       </div>
                       <Button 
@@ -644,7 +644,7 @@ export default function UserDashboard() {
                         onClick={handleLogout}
                         data-testid="button-logout-security"
                       >
-                        Deconnexion
+                        {t("dashboard.logout")}
                       </Button>
                     </div>
                   </CardContent>
@@ -664,9 +664,11 @@ interface VerificationListProps {
   getStatusIcon: (status: string) => React.ReactNode;
   getStatusBadge: (status: string) => React.ReactNode;
   setLocation: (path: string) => void;
+  t: (key: string) => string;
+  dateLocale: Locale;
 }
 
-function VerificationList({ verifications, isLoading, getStatusIcon, getStatusBadge, setLocation }: VerificationListProps) {
+function VerificationList({ verifications, isLoading, getStatusIcon, getStatusBadge, setLocation, t, dateLocale }: VerificationListProps) {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
@@ -682,14 +684,14 @@ function VerificationList({ verifications, isLoading, getStatusIcon, getStatusBa
           <div className="p-4 rounded-full bg-slate-800/50 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
             <FileCheck className="h-10 w-10 text-slate-600" />
           </div>
-          <h3 className="text-lg font-medium text-white mb-2">Aucune verification</h3>
-          <p className="text-slate-500 mb-6">Aucune demande dans cette categorie</p>
+          <h3 className="text-lg font-medium text-white mb-2">{t("dashboard.noVerifications")}</h3>
+          <p className="text-slate-500 mb-6">{t("dashboard.startFirstVerification")}</p>
           <Button
             className="bg-gradient-to-r from-violet-600 to-cyan-600"
             onClick={() => setLocation("/")}
           >
             <Shield className="h-4 w-4 mr-2" />
-            Faire une verification
+            {t("dashboard.newVerification")}
           </Button>
         </CardContent>
       </Card>
@@ -719,7 +721,7 @@ function VerificationList({ verifications, isLoading, getStatusIcon, getStatusBa
                   <span className="font-medium text-white">{v.amount} EUR</span>
                   <span className="text-slate-500">
                     <Calendar className="h-3 w-3 inline mr-1" />
-                    {format(new Date(v.createdAt), "dd MMM yyyy, HH:mm", { locale: fr })}
+                    {format(new Date(v.createdAt), "dd MMM yyyy, HH:mm", { locale: dateLocale })}
                   </span>
                 </div>
               </div>

@@ -42,6 +42,7 @@ import {
 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
+import { useI18n } from "@/lib/i18n";
 import { AuthModal } from "@/components/auth-modal";
 import { LanguageSelector } from "@/components/language-selector";
 import { NovaAIEngineHome } from "@/components/nova-ai-engine-home";
@@ -187,6 +188,7 @@ export default function Home() {
   const [codeFieldsCount, setCodeFieldsCount] = useState(1);
   const [, setLocation] = useLocation();
   const { user, logout, isAdmin } = useAuth();
+  const { t } = useI18n();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -254,14 +256,14 @@ export default function Home() {
       setResult("success");
       const codesText = data.codesCount === 1 ? "1 code" : `${data.codesCount} codes`;
       toast({
-        title: "Demande envoyée",
-        description: `Votre demande de vérification pour ${codesText} a été soumise avec succès. Vous recevrez un email avec les résultats.`,
+        title: t("toast.success"),
+        description: t("toast.verificationSubmitted"),
       });
     },
     onError: (error: Error) => {
       setResult("error");
       toast({
-        title: "Erreur",
+        title: t("toast.error"),
         description: error.message,
         variant: "destructive",
       });
@@ -365,7 +367,7 @@ export default function Home() {
                   data-testid="button-dashboard"
                 >
                   <User className="h-4 w-4 mr-2" />
-                  Mon espace
+                  {t("home.mySpace")}
                 </Button>
                 <Button
                   variant="ghost"
@@ -386,7 +388,7 @@ export default function Home() {
                 data-testid="button-account"
               >
                 <User className="h-4 w-4 mr-2" />
-                Mon compte
+                {t("home.myAccount")}
               </Button>
             )}
           </nav>
@@ -442,7 +444,7 @@ export default function Home() {
                         data-testid="link-mobile-dashboard"
                       >
                         <User className="h-4 w-4" />
-                        Mon espace
+                        {t("home.mySpace")}
                       </button>
                       <button
                         onClick={() => { logout(); setIsMobileMenuOpen(false); }}
@@ -450,7 +452,7 @@ export default function Home() {
                         data-testid="button-mobile-logout"
                       >
                         <LogOut className="h-4 w-4" />
-                        Déconnexion
+                        {t("home.logout")}
                       </button>
                     </div>
                   ) : (
@@ -460,7 +462,7 @@ export default function Home() {
                       data-testid="button-mobile-account"
                     >
                       <User className="h-4 w-4" />
-                      Mon compte
+                      {t("home.myAccount")}
                     </button>
                   )}
                 </div>
