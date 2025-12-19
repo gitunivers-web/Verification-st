@@ -650,7 +650,7 @@ export default function Home() {
                 </h1>
                 
                 <p className="text-sm sm:text-lg text-slate-600 leading-relaxed max-w-xl mb-6 sm:mb-12 font-light">
-                  Koupon Trust utilise un moteur d’analyse intelligent combinant IA, détection de fraude, vérification cryptographique et analyse visuelle haute précision. Une solution de confiance adoptée par des milliers d’utilisateurs.
+                  {t("hero.mainDescription")}
                 </p>
 
                 {/* Benefits Grid */}
