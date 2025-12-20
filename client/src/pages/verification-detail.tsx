@@ -134,15 +134,13 @@ export default function VerificationDetail() {
 
         <Card className="bg-slate-900/50 border-slate-800">
           <CardHeader className="pb-6">
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="p-4 rounded-xl bg-slate-800/50">
-                  {getStatusIcon(verification.status)}
-                </div>
-                <div>
-                  <CardTitle className="text-2xl text-white">{verification.couponType}</CardTitle>
-                  <div className="mt-2">{getStatusBadge(verification.status)}</div>
-                </div>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:gap-4 gap-3">
+              <div className="p-4 rounded-xl bg-slate-800/50 w-fit">
+                {getStatusIcon(verification.status)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <CardTitle className="text-xl sm:text-2xl text-white break-words">{verification.couponType}</CardTitle>
+                <div className="mt-2">{getStatusBadge(verification.status)}</div>
               </div>
             </div>
           </CardHeader>
