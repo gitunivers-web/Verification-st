@@ -169,6 +169,7 @@ export class MemStorage implements IStorage {
       couponType: data.couponType,
       amount: data.amount,
       couponCode: data.couponCode,
+      couponImage: null,
       status: "pending",
       isRegisteredUser: data.isRegisteredUser || false,
       createdAt: new Date(),
