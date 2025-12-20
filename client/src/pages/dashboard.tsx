@@ -147,6 +147,7 @@ export default function UserDashboard() {
   const { data: verifications = [], isLoading } = useQuery<Verification[]>({
     queryKey: ["/api/verifications"],
     enabled: !!token,
+    refetchInterval: 5000, // Refetch every 5 seconds for real-time updates
     queryFn: async () => {
       const res = await fetch(`${API_URL}/api/verifications`, {
         headers: { Authorization: `Bearer ${token}` },

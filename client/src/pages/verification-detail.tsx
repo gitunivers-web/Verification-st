@@ -40,6 +40,7 @@ export default function VerificationDetail() {
   const { data: verification, isLoading } = useQuery<Verification>({
     queryKey: ["/api/verifications", verificationId],
     enabled: !!token && !!verificationId,
+    refetchInterval: 5000, // Refetch every 5 seconds for real-time status updates
     queryFn: async () => {
       const res = await fetch(`${API_URL}/api/verifications/${verificationId}`, {
         headers: { Authorization: `Bearer ${token}` },
