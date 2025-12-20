@@ -737,8 +737,9 @@ function VerificationList({ verifications, isLoading, getStatusIcon, getStatusBa
       {verifications.map((v) => (
         <Card
           key={v.id}
-          className="bg-slate-900/50 border-slate-800 hover-elevate overflow-visible transition-all duration-200"
+          className="bg-slate-900/50 border-slate-800 hover-elevate overflow-visible transition-all duration-200 cursor-pointer"
           data-testid={`card-verification-${v.id}`}
+          onClick={() => setLocation(`/verification?id=${v.id}`)}
         >
           <CardContent className="p-4">
             <div className="flex items-center gap-4">

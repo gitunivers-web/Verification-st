@@ -674,6 +674,27 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/verifications/:id", authMiddleware, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { id } = req.params;
+      const verification = await storage.getVerification(id);
+      
+      if (!verification) {
+        return res.status(404).json({ error: "Vérification non trouvée" });
+      }
+
+      // Only allow users to view their own verifications
+      if (verification.userId && verification.userId !== req.user!.id) {
+        return res.status(403).json({ error: "Accès refusé" });
+      }
+
+      res.json(verification);
+    } catch (error) {
+      console.error("[VERIFICATION] Get single verification error:", error);
+      res.status(500).json({ error: "Erreur serveur" });
+    }
+  });
+
   app.get("/api/admin/verifications", authMiddleware, adminMiddleware, async (_req, res) => {
     try {
       const verifications = await storage.getAllVerifications();

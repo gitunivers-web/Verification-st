@@ -8,6 +8,7 @@ import { I18nProvider } from "@/lib/i18n";
 import Home from "@/pages/home";
 import AdminDashboard from "@/pages/admin";
 import UserDashboard from "@/pages/dashboard";
+import VerificationDetail from "@/pages/verification-detail";
 import VerifyEmail from "@/pages/verify-email";
 import Terms from "@/pages/terms";
 import Privacy from "@/pages/privacy";
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/dashboard" component={UserDashboard} />
+      <Route path="/verification" component={VerificationDetail} />
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
