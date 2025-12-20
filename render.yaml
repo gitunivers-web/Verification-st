@@ -2,7 +2,7 @@ services:
   - type: web
     name: novaverify-api
     runtime: node
-    buildCommand: npm install && npx tsx script/build-server.ts
+    buildCommand: npm install && npx drizzle-kit push && npx tsx script/build-server.ts
     startCommand: node dist/index.cjs
     envVars:
       - key: NODE_ENV
