@@ -789,6 +789,31 @@ export async function registerRoutes(
     }
   });
 
+  app.delete("/api/admin/verifications/:id", authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      const verification = await storage.getVerification(id);
+      if (!verification) {
+        return res.status(404).json({ error: "Vérification non trouvée" });
+      }
+
+      const deleted = await storage.deleteVerification(id);
+      if (!deleted) {
+        return res.status(500).json({ error: "Erreur lors de la suppression" });
+      }
+
+      broadcastUpdate("verification_deleted", { id }, { 
+        targetRole: "admin" 
+      });
+
+      res.json({ message: "Vérification supprimée avec succès" });
+    } catch (error) {
+      console.error("[ADMIN] Delete verification error:", error);
+      res.status(500).json({ error: "Erreur serveur" });
+    }
+  });
+
   app.get("/api/admin/users", authMiddleware, adminMiddleware, async (_req, res) => {
     try {
       const users = await storage.getAllUsers();

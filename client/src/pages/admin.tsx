@@ -73,6 +73,7 @@ import {
   Sparkles,
   Target,
   Award,
+  Trash2,
 } from "lucide-react";
 import { format, formatDistanceToNow, subDays, isAfter } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -176,6 +177,10 @@ export default function AdminDashboard() {
         queryClient.invalidateQueries({ queryKey: ["/api/admin/verifications"] });
         setRealtimeEvents(prev => [{type: "Verification mise a jour", time: new Date()}, ...prev.slice(0, 9)]);
       }
+      if (data.type === "verification_deleted") {
+        queryClient.invalidateQueries({ queryKey: ["/api/admin/verifications"] });
+        setRealtimeEvents(prev => [{type: "Verification supprimee", time: new Date()}, ...prev.slice(0, 9)]);
+      }
       if (data.type === "online_count") {
         setOnlineCount(data.data.count);
       }
@@ -220,6 +225,27 @@ export default function AdminDashboard() {
     },
     onError: () => {
       toast({ title: "Erreur", description: "Impossible de mettre a jour le statut", variant: "destructive" });
+    },
+  });
+
+  const deleteVerificationMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`${API_URL}/api/admin/verifications/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) throw new Error("Failed to delete");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/verifications"] });
+      setSelectedVerification(null);
+      toast({ title: "Supprimee", description: "La demande a ete supprimee avec succes" });
+    },
+    onError: () => {
+      toast({ title: "Erreur", description: "Impossible de supprimer la demande", variant: "destructive" });
     },
   });
 
@@ -669,6 +695,7 @@ export default function AdminDashboard() {
                       isLoading={isLoading}
                       getStatusBadge={getStatusBadge}
                       onView={setSelectedVerification}
+                      onDelete={(id) => deleteVerificationMutation.mutate(id)}
                       t={t}
                     />
                   </TabsContent>
@@ -678,6 +705,7 @@ export default function AdminDashboard() {
                       isLoading={isLoading}
                       getStatusBadge={getStatusBadge}
                       onView={setSelectedVerification}
+                      onDelete={(id) => deleteVerificationMutation.mutate(id)}
                       t={t}
                     />
                   </TabsContent>
@@ -687,6 +715,7 @@ export default function AdminDashboard() {
                       isLoading={isLoading}
                       getStatusBadge={getStatusBadge}
                       onView={setSelectedVerification}
+                      onDelete={(id) => deleteVerificationMutation.mutate(id)}
                       t={t}
                     />
                   </TabsContent>
@@ -1051,10 +1080,11 @@ interface VerificationTableProps {
   isLoading: boolean;
   getStatusBadge: (status: string) => React.ReactNode;
   onView: (v: Verification) => void;
+  onDelete: (id: string) => void;
   t: (key: string) => string;
 }
 
-function VerificationTable({ verifications, isLoading, getStatusBadge, onView, t }: VerificationTableProps) {
+function VerificationTable({ verifications, isLoading, getStatusBadge, onView, onDelete, t }: VerificationTableProps) {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
@@ -1121,14 +1151,31 @@ function VerificationTable({ verifications, isLoading, getStatusBadge, onView, t
                     {format(new Date(v.createdAt), "dd/MM/yy HH:mm")}
                   </td>
                   <td className="py-4 px-4">
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      onClick={(e) => { e.stopPropagation(); onView(v); }}
-                      data-testid={`button-view-${v.id}`}
-                    >
-                      <Eye className="h-4 w-4 text-slate-400" />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={(e) => { e.stopPropagation(); onView(v); }}
+                        data-testid={`button-view-${v.id}`}
+                      >
+                        <Eye className="h-4 w-4 text-slate-400" />
+                      </Button>
+                      {v.status !== "pending" && (
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          onClick={(e) => { 
+                            e.stopPropagation();
+                            if (confirm("Êtes-vous sûr de vouloir supprimer cette demande ?")) {
+                              onDelete(v.id);
+                            }
+                          }}
+                          data-testid={`button-delete-${v.id}`}
+                        >
+                          <Trash2 className="h-4 w-4 text-rose-400" />
+                        </Button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

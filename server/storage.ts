@@ -27,6 +27,7 @@ export interface IStorage {
   getAllVerifications(): Promise<Verification[]>;
   createVerification(verification: InsertVerification & { userId?: string; isRegisteredUser?: boolean }): Promise<Verification>;
   updateVerificationStatus(id: string, status: VerificationStatus): Promise<Verification | undefined>;
+  deleteVerification(id: string): Promise<boolean>;
   
   // Nova AI Engine state
   getNovaStats(): NovaStats;
@@ -185,6 +186,10 @@ export class MemStorage implements IStorage {
     const updated = { ...verification, status, updatedAt: new Date() };
     this.verifications.set(id, updated);
     return updated;
+  }
+
+  async deleteVerification(id: string): Promise<boolean> {
+    return this.verifications.delete(id);
   }
 
   // Nova AI Engine state management
