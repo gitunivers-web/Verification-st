@@ -2633,6 +2633,31 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
+    // Try to detect language from IP on component mount
+    const detectFromIP = async () => {
+      try {
+        const response = await fetch("/api/detect-language");
+        if (response.ok) {
+          const data = await response.json();
+          const ipLanguage = data.language as Language;
+          if (ipLanguage && ["fr", "nl", "de", "it", "en"].includes(ipLanguage)) {
+            // Only update if no user preference is saved
+            const saved = localStorage.getItem("koupon-language");
+            if (!saved) {
+              setLanguage(ipLanguage);
+              return;
+            }
+          }
+        }
+      } catch {
+        // If fetch fails, keep using detected browser language
+      }
+    };
+    
+    detectFromIP();
+  }, []);
+
+  useEffect(() => {
     try {
       localStorage.setItem("koupon-language", language);
     } catch {

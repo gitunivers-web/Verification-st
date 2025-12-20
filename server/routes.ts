@@ -833,5 +833,19 @@ export async function registerRoutes(
     }
   });
 
+  // Detect language from client IP
+  app.get("/api/detect-language", (req, res) => {
+    try {
+      const clientIP = (req.headers["x-forwarded-for"] as string) || 
+                       req.socket.remoteAddress || 
+                       "127.0.0.1";
+      const language = detectLanguageFromIP(clientIP);
+      res.json({ language });
+    } catch (error) {
+      console.error("[LANGUAGE] Detection error:", error);
+      res.json({ language: "fr" });
+    }
+  });
+
   return httpServer;
 }
