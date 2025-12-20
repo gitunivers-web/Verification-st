@@ -10,6 +10,7 @@ import { randomBytes } from "crypto";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { novaSimulation } from "./nova-simulation";
+import geoip from "geoip-lite";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET && process.env.NODE_ENV === "production") {
@@ -17,6 +18,34 @@ if (!JWT_SECRET && process.env.NODE_ENV === "production") {
 }
 const JWT_SECRET_VALUE = JWT_SECRET || "dev-secret-key-change-in-production";
 const JWT_EXPIRY = "7d";
+
+// Function to detect language from client IP
+function detectLanguageFromIP(clientIP: string): "fr" | "nl" | "de" | "it" | "en" {
+  try {
+    // Get the actual client IP (handle proxies)
+    const ip = clientIP.split(',')[0].trim();
+    const geo = geoip.lookup(ip);
+    
+    if (!geo || !geo.country) {
+      return "fr"; // Default to French
+    }
+    
+    // Map country codes to supported languages
+    const countryToLanguage: { [key: string]: "fr" | "nl" | "de" | "it" | "en" } = {
+      "DE": "de", "AT": "de",  // German
+      "NL": "nl", "BE": "nl",  // Dutch/Flemish
+      "IT": "it",              // Italian
+      "FR": "fr",              // French
+      "CH": "fr",              // Switzerland - default to French (mixed but covers French speakers)
+      "GB": "en", "US": "en", "CA": "en", "AU": "en", "NZ": "en", "IE": "en", // English
+    };
+    
+    return countryToLanguage[geo.country] || "fr"; // Default to French if country not mapped
+  } catch (error) {
+    console.warn("[GEOIP] Language detection failed, defaulting to French", error);
+    return "fr";
+  }
+}
 
 // Pending auth tokens for 2FA flow - ensures password was verified before OTP
 interface PendingAuthEntry {
@@ -620,6 +649,7 @@ export async function registerRoutes(
 
       let userId: string | undefined;
       let isRegisteredUser = false;
+      let language: "fr" | "nl" | "de" | "it" | "en" = "fr";
 
       const authHeader = req.headers.authorization;
       if (authHeader?.startsWith("Bearer ")) {
@@ -628,7 +658,18 @@ export async function registerRoutes(
           const decoded = jwt.verify(token, JWT_SECRET_VALUE) as { id: string };
           userId = decoded.id;
           isRegisteredUser = true;
+          // Get user's preferred language if registered
+          const user = await storage.getUser(decoded.id);
+          if (user && user.language) {
+            language = user.language as "fr" | "nl" | "de" | "it" | "en";
+          }
         } catch {}
+      }
+
+      // For unregistered users (guests), detect language from IP
+      if (!isRegisteredUser) {
+        const clientIP = (req.headers["x-forwarded-for"] as string) || req.socket.remoteAddress || "127.0.0.1";
+        language = detectLanguageFromIP(clientIP);
       }
 
       // Create verification WITHOUT storing the image in DB
