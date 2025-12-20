@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { getApiUrl } from "./config";
 
 export type Language = "fr" | "nl" | "de" | "it" | "en";
 
@@ -2636,7 +2637,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     // Try to detect language from IP on component mount
     const detectFromIP = async () => {
       try {
-        const response = await fetch("/api/detect-language");
+        const response = await fetch(getApiUrl("/api/detect-language"));
         if (response.ok) {
           const data = await response.json();
           const ipLanguage = data.language as Language;
