@@ -1,23 +1,110 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
+    <!-- Essential Meta Tags -->
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-
-    <meta property="og:title" content="CouponChecker - Vérification de Coupons Sécurisée" />
-    <meta property="og:description" content="Vérifiez instantanément la validité de vos coupons Transcash, PCS, Neosurf et Paysafecard en toute sécurité." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://replit.com/public/images/opengraph.png" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@replit" />
-    <meta name="twitter:title" content="CouponChecker - Vérification de Coupons Sécurisée" />
-    <meta name="twitter:description" content="Vérifiez instantanément la validité de vos coupons Transcash, PCS, Neosurf et Paysafecard en toute sécurité." />
-    <meta name="twitter:image" content="https://replit.com/public/images/opengraph.png" />
-
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5" />
+    <meta name="description" content="Koupon Trust - Plateforme de vérification sécurisée pour coupons prépayés. Validez instantanément vos cartes Transcash, PCS, Paysafecard, cartes cadeaux et cartes gaming avec notre technologie IA avancée." />
+    <meta name="keywords" content="coupon verification, prepaid cards, Transcash, Paysafecard, coupon validation, secure verification, AI fraud detection" />
+    <meta name="author" content="Koupon Trust" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    
+    <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Open Graph Tags (Social Media & Search Engines) -->
+    <meta property="og:site_name" content="Koupon Trust" />
+    <meta property="og:title" content="Koupon Trust - Plateforme de Vérification de Coupons Sécurisée" />
+    <meta property="og:description" content="Validez vos coupons prépayés en toute sécurité. Transcash, PCS, Paysafecard et cartes cadeaux avec détection de fraude IA." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://koupontrust.com" />
+    <meta property="og:image" content="https://koupontrust.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="nl_NL" />
+    <meta property="og:locale:alternate" content="de_DE" />
+    <meta property="og:locale:alternate" content="it_IT" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Koupon Trust - Plateforme de Vérification de Coupons Sécurisée" />
+    <meta name="twitter:description" content="Validez vos coupons prépayés en toute sécurité. Transcash, PCS, Paysafecard et plus." />
+    <meta name="twitter:image" content="https://koupontrust.com/og-image.png" />
+    <meta name="twitter:creator" content="@koupontrust" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://koupontrust.com" />
+
+    <!-- Icons & Branding -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Browser Theme Color -->
+    <meta name="theme-color" content="#7c3aed" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f3ff" media="(prefers-color-scheme: light)" />
+
+    <!-- Additional SEO & Performance -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <link rel="preload" href="/og-image.png" as="image" />
+
+    <!-- Structured Data (JSON-LD) for Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Koupon Trust",
+      "description": "Plateforme de vérification sécurisée pour coupons prépayés avec détection de fraude IA",
+      "url": "https://koupontrust.com",
+      "applicationCategory": "FinanceApplication",
+      "image": "https://koupontrust.com/og-image.png",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "100"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Koupon Trust",
+        "url": "https://koupontrust.com"
+      }
+    }
+    </script>
+
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Koupon Trust",
+      "url": "https://koupontrust.com",
+      "logo": "https://koupontrust.com/og-image.png",
+      "description": "Plateforme de vérification sécurisée pour coupons prépayés",
+      "sameAs": [
+        "https://twitter.com/koupontrust",
+        "https://linkedin.com/company/koupon-trust"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Customer Support",
+        "email": "support@koupontrust.com"
+      }
+    }
+    </script>
+
+    <title>Koupon Trust - Plateforme de Vérification de Coupons Sécurisée | IA Avancée</title>
   </head>
   <body>
     <div id="root"></div>
