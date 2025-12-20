@@ -30,6 +30,7 @@ export const verifications = pgTable("verifications", {
   amount: integer("amount").notNull(),
   couponCode: text("coupon_code").notNull(),
   couponImage: text("coupon_image"),
+  language: text("language").notNull().default("fr"),
   status: text("status").notNull().default("pending"),
   isRegisteredUser: boolean("is_registered_user").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),

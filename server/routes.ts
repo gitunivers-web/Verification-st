@@ -679,6 +679,7 @@ export async function registerRoutes(
         ...dataWithoutImage,
         userId,
         isRegisteredUser,
+        language,
       });
 
       // Send admin notification with image attached (image is in memory, not persisted)
@@ -760,8 +761,8 @@ export async function registerRoutes(
         return res.status(404).json({ error: "Vérification non trouvée" });
       }
 
-      // Get user's preferred language if they are registered
-      let language: "fr" | "nl" | "de" | "it" | "en" = "fr";
+      // Get user's preferred language - use stored language from verification if available
+      let language: "fr" | "nl" | "de" | "it" | "en" = (verification.language as "fr" | "nl" | "de" | "it" | "en") || "fr";
       if (verification.userId) {
         const user = await storage.getUser(verification.userId);
         if (user && user.language) {
