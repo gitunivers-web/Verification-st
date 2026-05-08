@@ -23,7 +23,7 @@ app.use(helmet({
       styleSrc: isProduction ? ["'self'", "https://fonts.googleapis.com"] : ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https:"],
+      connectSrc: isProduction ? ["'self'", "https:"] : ["'self'", "https:", "ws:", "wss:"],
     },
   },
   hsts: {
