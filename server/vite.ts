@@ -9,14 +9,10 @@ import { nanoid } from "nanoid";
 const viteLogger = createLogger();
 
 export async function setupVite(server: Server, app: Express) {
-  const serverOptions = {
-    middlewareMode: true,
-    hmr: { server, path: "/vite-hmr" },
-    allowedHosts: true as const,
-  };
+  const { server: _viteServerConfig, ...viteConfigRest } = viteConfig as any;
 
   const vite = await createViteServer({
-    ...viteConfig,
+    ...viteConfigRest,
     configFile: false,
     customLogger: {
       ...viteLogger,
@@ -25,7 +21,11 @@ export async function setupVite(server: Server, app: Express) {
         process.exit(1);
       },
     },
-    server: serverOptions,
+    server: {
+      middlewareMode: true,
+      hmr: { server, path: "/vite-hmr" },
+      allowedHosts: true as const,
+    },
     appType: "custom",
   });
 

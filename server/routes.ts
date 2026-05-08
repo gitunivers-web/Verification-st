@@ -179,7 +179,16 @@ export async function registerRoutes(
     res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
   });
 
-  const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
+  const wss = new WebSocketServer({ noServer: true });
+
+  httpServer.on("upgrade", (req, socket, head) => {
+    if (req.url === "/ws" || req.url?.startsWith("/ws?")) {
+      wss.handleUpgrade(req, socket as any, head, (ws) => {
+        wss.emit("connection", ws, req);
+      });
+    }
+    // All other upgrade paths (e.g. /vite-hmr) fall through to be handled by Vite
+  });
 
   wss.on("connection", (ws) => {
     const clientData: AuthenticatedClient = { ws };
