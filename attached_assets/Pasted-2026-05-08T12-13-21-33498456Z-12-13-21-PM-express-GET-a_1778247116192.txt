@@ -1,0 +1,52 @@
+2026-05-08T12:13:21.33498456Z 12:13:21 PM [express] GET /api/detect-language 200 in 1ms :: {"language":"fr"}
+2026-05-08T12:13:21.341204936Z 12:13:21 PM [express] GET /api/nova/stats 200 in 2ms :: {"codesAnalyzed":47835,"fraudsDetected":847,"todayIncrement":3,"lastResetDate":"Fri May 08 2026","processingPower":91}
+2026-05-08T12:14:02.939385235Z 12:14:02 PM [express] GET /api/detect-language 304 in 0ms :: {"language":"fr"}
+2026-05-08T12:14:02.94082307Z 12:14:02 PM [express] GET /api/nova/stats 304 in 1ms :: {"codesAnalyzed":47835,"fraudsDetected":847,"todayIncrement":3,"lastResetDate":"Fri May 08 2026","processingPower":91}
+2026-05-08T12:14:25.005929457Z 12:14:24 PM [express] POST /api/auth/login 200 in 2112ms :: {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJiNmQ3NWMyLTY5MzQtNGI5OS1hNzkxLTZkZmY1NTViNGM5OCIsImVtYWlsIjoiYWRtaW5Aa291cG9udHJ1c3QuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc4MjQyNDY0LCJleHAiOjE3Nzg4NDcyNjR9.qZCOLuN1jwTgX2wQy1xJa8wNNN7tkq3lwYpIddAKb6Q","user":{"id":"2b6d75c2-6934-4b99-a791-6dff555b4c98","email":"admin@koupontrust.com","firstName":"Admin","lastName":"Koupon Trust","role":"admin","twoFactorEnabled":false}}
+2026-05-08T12:14:25.45117643Z 12:14:25 PM [express] GET /api/admin/verifications 200 in 1ms :: []
+2026-05-08T12:14:25.568123216Z [WS] Client connected, total: 2
+2026-05-08T12:14:25.759695936Z [WS] Client authenticated: {"alg":"HS256","typ":"JWT"}{"id":"2b6d75c2-6934-4b99-a791-6dff555b4c98","email":"admin@koupontrust.com","role":"admin","iat":1778242464,"exp":1778847264}���.�u��_l�\Ik�
+4�풭���Hu�
+2026-05-08T12:14:25.759720527Z o� (undefined)
+2026-05-08T12:14:25.793666667Z 12:14:25 PM [express] GET /api/admin/verifications 304 in 1ms :: []
+2026-05-08T12:14:56.438821012Z 12:14:56 PM [express] GET /api/admin/verifications 304 in 2ms :: []
+2026-05-08T12:15:33.772480868Z [WS] Client disconnected, total: 1
+2026-05-08T12:15:51.632634079Z 12:15:51 PM [express] GET /api/detect-language 200 in 1ms :: {"language":"fr"}
+2026-05-08T12:15:51.649986451Z 12:15:51 PM [express] GET /api/nova/stats 200 in 0ms :: {"codesAnalyzed":47837,"fraudsDetected":847,"todayIncrement":5,"lastResetDate":"Fri May 08 2026","processingPower":87}
+2026-05-08T12:16:50.041662219Z 12:16:50 PM [express] GET /api/detect-language 304 in 3ms :: {"language":"fr"}
+2026-05-08T12:16:50.071429152Z 12:16:50 PM [express] GET /api/nova/stats 200 in 1ms :: {"codesAnalyzed":47838,"fraudsDetected":847,"todayIncrement":6,"lastResetDate":"Fri May 08 2026","processingPower":99}
+2026-05-08T12:18:35.819138503Z [EMAIL] Email sent successfully to: admin@koupontrust.com ID: 686b7be3-e4b9-4104-ada5-55d85df6ab4e
+2026-05-08T12:18:35.819840785Z 12:18:35 PM [express] POST /api/verifications 201 in 521ms :: {"id":"86f0f5eb-675b-49ae-8a3f-2229553f7272","userId":null,"firstName":"Ahogni ","lastName":"Ricardo ","email":"isabellegarongaron@gmail.com","couponType":"paysafecard","amount":100,"couponCode":"345563223566","couponImage":null,"status":"pending","isRegisteredUser":false,"createdAt":"2026-05-08T12:18:35.299Z","updatedAt":"2026-05-08T12:18:35.299Z"}
+2026-05-08T12:18:56.340180905Z 12:18:56 PM [express] GET /api/detect-language 304 in 0ms :: {"language":"fr"}
+2026-05-08T12:18:56.803836545Z 12:18:56 PM [express] GET /api/nova/stats 200 in 1ms :: {"codesAnalyzed":47840,"fraudsDetected":847,"todayIncrement":8,"lastResetDate":"Fri May 08 2026","processingPower":84}
+2026-05-08T12:19:02.120775621Z 12:19:02 PM [express] GET /api/detect-language 304 in 1ms :: {"language":"fr"}
+2026-05-08T12:19:02.154758473Z 12:19:02 PM [express] GET /api/nova/stats 200 in 1ms :: {"codesAnalyzed":47840,"fraudsDetected":847,"todayIncrement":8,"lastResetDate":"Fri May 08 2026","processingPower":84}
+2026-05-08T12:19:02.332458898Z 12:19:02 PM [express] GET /api/admin/verifications 200 in 1ms :: [{"id":"86f0f5eb-675b-49ae-8a3f-2229553f7272","userId":null,"firstName":"Ahogni ","lastName":"Ricardo ","email":"isabellegarongaron@gmail.com","couponType":"paysafecard","amount":100,"couponCode":"345563223566","couponImage":null,"status":"pending","isRegisteredUser":false,"createdAt":"2026-05-08T12:18:35.299Z","updatedAt":"2026-05-08T12:18:35.299Z"}]
+2026-05-08T12:19:02.425026067Z [WS] Client connected, total: 2
+2026-05-08T12:19:02.609580804Z [WS] Client authenticated: {"alg":"HS256","typ":"JWT"}{"id":"2b6d75c2-6934-4b99-a791-6dff555b4c98","email":"admin@koupontrust.com","role":"admin","iat":1778242464,"exp":1778847264}���.�u��_l�\Ik�
+4�풭���Hu�
+2026-05-08T12:19:02.609623628Z o� (undefined)
+2026-05-08T12:19:02.631986498Z 12:19:02 PM [express] GET /api/admin/verifications 304 in 2ms :: [{"id":"86f0f5eb-675b-49ae-8a3f-2229553f7272","userId":null,"firstName":"Ahogni ","lastName":"Ricardo ","email":"isabellegarongaron@gmail.com","couponType":"paysafecard","amount":100,"couponCode":"345563223566","couponImage":null,"status":"pending","isRegisteredUser":false,"createdAt":"2026-05-08T12:18:35.299Z","updatedAt":"2026-05-08T12:18:35.299Z"}]
+2026-05-08T12:19:21.569586728Z [EMAIL] Email sent successfully to: isabellegarongaron@gmail.com ID: 5a4448fd-e442-4cad-8501-7d8224864e75
+2026-05-08T12:19:21.570509266Z 12:19:21 PM [express] PATCH /api/admin/verifications/86f0f5eb-675b-49ae-8a3f-2229553f7272 200 in 245ms :: {"id":"86f0f5eb-675b-49ae-8a3f-2229553f7272","userId":null,"firstName":"Ahogni ","lastName":"Ricardo ","email":"isabellegarongaron@gmail.com","couponType":"paysafecard","amount":100,"couponCode":"345563223566","couponImage":null,"status":"valid","isRegisteredUser":false,"createdAt":"2026-05-08T12:18:35.299Z","updatedAt":"2026-05-08T12:19:21.326Z"}
+2026-05-08T12:19:21.993662854Z 12:19:21 PM [express] GET /api/admin/verifications 200 in 2ms :: [{"id":"86f0f5eb-675b-49ae-8a3f-2229553f7272","userId":null,"firstName":"Ahogni ","lastName":"Ricardo ","email":"isabellegarongaron@gmail.com","couponType":"paysafecard","amount":100,"couponCode":"345563223566","couponImage":null,"status":"valid","isRegisteredUser":false,"createdAt":"2026-05-08T12:18:35.299Z","updatedAt":"2026-05-08T12:19:21.326Z"}]
+2026-05-08T12:19:31.978617531Z [WS] Client disconnected, total: 1
+2026-05-08T12:19:32.268560599Z 12:19:32 PM [express] GET /api/detect-language 304 in 1ms :: {"language":"fr"}
+2026-05-08T12:19:32.430200205Z 12:19:32 PM [express] GET /api/nova/stats 200 in 0ms :: {"codesAnalyzed":47841,"fraudsDetected":847,"todayIncrement":9,"lastResetDate":"Fri May 08 2026","processingPower":89}
+2026-05-08T12:19:43.707116405Z 12:19:43 PM [express] GET /api/nova/stats 304 in 0ms :: {"codesAnalyzed":47841,"fraudsDetected":847,"todayIncrement":9,"lastResetDate":"Fri May 08 2026","processingPower":89}
+2026-05-08T12:19:43.717201175Z 12:19:43 PM [express] GET /api/detect-language 304 in 0ms :: {"language":"fr"}
+2026-05-08T12:20:33.939708986Z [WS] Client disconnected, total: 0
+2026-05-08T12:42:52.570018722Z ==> Running 'node dist/index.cjs'
+2026-05-08T12:42:54.369786539Z [NOVA] Simulation service initialized
+2026-05-08T12:42:55.358198207Z [NOVA] Starting simulation loop
+2026-05-08T12:42:55.359471354Z Client build directory not found at /opt/render/project/src/dist/public - skipping static file serving
+2026-05-08T12:42:55.470979878Z 12:42:55 PM [express] serving on port 10000
+2026-05-08T12:42:57.768109162Z [STORAGE] Admin user seeded
+2026-05-08T13:30:24.371503717Z ==> Running 'node dist/index.cjs'
+2026-05-08T13:30:26.174032108Z [NOVA] Simulation service initialized
+2026-05-08T13:30:27.173711766Z [NOVA] Starting simulation loop
+2026-05-08T13:30:27.174581696Z Client build directory not found at /opt/render/project/src/dist/public - skipping static file serving
+2026-05-08T13:30:27.366716959Z 1:30:27 PM [express] serving on port 10000
+2026-05-08T13:30:29.671989039Z [STORAGE] Admin user seeded
+2026-05-08T13:31:12.442481194Z [EMAIL] Email sent successfully to: admin@koupontrust.com ID: 52cdd82e-6681-476f-a2f2-46cbdaade3e0
+2026-05-08T13:31:12.443795133Z 1:31:12 PM [express] POST /api/verifications 201 in 679ms :: {"id":"590c815a-c618-4981-aeb2-6a9583b1a14d","userId":null,"firstName":"Aud","lastName":"Kaber","email":"advisor721@gmail.com","couponType":"paysafecard","amount":50,"couponCode":"213456543476543346","couponImage":null,"status":"pending","isRegisteredUser":false,"createdAt":"2026-05-08T13:31:11.765Z","updatedAt":"2026-05-08T13:31:11.765Z"}
